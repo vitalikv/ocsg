@@ -138,7 +138,7 @@ function clickRayHit(event)
 
 	if(!infProject.scene.block.click.controll_wd)
 	{
-		var ray = rayIntersect( event, infProject.tools.controllWD, 'arr' );
+		var ray = rayIntersect( event, [infProject.tools.controllWD[0], infProject.tools.controllWD[1]], 'arr' );
 		if(!rayhit) { if(ray.length > 0) { rayhit = ray[0]; } }		
 	}
 	
@@ -203,11 +203,12 @@ function clickRayHit(event)
 
 
 function clickMouseActive(cdm)
-{
+{ 
 	if(!clickO.rayhit) { hideMenuObjUI_2D(cdm); return; }
 
 	var obj = clickO.obj = clickO.rayhit.object;
 	hideMenuObjUI_2D(cdm);
+	
 	
 	var tag = obj.userData.tag;
 	var rayhit = clickO.rayhit;

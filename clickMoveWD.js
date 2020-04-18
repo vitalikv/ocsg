@@ -243,9 +243,12 @@ function hideSizeWD( obj )
 						
 						arrWallFront.wall[i].obj.userData.wall.html.label[0].style.display = 'block';
 						arrWallFront.wall[i].obj.userData.wall.html.label[1].style.display = 'block';
-						
+						 
 						arrWallFront.wall[i].obj.userData.wall.html.label[0].userData.elem.show = true;
-						arrWallFront.wall[i].obj.userData.wall.html.label[1].userData.elem.show = true;						
+						arrWallFront.wall[i].obj.userData.wall.html.label[1].userData.elem.show = true;	
+
+						upPosLabels_2({elem: arrWallFront.wall[i].obj.userData.wall.html.label[0]});
+						upPosLabels_2({elem: arrWallFront.wall[i].obj.userData.wall.html.label[1]});
 					}					
 				}
 			}			
