@@ -18,7 +18,7 @@ async function getListObjTypesApi()
 		
 		if(window.location.hostname == 'ocsg' || window.location.hostname == 'ocsg.ru'){ var url_2 = 'import/catalog/'+json[i].model; }
 		
-		arr[i] = { lotid: json[i].id, name: json[i].title, url: url_2, planeMath : 0.0, glb : true, spot: json[i].spot, height: json[i].height };		
+		//arr[i] = { lotid: json[i].id, name: json[i].title, url: url_2, planeMath : 0.0, glb : true, spot: json[i].spot, height: json[i].height };		
 	}		
 
 	
@@ -80,7 +80,7 @@ async function getListObjTypesApi()
 			name : 'кровать',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 
 		arr[arr.length] =
@@ -100,7 +100,7 @@ async function getListObjTypesApi()
 			name : 'Туалетный_стол',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 
 		arr[arr.length] =
@@ -110,7 +110,7 @@ async function getListObjTypesApi()
 			name : 'Кровать_с_подъёмным_механизмом',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 
 		arr[arr.length] =
@@ -120,7 +120,7 @@ async function getListObjTypesApi()
 			name : 'Тумба_прикроватная',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 
 		arr[arr.length] =
@@ -130,7 +130,7 @@ async function getListObjTypesApi()
 			name : 'Зеркало_навесное',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 
 		arr[arr.length] =
@@ -140,7 +140,7 @@ async function getListObjTypesApi()
 			name : 'Шкаф-купе_Стандарт_160_см',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 		
 	};
@@ -157,7 +157,7 @@ async function getListObjTypesApi()
 			name : 'Стол_Мюнхен',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 		
 		arr[arr.length] =
@@ -167,7 +167,7 @@ async function getListObjTypesApi()
 			name : 'Стул_Новара',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};	
 
 		arr[arr.length] =
@@ -177,7 +177,7 @@ async function getListObjTypesApi()
 			name : 'Кухонный_гарнитур_Софи',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};		
 	};
 	// <-- кухня
@@ -192,7 +192,7 @@ async function getListObjTypesApi()
 			name : 'Тумба_для_обуви_Гранада 1',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 		
 		arr[arr.length] =
@@ -202,7 +202,7 @@ async function getListObjTypesApi()
 			name : 'Шкаф_для_одежды_Гранада',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 
 		arr[arr.length] =
@@ -212,7 +212,7 @@ async function getListObjTypesApi()
 			name : 'Тумба_для_обуви_Гранада 2',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 
 		arr[arr.length] =
@@ -222,7 +222,7 @@ async function getListObjTypesApi()
 			name : 'Шкаф-купе_2-дверный',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};		
 	};
 	// <-- прихожая	
@@ -238,7 +238,7 @@ async function getListObjTypesApi()
 			name : 'Комод_НК-3',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 		
 		arr[arr.length] =
@@ -248,7 +248,7 @@ async function getListObjTypesApi()
 			name : 'Стеллаж_Стенли',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 
 		arr[arr.length] =
@@ -258,7 +258,7 @@ async function getListObjTypesApi()
 			name : 'Шкаф-купе_3-дверный_Slide_210х220_см',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 
 		arr[arr.length] =
@@ -268,7 +268,7 @@ async function getListObjTypesApi()
 			name : 'Кресло_рабочее_Boss_II',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 
 		arr[arr.length] =
@@ -278,7 +278,7 @@ async function getListObjTypesApi()
 			name : 'Журнальный_стол_Лофт',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};
 
 		arr[arr.length] =
@@ -298,7 +298,7 @@ async function getListObjTypesApi()
 			name : 'Письменный_стол_Рокс',
 			planeMath : 0.0,
 			glb : true,
-			stopUI: true,
+			//stopUI: true,
 		};		
 				
 	};
