@@ -98,7 +98,6 @@
 		}
 	</script>
 	
-	<script src="<?=$path?>autoBuilding.js"></script>
 	<script src="<?=$path?>meshBSP.js"></script> 	
     <script src="<?=$path?>calculationArea.js?<?=$vrs?>"></script>
 	<script src="<?=$path?>boxScale2D.js?<?=$vrs?>"></script>
@@ -126,6 +125,7 @@
 	<script src="<?=$path?>getScreenshot.js?<?=$vrs?>"></script>
 	<script src="<?=$path?>undoRedo.js?<?=$vrs?>"></script>
 	
+	<script src="<?=$path?>setObjBD.js?<?=$vrs?>"></script>
 	<script src="<?=$path?>hideWall.js?<?=$vrs?>"></script>
     <script src="<?=$path?>inputWall.js?<?=$vrs?>"></script>  	
 	<script src="<?=$path?>clickActiveObj.js?<?=$vrs?>"></script>    

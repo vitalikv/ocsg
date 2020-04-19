@@ -688,7 +688,7 @@ function addObjInScene(inf, cdm)
 		obj.userData.obj3D.box = new THREE.Vector3(x, y, z);
 	}
 
-	getBoundObject({obj: obj});
+	
 	
 	if(cdm.scale){ obj.scale.set(cdm.scale.x, cdm.scale.y, cdm.scale.z); }
 
@@ -705,7 +705,7 @@ function addObjInScene(inf, cdm)
 		}
 	}
 	
-	//obj.material.visible = false;
+	obj.material.visible = false;
 
 	
 	// CubeCamera
@@ -1086,7 +1086,10 @@ async function addNewObj(cdm)
 		
 		function ( obj ) 
 		{
-			var inf = {obj: obj, pos: new THREE.Vector3(0,1,0)};
+			var box = createBoundObject({obj: obj});
+			box.add(obj);
+			
+			var inf = {obj: box, pos: new THREE.Vector3(0,1,0)};
 			
 			addObjInScene(inf, {});
 			
@@ -1100,8 +1103,8 @@ async function addNewObj(cdm)
 
 
 
-// получаем габариты объекта и строим box-форму
-function getBoundObject(cdm)
+// создаем box-форму для объекта
+function createBoundObject(cdm)
 {
 	var obj = cdm.obj;
 	
@@ -1129,7 +1132,7 @@ function getBoundObject(cdm)
 
 		var bound = arr[i].geometry.boundingBox;
 		
-		console.log(111111, arr[i], bound);
+		//console.log(111111, arr[i], bound);
 
 		v[v.length] = new THREE.Vector3(bound.min.x, bound.min.y, bound.max.z).applyMatrix4( arr[i].matrixWorld );
 		v[v.length] = new THREE.Vector3(bound.max.x, bound.min.y, bound.max.z).applyMatrix4( arr[i].matrixWorld );
@@ -1174,7 +1177,9 @@ function getBoundObject(cdm)
 	  
 	
 	console.log(x, y, z);
-	console.log(box);	
+	console.log(obj);
+
+	return box;
 }
 
 

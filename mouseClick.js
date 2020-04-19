@@ -188,6 +188,9 @@ function clickRayHit(event)
 			{
 				rayhit = ray[0];
 			}
+			
+			
+			//rayhit.object = getParentObj({obj: rayhit.object}); 
 		}			
 	}
 	
@@ -199,6 +202,61 @@ function clickRayHit(event)
 	
 	
 	return rayhit;
+}
+
+
+
+// находим родитель у дочернего объекта
+function getParentObj(cdm)
+{
+	var obj = cdm.obj;	
+	var next = true;
+	
+	while(next) 
+	{
+		if(obj.userData)
+		{
+			if(obj.userData.tag)
+			{
+				if(obj.userData.tag == 'obj')
+				{
+					next = false;
+					return obj;					
+				}
+				else
+				{
+					if(obj.parent)
+					{
+						obj = obj.parent;
+					}
+					else
+					{
+						next = false;
+						return null;
+					}
+				}
+			}
+			else if(obj.parent)
+			{ 
+				obj = obj.parent;
+			}
+			else
+			{
+				next = false;
+				return null;
+			}
+			
+		}
+		else if(obj.parent)
+		{ 
+			obj = obj.parent;
+		}
+		else
+		{
+			next = false;
+			return null;
+		}
+	}
 }
 
 

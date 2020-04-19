@@ -372,6 +372,10 @@
 						удалить	
 					</div>									
 					
+								
+					<div class="button1 button_gradient_1" nameId="button_save_obj" style="margin-top: 40px;">
+						сохранить	
+					</div>						
 				</div> 
 			</div>	
 		</div>

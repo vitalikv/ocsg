@@ -24,6 +24,7 @@ $('[nameId="sw_dw_2"]').mousedown(function () { swSetDW_1({obj: clickO.last_obj,
 $('[nameId="obj_rotate_reset"]').mousedown(function () { objRotateReset(); });	
 $('[nameId="button_copy_obj"]').mousedown(function () { copyObj(); });
 $('[nameId="button_delete_obj"]').mousedown(function () { deleteObjectPop(); });
+$('[nameId="button_save_obj"]').mousedown(function () { getBoundObject({obj: clickO.last_obj}); });
 
 
 $('[data-action="wall"]').mousedown(function () { clickInterface({button:'point_1'}); });
