@@ -676,16 +676,19 @@ function addObjInScene(inf, cdm)
 	
 	if(!cdm.id){ obj.userData.obj3D.newO = true; }
 	
-	obj.geometry.computeBoundingBox();	
+		
 	
 	// получаем начальные размеры объекта, что потом можно было масштабировать от начальных размеров
-	if(1==1)
+	if(1==2)
 	{
+		obj.geometry.computeBoundingBox();
 		var x = obj.geometry.boundingBox.max.x - obj.geometry.boundingBox.min.x;
 		var y = obj.geometry.boundingBox.max.y - obj.geometry.boundingBox.min.y;
 		var z = obj.geometry.boundingBox.max.z - obj.geometry.boundingBox.min.z;	
 		obj.userData.obj3D.box = new THREE.Vector3(x, y, z);
-	}	
+	}
+
+	getBoundObject({obj: obj});
 	
 	if(cdm.scale){ obj.scale.set(cdm.scale.x, cdm.scale.y, cdm.scale.z); }
 
@@ -702,7 +705,7 @@ function addObjInScene(inf, cdm)
 		}
 	}
 	
-	obj.material.visible = false;
+	//obj.material.visible = false;
 
 	
 	// CubeCamera
@@ -944,22 +947,29 @@ function loadUrlFile()
 	// /import/vm_furn_3.glb
 	// /import/80105983_krovat_dafna5.glb
 	
-	if(1==1)	// gltf/glb
+	if(1==1)
 	{
-		var loader = new THREE.GLTFLoader();
-		loader.load( url, function ( obj ) 						
-		{ 
-			//var obj = obj.scene.children[0];
-			setParamObj({obj: obj.scene});
-		});			
+		addNewObj({url: url});		
 	}
-	else	// fbx
+	else
 	{
-		var loader = new THREE.FBXLoader();
-		loader.load( url, function ( obj ) 						
-		{ 			
-			setParamObj({obj: obj});
-		});			
+		if(1==1)	// gltf/glb
+		{
+			var loader = new THREE.GLTFLoader();
+			loader.load( url, function ( obj ) 						
+			{ 
+				//var obj = obj.scene.children[0];
+				setParamObj({obj: obj.scene});
+			});			
+		}
+		else	// fbx
+		{
+			var loader = new THREE.FBXLoader();
+			loader.load( url, function ( obj ) 						
+			{ 			
+				setParamObj({obj: obj});
+			});			
+		}
 	}
 }
 
@@ -1059,6 +1069,113 @@ function setParamObj(cdm)
 	renderCamera();	
 }
 
+
+
+async function addNewObj(cdm)
+{
+	var url = cdm.url;
+	url = 'https://files.planoplan.com/upload/catalog/lot/201810/40a5dafd.unity3d';
+	//url = 'https://files.planoplan.com/upload/catalog/lot/201903/bf730220.unity3d';
+	
+	var response = await fetch(url, { method: 'GET' });
+	var json = await response.json();	
+	
+	new THREE.ObjectLoader().parse
+	(
+		json, 
+		
+		function ( obj ) 
+		{
+			var inf = {obj: obj, pos: new THREE.Vector3(0,1,0)};
+			
+			addObjInScene(inf, {});
+			
+			//scene.add(obj);
+			//renderCamera();		
+		}
+		
+	);	
+}
+
+
+
+
+// получаем габариты объекта и строим box-форму
+function getBoundObject(cdm)
+{
+	var obj = cdm.obj;
+	
+	if(!obj) return;
+	
+	var arr = [];
+	
+	obj.traverse(function(child) 
+	{
+		if (child instanceof THREE.Mesh)
+		{
+			if(child.geometry) { arr[arr.length] = child; }
+		}
+	});	
+
+	//scene.updateMatrixWorld();
+	
+	var v = [];
+	
+	for ( var i = 0; i < arr.length; i++ )
+	{
+		arr[i].updateMatrixWorld();
+		arr[i].geometry.computeBoundingBox();	
+		arr[i].geometry.computeBoundingSphere();
+
+		var bound = arr[i].geometry.boundingBox;
+		
+		console.log(111111, arr[i], bound);
+
+		v[v.length] = new THREE.Vector3(bound.min.x, bound.min.y, bound.max.z).applyMatrix4( arr[i].matrixWorld );
+		v[v.length] = new THREE.Vector3(bound.max.x, bound.min.y, bound.max.z).applyMatrix4( arr[i].matrixWorld );
+		v[v.length] = new THREE.Vector3(bound.min.x, bound.min.y, bound.min.z).applyMatrix4( arr[i].matrixWorld );
+		v[v.length] = new THREE.Vector3(bound.max.x, bound.min.y, bound.min.z).applyMatrix4( arr[i].matrixWorld );
+
+		v[v.length] = new THREE.Vector3(bound.min.x, bound.max.y, bound.max.z).applyMatrix4( arr[i].matrixWorld );
+		v[v.length] = new THREE.Vector3(bound.max.x, bound.max.y, bound.max.z).applyMatrix4( arr[i].matrixWorld );
+		v[v.length] = new THREE.Vector3(bound.min.x, bound.max.y, bound.min.z).applyMatrix4( arr[i].matrixWorld );
+		v[v.length] = new THREE.Vector3(bound.max.x, bound.max.y, bound.min.z).applyMatrix4( arr[i].matrixWorld );		
+	}
+	
+	var bound = { min : { x : 999999, y : 999999, z : 999999 }, max : { x : -999999, y : -999999, z : -999999 } };
+	
+	for(var i = 0; i < v.length; i++)
+	{
+		if(v[i].x < bound.min.x) { bound.min.x = v[i].x; }
+		if(v[i].x > bound.max.x) { bound.max.x = v[i].x; }
+		if(v[i].y < bound.min.y) { bound.min.y = v[i].y; }
+		if(v[i].y > bound.max.y) { bound.max.y = v[i].y; }			
+		if(v[i].z < bound.min.z) { bound.min.z = v[i].z; }
+		if(v[i].z > bound.max.z) { bound.max.z = v[i].z; }		
+	}
+
+	var x = (bound.max.x - bound.min.x);
+	var y = (bound.max.y - bound.min.y);
+	var z = (bound.max.z - bound.min.z);	
+	
+	var material = new THREE.MeshStandardMaterial({ color: 0xcccccc, transparent: true, opacity: 0.9, depthTest: false });
+	var geometry = createGeometryCube(x, y, z);	
+		
+	var box = new THREE.Mesh( geometry, material ); 	
+	//box.position.copy(centP);
+	scene.add(box);
+	
+	//box.position.copy(obj.position);
+	//box.rotation.copy(obj.rotation);
+	
+	box.updateMatrixWorld();
+	box.geometry.computeBoundingBox();	
+	box.geometry.computeBoundingSphere();	
+	  
+	
+	console.log(x, y, z);
+	console.log(box);	
+}
 
 
 
