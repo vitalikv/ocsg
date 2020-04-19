@@ -6,19 +6,13 @@ async function getListObjTypesApi()
 	var url = infProject.settings.api.list;
 	
 	var arr = [];
-
-	if(window.location.hostname == 'ocsg' || window.location.hostname == 'ocsg.ru'){ var url = 't/list_model.json'; }
 	
 	var response = await fetch(url, { method: 'GET' });
 	var json = await response.json();
 	
 	for(var i = 0; i < json.length; i++)
-	{		
-		var url_2 = infProject.settings.api.models+json[i].model;
-		
-		if(window.location.hostname == 'ocsg' || window.location.hostname == 'ocsg.ru'){ var url_2 = 'import/catalog/'+json[i].model; }
-		
-		//arr[i] = { lotid: json[i].id, name: json[i].title, url: url_2, planeMath : 0.0, glb : true, spot: json[i].spot, height: json[i].height };		
+	{			
+		arr[i] = { lotid: json[i].id, name: json[i].name, url: '', planeMath: 0.0, json: true };		
 	}		
 
 	
@@ -50,16 +44,6 @@ async function getListObjTypesApi()
 	};
 	// <-- wd		
 	
-	arr[arr.length] =
-	{
-		lotid : 4,
-		url : infProject.path+'import/vm_door_1.fbx', 
-		name : 'дверь',
-		type: 'wd',
-		planeMath : 1.0,
-		material : true,
-		stopUI: true,
-	};
 
 	arr[arr.length] =
 	{
@@ -70,164 +54,7 @@ async function getListObjTypesApi()
 		planeMath : infProject.settings.height - 0.05,
 	};
 
-	// спальня -->
-	if(1==1)
-	{
-		arr[arr.length] =
-		{
-			lotid : 11,
-			url : infProject.path+'import/glb/спальня/80105983_krovat_dafna10.glb', 
-			name : 'кровать',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
 
-		arr[arr.length] =
-		{
-			lotid : 12,
-			url : infProject.path+'import/glb/спальня/80274115_Пуф_ПФ-1.glb', 
-			name : 'Пуф_ПФ',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 13,
-			url : infProject.path+'import/glb/спальня/80286563_Туалетный_стол_Sherlock.glb', 
-			name : 'Туалетный_стол',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 14,
-			url : infProject.path+'import/glb/спальня/80318441_Кровать_с_подъёмным_механизмом_Paola.glb', 
-			name : 'Кровать_с_подъёмным_механизмом',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 15,
-			url : infProject.path+'import/glb/спальня/80318442_Тумба_прикроватная_Paola.glb', 
-			name : 'Тумба_прикроватная',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 16,
-			url : infProject.path+'import/glb/спальня/80318445_Зеркало_навесное_Paola.glb', 
-			name : 'Зеркало_навесное',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 17,
-			url : infProject.path+'import/glb/спальня/80328489_Шкаф-купе_Home_Стандарт_160_см.glb', 
-			name : 'Шкаф-купе_Стандарт_160_см',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-		
-	};
-	// <-- спальня
-	
-	
-	// кухня -->
-	if(1==1)
-	{
-		arr[arr.length] =
-		{
-			lotid : 18,
-			url : infProject.path+'import/glb/кухня/80310580_Стол_Мюнхен.glb', 
-			name : 'Стол_Мюнхен',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-		
-		arr[arr.length] =
-		{
-			lotid : 19,
-			url : infProject.path+'import/glb/кухня/80320714_Стул_Новара.glb', 
-			name : 'Стул_Новара',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};	
-
-		arr[arr.length] =
-		{
-			lotid : 20,
-			url : infProject.path+'import/glb/кухня/80321220_Кухонный_гарнитур_Софи.glb', 
-			name : 'Кухонный_гарнитур_Софи',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};		
-	};
-	// <-- кухня
-	
-	// прихожая -->
-	if(1==1)
-	{
-		arr[arr.length] =
-		{
-			lotid : 21,
-			url : infProject.path+'import/glb/прихожая/80288366_Тумба_для_обуви_Гранада.glb', 
-			name : 'Тумба_для_обуви_Гранада 1',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-		
-		arr[arr.length] =
-		{
-			lotid : 22,
-			url : infProject.path+'import/glb/прихожая/80288367_Шкаф_для_одежды_Гранада.glb', 
-			name : 'Шкаф_для_одежды_Гранада',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 23,
-			url : infProject.path+'import/glb/прихожая/80288368_Тумба_для_обуви_Гранада.glb', 
-			name : 'Тумба_для_обуви_Гранада 2',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 24,
-			url : infProject.path+'import/glb/прихожая/80311598_Шкаф-купе_2-дверный_Slide_120х220_см.glb', 
-			name : 'Шкаф-купе_2-дверный',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};		
-	};
-	// <-- прихожая	
-	
-	
 	// зал -->
 	if(1==1)
 	{
@@ -239,67 +66,7 @@ async function getListObjTypesApi()
 			planeMath : 0.0,
 			glb : true,
 			//stopUI: true,
-		};
-		
-		arr[arr.length] =
-		{
-			lotid : 26,
-			url : infProject.path+'import/glb/зал/80295027_Стеллаж_Стенли.glb', 
-			name : 'Стеллаж_Стенли',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 27,
-			url : infProject.path+'import/glb/зал/80310320_Шкаф-купе_3-дверный_Slide_210х220_см.glb', 
-			name : 'Шкаф-купе_3-дверный_Slide_210х220_см',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 28,
-			url : infProject.path+'import/glb/зал/80311525_Кресло_рабочее_Boss_II.glb', 
-			name : 'Кресло_рабочее_Boss_II',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 29,
-			url : infProject.path+'import/glb/зал/80322444_Журнальный_стол_Лофт.glb', 
-			name : 'Журнальный_стол_Лофт',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 30,
-			url : infProject.path+'import/glb/зал/80327766_Угловой_диван-кровать_Вольберг.glb', 
-			name : 'Угловой_диван-кровать_Вольберг',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 31,
-			url : infProject.path+'import/glb/зал/80328867_Письменный_стол_Рокс.glb', 
-			name : 'Письменный_стол_Рокс',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};		
+		};				
 				
 	};
 	// <-- зал	
@@ -408,7 +175,7 @@ function loadObjServer(cdm)
 	{
 		
 		if(cdm.loadFromFile){}
-		else { createSpotObj(inf, cdm); }
+		//else { createSpotObj(inf, cdm); }
 		
 		if(inf.glb)
 		{ 
