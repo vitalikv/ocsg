@@ -562,7 +562,7 @@ async function loadFilePL(arr)
 	resetScene();
 
 	await getListRoomTypesApi();	// получаем типы помещений из api, добавляем в меню
-	await getListObjTypesApi();		// получаем в массив список объектов
+	await addObjInCatalogUI_1();		// наполняем каталог объектов UI
 	 
 	//if(!arr) return;	
 	//console.log(arr);
@@ -738,7 +738,7 @@ async function loadFilePL(arr)
 	  
 	assignListRoomTypesApi({arr: rooms});	// получаем типы помещений, добавляем в меню и назначаем всем построеннным комнатам тип помещения
 	
-	loadObjInBase({furn: furn});
+	//loadObjInBase({furn: furn});
 	
 	readyProject(); 
 }

@@ -4,7 +4,7 @@ require_once ($_SERVER['DOCUMENT_ROOT']."/include/bd_1.php");
 
 
 
-$id = trim($_POST['id']);
+$id = trim($_GET['id']);
 $id = addslashes($id);
 if(!preg_match("/^[0-9]+$/i", $id)) { exit; }
 
@@ -20,5 +20,34 @@ $res = $r->fetch(PDO::FETCH_ASSOC);
 
 $count = $r->rowCount();
 
+$data = [];
+$data['error'] = true;
 
-echo json_encode( $res );
+if($res) 
+{
+	$data = [];
+	$data['id'] = json_decode($res['id']);
+	
+	if($res['name'])
+	{
+		$data['name'] = json_decode($res['name']);	
+	}
+
+	if($res['size'])
+	{
+		$data['size'] = json_decode($res['size']);	
+	}
+	
+	if($res['json'])
+	{
+		$data['json'] = json_decode($res['json']);	
+	}	
+}
+
+
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode( $data );
+
+
+
+

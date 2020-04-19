@@ -184,7 +184,7 @@ infProject.camera.d3.targetO = createCenterCamObj();
 // controllWD контроллеры для изменения ширины/длины wd
 infProject.tools = { pivot: createPivot_2(), gizmo: createGizmo360_2(), cutWall: [], point: createToolPoint(), axis: createLineAxis(), controllWD: createControllWD() }; 
 infProject.tools.floorPl = createPlaneOutlineFloor();
-infProject.catalog = { obj: [], texture: infoListTexture() }; 
+infProject.catalog = { texture: infoListTexture() }; 
 infProject.listColor = resetPop.listColor(); 
 infProject.start = true; 
 
@@ -318,7 +318,7 @@ var ccc = new THREE.Color().setHex( '0x'+infProject.settings.profile.color );
 // cdm
 {	
 	startPosCamera3D({radious: infProject.settings.cam3D, theta: 90, phi: 35});		// стартовое положение 3D камеры
-	//addObjInCatalogUI_1();			// наполняем каталог объектов UI
+	//await addObjInCatalogUI_1();			// наполняем каталог объектов UI
 	addTextureInCatalogUI_1();		// наполняем каталог текстур UI
 	addTextureInCatalogUI_2();
 	changeRightMenuUI_1({name: 'button_wrap_object'});	// назначаем первоначальную вкладку , которая будет включена	

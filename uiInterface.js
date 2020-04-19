@@ -3,12 +3,40 @@
 
 
 // добавляем объекты в каталог UI 
-function addObjInCatalogUI_1(cdm)
+async function addObjInCatalogUI_1(cdm) 
 {
+	var url = infProject.settings.api.list;
 	
-	for(var i = 0; i < infProject.catalog.obj.length; i++)
+	var arr = [];
+	
+	var response = await fetch(url, { method: 'GET' });
+	var json = await response.json();
+	
+	for(var i = 0; i < json.length; i++)
+	{			
+		arr[i] = { lotid: json[i].id, name: json[i].name };		
+	}		
+
+
+	arr[arr.length] =
 	{
-		var o = infProject.catalog.obj[i];
+		lotid : 34,
+		url : infProject.path+'import/vm_light_point_1.fbx', 
+		name : 'светильник',
+	};
+
+	arr[arr.length] =
+	{
+		lotid : 35,
+		url : infProject.path+'import/glb/зал/80088931_Комод_НК-3.glb', 
+		name : 'Комод_НК-3',
+	};				
+	
+
+	
+	for(var i = 0; i < arr.length; i++)
+	{
+		var o = arr[i];
 		
 		if(o.stopUI) continue;
 		

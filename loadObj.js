@@ -1,83 +1,6 @@
 
 
 
-async function getListObjTypesApi()
-{
-	var url = infProject.settings.api.list;
-	
-	var arr = [];
-	
-	var response = await fetch(url, { method: 'GET' });
-	var json = await response.json();
-	
-	for(var i = 0; i < json.length; i++)
-	{			
-		arr[i] = { lotid: json[i].id, name: json[i].name, url: '', planeMath: 0.0, json: true };		
-	}		
-
-	
-	
-	// wd -->
-	if(1==1)
-	{
-		arr[arr.length] =
-		{
-			lotid : 32,
-			url : infProject.path+'import/glb/wd/okno1x1.glb', 
-			name : 'окно 1',
-			type: 'wd',
-			planeMath : 1.5,
-			glb : true,
-			stopUI: true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 33,
-			url : infProject.path+'import/glb/wd/dver2x1.glb', 
-			name : 'дверь',
-			type: 'wd',
-			planeMath : 0.1,
-			glb : true,
-			stopUI: true,
-		};		
-	};
-	// <-- wd		
-	
-
-	arr[arr.length] =
-	{
-		lotid : 8,
-		url : infProject.path+'import/vm_light_point_1.fbx', 
-		name : 'светильник',
-		type: 'light point',
-		planeMath : infProject.settings.height - 0.05,
-	};
-
-
-	// зал -->
-	if(1==1)
-	{
-		arr[arr.length] =
-		{
-			lotid : 25,
-			url : infProject.path+'import/glb/зал/80088931_Комод_НК-3.glb', 
-			name : 'Комод_НК-3',
-			planeMath : 0.0,
-			glb : true,
-			//stopUI: true,
-		};				
-				
-	};
-	// <-- зал	
-
-	
-	infProject.catalog.obj = arr;
-	addObjInCatalogUI_1(); 
-	
-}
-
-
 
 
 function infoListTexture()
@@ -128,18 +51,72 @@ function infoListTexture()
 }
 
 
-// получаем параметры объекта из базы
-function getInfoObj(cdm)
+// получаем параметры объекта из api
+async function getInfoObj(cdm)
 {
-	var lotid = cdm.lotid;
+	var lotid = cdm.lotid;	
 	
+	var url = infProject.settings.api.obj + '?id='+lotid;
 	
-	for(var i = 0; i < infProject.catalog.obj.length; i++)
+	var response = await fetch(url, { method: 'GET' });	
+	var json = await response.json();
+	
+	if(!json.error)
 	{
-		if(lotid == infProject.catalog.obj[i].lotid)
-		{  
-			return infProject.catalog.obj[i];
-		}
+		var inf = json;
+		inf.planeMath = 0.0;
+		
+		return inf;
+	}
+	else
+	{
+		var arr = [];
+		
+		arr[arr.length] =
+		{
+			lotid : 32,
+			url : infProject.path+'import/glb/wd/okno1x1.glb', 
+			name : 'окно 1',
+			type: 'wd',
+			planeMath : 1.5,
+			glb : true,
+		};
+
+		arr[arr.length] =
+		{
+			lotid : 33,
+			url : infProject.path+'import/glb/wd/dver2x1.glb', 
+			name : 'дверь',
+			type: 'wd',
+			planeMath : 0.1,
+			glb : true,
+		};
+
+		arr[arr.length] =
+		{
+			lotid : 34,
+			url : infProject.path+'import/vm_light_point_1.fbx', 
+			name : 'светильник',
+			type: 'light point',
+			planeMath : infProject.settings.height - 0.05,
+		};
+
+		arr[arr.length] =
+		{
+			lotid : 35,
+			url : infProject.path+'import/glb/зал/80088931_Комод_НК-3.glb', 
+			name : 'Комод_НК-3',
+			planeMath : 0.0,
+			glb : true,
+		};		
+		
+		for(var i = 0; i < arr.length; i++)
+		{
+			if(lotid == arr[i].lotid)
+			{  
+				return arr[i];
+			}
+		}		
 	}
 	
 	return null;
@@ -147,7 +124,7 @@ function getInfoObj(cdm)
 
 
 
-function loadObjServer(cdm)
+async function loadObjServer(cdm)
 { 
 	// cdm - информация, которая пришла из вне
 	// inf - статическая инфа из базы
@@ -157,7 +134,7 @@ function loadObjServer(cdm)
 	
 	var lotid = cdm.lotid;
 	
-	var inf = getInfoObj({lotid: lotid});
+	var inf = await getInfoObj({lotid: lotid});
 
 	if(!inf) return;	// объект не существует в API/каталоге
 	
@@ -176,8 +153,30 @@ function loadObjServer(cdm)
 		
 		if(cdm.loadFromFile){}
 		//else { createSpotObj(inf, cdm); }
-		
-		if(inf.glb)
+	
+		if(inf.json)
+		{ 
+	
+			new THREE.ObjectLoader().parse
+			(
+				inf.json, 
+				
+				function ( obj ) 
+				{
+					var box = createBoundObject({obj: obj});
+					box.add(obj);
+					
+					var inf = {obj: box, pos: new THREE.Vector3(0,1,0)};
+					
+					addObjInScene(inf, {});
+					
+					//scene.add(obj);
+					//renderCamera();		
+				}
+				
+			);				
+		}	
+		else if(inf.glb)
 		{ 
 			var loader = new THREE.GLTFLoader();
 			loader.load( inf.url, function ( object ) 						

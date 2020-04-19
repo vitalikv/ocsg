@@ -46,6 +46,7 @@ $infProject['settings']['project'] = 'test';
 $infProject['settings']['load']['file'] = 't/fileJson.json';
 $infProject['settings']['save']['file'] = 't/fileJson.json';
 $infProject['settings']['api']['list'] = 'components_2/getListObjSql.php';
+$infProject['settings']['api']['obj'] = 'components_2/getObjSql.php';
 $infProject['settings']['api']['type']['room'] = 'https://vim.myplan.pro/placer/api/ae/room.zone/list';
 $infProject['settings']['html']['fonts']['wall']['show'] = true;
 $infProject['settings']['html']['fonts']['wall']['size'] = 'font-size: 14px;';
