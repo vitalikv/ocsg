@@ -21,17 +21,9 @@ async function addObjInCatalogUI_1(cdm)
 	arr[arr.length] =
 	{
 		lotid : 34,
-		url : infProject.path+'import/vm_light_point_1.fbx', 
 		name : 'светильник',
 	};
 
-	arr[arr.length] =
-	{
-		lotid : 35,
-		url : infProject.path+'import/glb/зал/80088931_Комод_НК-3.glb', 
-		name : 'Комод_НК-3',
-	};				
-	
 
 	
 	for(var i = 0; i < arr.length; i++)

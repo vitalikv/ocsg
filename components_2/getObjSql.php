@@ -33,6 +33,11 @@ if($res)
 		$data['name'] = json_decode($res['name']);	
 	}
 
+	if($res['type'])
+	{
+		$data['type'] = json_decode($res['type']);	
+	}
+	
 	if($res['size'])
 	{
 		$data['size'] = json_decode($res['size']);	
@@ -41,6 +46,11 @@ if($res)
 	if($res['json'])
 	{
 		$data['json'] = json_decode($res['json']);	
+	}
+
+	if($res['properties'])
+	{
+		$data['properties'] = json_decode($res['properties']);	
 	}	
 }
 

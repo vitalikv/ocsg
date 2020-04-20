@@ -70,27 +70,7 @@ async function getInfoObj(cdm)
 	}
 	else
 	{
-		var arr = [];
-		
-		arr[arr.length] =
-		{
-			lotid : 32,
-			url : infProject.path+'import/glb/wd/okno1x1.glb', 
-			name : 'окно 1',
-			type: 'wd',
-			planeMath : 1.5,
-			glb : true,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 33,
-			url : infProject.path+'import/glb/wd/dver2x1.glb', 
-			name : 'дверь',
-			type: 'wd',
-			planeMath : 0.1,
-			glb : true,
-		};
+		var arr = [];		
 
 		arr[arr.length] =
 		{
@@ -99,15 +79,6 @@ async function getInfoObj(cdm)
 			name : 'светильник',
 			type: 'light point',
 			planeMath : infProject.settings.height - 0.05,
-		};
-
-		arr[arr.length] =
-		{
-			lotid : 35,
-			url : infProject.path+'import/glb/зал/80088931_Комод_НК-3.glb', 
-			name : 'Комод_НК-3',
-			planeMath : 0.0,
-			glb : true,
 		};		
 		
 		for(var i = 0; i < arr.length; i++)
@@ -134,11 +105,10 @@ async function loadObjServer(cdm)
 	
 	var lotid = cdm.lotid;
 	
-	var inf = await getInfoObj({lotid: lotid});
-
+	var inf = await getInfoObj({lotid: lotid});		// проверяем, есть ли такой id в api
 	if(!inf) return;	// объект не существует в API/каталоге
 	
-	var obj = getObjFromBase({lotid: lotid});
+	var obj = getObjFromBase({lotid: lotid});	// проверяем есть ли объект в кэше
 	
 	if(cdm.loadFromFile){ obj = null; }
 	
@@ -148,30 +118,28 @@ async function loadObjServer(cdm)
 		console.log('---------');
 		if(obj) { addObjInScene(inf, cdm); }
 	}
-	else		// объекта нет в кэше
+	else		// объекта нет в кэше, сохраняем/добавляем в кэш
 	{
 		
 		if(cdm.loadFromFile){}
 		//else { createSpotObj(inf, cdm); }
 	
 		if(inf.json)
-		{ 
-	
+		{ 	
 			new THREE.ObjectLoader().parse
 			(
 				inf.json, 
 				
 				function ( obj ) 
 				{
-					var box = createBoundObject({obj: obj});
+					var box = createBoundObject({obj: obj});	// создаем box-форму объекта
 					box.add(obj);
 					
-					var inf = {obj: box, pos: new THREE.Vector3(0,1,0)};
+					var obj = addObjInBase({lotid: lotid, inf: inf, obj: box});
 					
-					addObjInScene(inf, {});
+					inf.obj = obj;
 					
-					//scene.add(obj);
-					//renderCamera();		
+					addObjInScene(inf, cdm);		
 				}
 				
 			);				
@@ -241,7 +209,6 @@ function getObjFromBase(cdm)
 		{
 			return arrObj[i].obj;
 		}
-
 	}
 	
 	return null;
@@ -249,7 +216,7 @@ function getObjFromBase(cdm)
 
 
 
-// добавляем новый объект в базу объектов (добавляются только уникальные объекты, кторых нет в базе)
+// добавляем новый объект в базу/кэш (добавляются только уникальные объекты, которых нет в базе)
 function addObjInBase(cdm)
 {
 	var lotid = cdm.lotid;								// объекты в сцене
@@ -262,8 +229,7 @@ function addObjInBase(cdm)
 		{  
 			return obj;
 		}
-	}
-	
+	}	
 	
 	obj.geometry.computeBoundingBox();	
 	
@@ -274,46 +240,16 @@ function addObjInBase(cdm)
 	{
 		if(child.isMesh) 
 		{ 
-			if(1==2)
-			{
-				child.updateMatrix();
-				child.updateMatrixWorld();
-				child.parent.updateMatrixWorld();							
-				
-				var geometry = child.geometry.clone();
-				geometry.applyMatrix4(child.parent.matrixWorld);
-				geometries.push(geometry);										
-			}
-			
 			if(infProject.settings.obj.material.texture == 'none')
 			{
 				child.material.map = null;
 				child.material.color = new THREE.Color(infProject.settings.obj.material.color);				
 			}
-			if(child.material.map) 
-			{
-				//console.log(222222, child.material, THREE.sRGBEncoding, child.material.map.encoding);
-				//child.material.map.encoding = THREE.sRGBEncoding;
-			}
+
 			child.castShadow = true;	
 			child.receiveShadow = true;				
 		}
-	});	
-	
-	
-	if(1==2)
-	{
-		var mergedGeometry = THREE.BufferGeometryUtils.mergeBufferGeometries([obj.geometry]); 
-		var mergedGeometry = THREE.BufferGeometryUtils.mergeBufferGeometries([obj.children[0].geometry]);
-		console.log(111111, lotid, geometries, obj);
-		
-		//var objF = new THREE.Mesh( mergedGeometry, new THREE.MeshLambertMaterial({ color : 0xff0000, transparent: true, opacity: 0.5 }) ); 
-
-		//objF.add(obj);
-		//scene.add(objF);
-		
-		//obj = objF;		
-	}
+	});		
 	
 	base[base.length] = {lotid: lotid, obj: obj.clone()};
 
@@ -403,7 +339,7 @@ function deleteSpotObj(cdm)
 
 // добавляем объект в сцену
 function addObjInScene(inf, cdm)
-{
+{  
 	// загрузка wd
 	if(cdm.wd)
 	{  
@@ -445,7 +381,7 @@ function addObjInScene(inf, cdm)
 		
 	
 	// получаем начальные размеры объекта, что потом можно было масштабировать от начальных размеров
-	if(1==2)
+	if(1==1)
 	{
 		obj.geometry.computeBoundingBox();
 		var x = obj.geometry.boundingBox.max.x - obj.geometry.boundingBox.min.x;
@@ -471,7 +407,7 @@ function addObjInScene(inf, cdm)
 		}
 	}
 	
-	obj.material.visible = false;
+	//obj.material.visible = false;
 
 	
 	// CubeCamera
@@ -713,30 +649,51 @@ function loadUrlFile()
 	// /import/vm_furn_3.glb
 	// /import/80105983_krovat_dafna5.glb
 	
-	if(1==1)
+	var json = true;
+	var glb = false;
+	var fbx = false;
+	
+	if(json)
 	{
-		addNewObj({url: url});		
+		//addNewObj({url: url});
+		url = 'https://files.planoplan.com/upload/catalog/lot/201810/40a5dafd.unity3d';
+		//url = 'https://files.planoplan.com/upload/catalog/lot/201903/bf730220.unity3d';	
+		url = 'https://files.planoplan.com/upload/catalog/lot/201803/04bea56c.unity3d';	
+		
+		var loader = new THREE.ObjectLoader();
+		loader.load( url, function ( obj ) 						
+		{ 			
+			var box = createBoundObject({obj: obj});
+			box.add(obj);
+			
+			var inf = {obj: box, pos: new THREE.Vector3(0,1,0)};
+			
+			addObjInScene(inf, {});
+		});			
 	}
-	else
+
+	if(glb)	// gltf/glb
 	{
-		if(1==1)	// gltf/glb
-		{
-			var loader = new THREE.GLTFLoader();
-			loader.load( url, function ( obj ) 						
-			{ 
-				//var obj = obj.scene.children[0];
-				setParamObj({obj: obj.scene});
-			});			
-		}
-		else	// fbx
-		{
-			var loader = new THREE.FBXLoader();
-			loader.load( url, function ( obj ) 						
-			{ 			
-				setParamObj({obj: obj});
-			});			
-		}
+		url = infProject.path+'import/glb/wd/okno1x1.glb';
+		
+		var loader = new THREE.GLTFLoader();
+		loader.load( url, function ( obj ) 						
+		{ 
+			//var obj = obj.scene.children[0];
+			setParamObj({obj: obj.scene});
+		});			
 	}
+	
+	if(fbx)	// fbx
+	{
+		var loader = new THREE.FBXLoader();
+		loader.load( url, function ( obj ) 						
+		{ 			
+			setParamObj({obj: obj});
+		});			
+	}
+
+	$('[nameId="window_main_load_obj"]').css({"display":"none"});
 }
 
 
@@ -837,39 +794,12 @@ function setParamObj(cdm)
 
 
 
-async function addNewObj(cdm)
-{
-	var url = cdm.url;
-	url = 'https://files.planoplan.com/upload/catalog/lot/201810/40a5dafd.unity3d';
-	//url = 'https://files.planoplan.com/upload/catalog/lot/201903/bf730220.unity3d';
-	
-	var response = await fetch(url, { method: 'GET' });
-	var json = await response.json();	
-	
-	new THREE.ObjectLoader().parse
-	(
-		json, 
-		
-		function ( obj ) 
-		{
-			var box = createBoundObject({obj: obj});
-			box.add(obj);
-			
-			var inf = {obj: box, pos: new THREE.Vector3(0,1,0)};
-			
-			addObjInScene(inf, {});
-			
-			//scene.add(obj);
-			//renderCamera();		
-		}
-		
-	);	
-}
 
 
 
 
-// создаем box-форму для объекта
+
+// создаем box-форму для объекта (находим все дочерние объекты и создаем максимальную форму)
 function createBoundObject(cdm)
 {
 	var obj = cdm.obj;
@@ -927,23 +857,30 @@ function createBoundObject(cdm)
 	var y = (bound.max.y - bound.min.y);
 	var z = (bound.max.z - bound.min.z);	
 	
-	var material = new THREE.MeshStandardMaterial({ color: 0xcccccc, transparent: true, opacity: 0.9, depthTest: false });
+	var material = new THREE.MeshStandardMaterial({ color: 0xcccccc, transparent: true, opacity: 0.7, depthTest: false });
 	var geometry = createGeometryCube(x, y, z);	
+	
+	var v = geometry.vertices;
+	v[0].x = v[1].x = v[6].x = v[7].x = bound.min.x;
+	v[3].x = v[2].x = v[5].x = v[4].x = bound.max.x;
+
+	v[0].y = v[3].y = v[4].y = v[7].y = bound.min.y;
+	v[1].y = v[2].y = v[5].y = v[6].y = bound.max.y;
+	
+	v[0].z = v[1].z = v[2].z = v[3].z = bound.max.z;
+	v[4].z = v[5].z = v[6].z = v[7].z = bound.min.z;	
 		
 	var box = new THREE.Mesh( geometry, material ); 	
 	//box.position.copy(centP);
 	scene.add(box);
 	
-	//box.position.copy(obj.position);
-	//box.rotation.copy(obj.rotation);
+	box.position.copy(obj.position);
+	box.rotation.copy(obj.rotation);
 	
 	box.updateMatrixWorld();
 	box.geometry.computeBoundingBox();	
-	box.geometry.computeBoundingSphere();	
+	box.geometry.computeBoundingSphere();			
 	  
-	
-	console.log(x, y, z);
-	console.log(obj);
 
 	return box;
 }

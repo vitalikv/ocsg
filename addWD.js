@@ -321,8 +321,8 @@ function addWD( cdm )
 	obj.geometry.computeBoundingBox();
 	obj.geometry.computeBoundingSphere();
 	
-	if(obj.userData.tag == 'window') { obj.userData.door.lotid = 32; }
-	else { obj.userData.door.lotid = 33; }
+	if(obj.userData.tag == 'window') { obj.userData.door.lotid = 2; }
+	else { obj.userData.door.lotid = 3; }
 	
 	if(obj.userData.door.lotid)
 	{

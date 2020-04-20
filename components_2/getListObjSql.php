@@ -4,7 +4,7 @@ require_once ($_SERVER['DOCUMENT_ROOT']."/include/bd_1.php");
 
 
 
-$sql = "SELECT id, name, size, json FROM list_obj";
+$sql = "SELECT id, name, type, size, json, properties FROM list_obj";
 $r = $db->prepare($sql);
 $r->execute();
 $res = $r->fetchAll(PDO::FETCH_ASSOC);
@@ -22,6 +22,11 @@ foreach ($res as $text)
 		$data[$i]['name'] = json_decode($text['name']);	
 	}
 
+	if($text['type'])
+	{
+		$data[$i]['type'] = json_decode($text['type']);	
+	}	
+
 	if($text['size'])
 	{
 		$data[$i]['size'] = json_decode($text['size']);	
@@ -29,7 +34,12 @@ foreach ($res as $text)
 	
 	if($text['json'])
 	{
-		$data[$i]['json'] = json_decode($text['json']);	
+		//$data[$i]['json'] = json_decode($text['json']);	
+	}
+
+	if($text['properties'])
+	{
+		$data[$i]['properties'] = json_decode($text['properties']);	
 	}	
 	
 	$i++;
