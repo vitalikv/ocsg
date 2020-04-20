@@ -261,7 +261,7 @@ function clickToolWD(obj)
 
 
 
-// добавляем на выбранную стену окно/дверь
+// добавляем на выбранную стену окно/дверь (вырезаем форму в стене)
 // obj 		готовая дверь/окно
 // wall		стену на которую кликнули
 function addWD( cdm )
@@ -321,8 +321,6 @@ function addWD( cdm )
 	obj.geometry.computeBoundingBox();
 	obj.geometry.computeBoundingSphere();
 	
-	if(obj.userData.tag == 'window') { obj.userData.door.lotid = 2; }
-	else { obj.userData.door.lotid = 3; }
 	
 	if(obj.userData.door.lotid)
 	{
@@ -372,7 +370,6 @@ function swSetDW_1(cdm)
 		}		
 	}
 	
-	console.log(333, type, obj.userData.door.openId);
 	calcSvgFormWD({obj: obj});
 	
 	renderCamera();

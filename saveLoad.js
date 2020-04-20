@@ -621,6 +621,7 @@ async function loadFilePL(arr)
 			wall[i].arrO[i2] = {  };
 			
 			wall[i].arrO[i2].id = arrO[i2].id;
+			wall[i].arrO[i2].lotid = arrO[i2].lotid;
 			wall[i].arrO[i2].pos = new THREE.Vector3(arrO[i2].pos.x, arrO[i2].pos.y, 0);
 			wall[i].arrO[i2].size = new THREE.Vector2(arrO[i2].size.x, arrO[i2].size.y);
 			wall[i].arrO[i2].type = arrO[i2].type;
@@ -706,7 +707,8 @@ async function loadFilePL(arr)
 			
 			var intP = obj.localToWorld( wall[i].arrO[i2].pos.clone() );  						
 
-			var inf = { status: 'load', id: wall[i].arrO[i2].id, pos: intP, wall: obj, type: wall[i].arrO[i2].type, openId: wall[i].arrO[i2].openId };	 		
+			var inf = { status: 'load', id: wall[i].arrO[i2].id, pos: intP, wall: obj, type: wall[i].arrO[i2].type, openId: wall[i].arrO[i2].openId };
+			inf.lotid = wall[i].arrO[i2].lotid;
 			if(wall[i].arrO[i2].size) { inf.size = wall[i].arrO[i2].size; }				
 						
 			createEmptyFormWD_1(inf);
