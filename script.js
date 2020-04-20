@@ -22,8 +22,8 @@ renderer.setSize( containerF.clientWidth, containerF.clientHeight );
 containerF.appendChild( renderer.domElement );
 
 var scene = new THREE.Scene();
-scene.background = new THREE.Color( 0xdefbff );
-scene.fog = new THREE.Fog('lightblue', 100, 200);
+scene.background = new THREE.Color( 0xffffff );
+//scene.fog = new THREE.Fog('lightblue', 100, 200);
 
 var aspect = containerF.clientWidth/containerF.clientHeight;
 var d = infProject.settings.cam2D;
