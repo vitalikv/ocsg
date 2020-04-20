@@ -67,25 +67,6 @@ function clickObject3D(cdm)
 	showSvgSizeObj({obj: obj, boxCircle: true, getObjRoom: true, resetPos: true});
 	
 	
-	var inf = {};
-	inf.lotid = obj.userData.obj3D.lotid;
-
-	// размеры объекта
-	if(1==1)
-	{
-		obj.geometry.computeBoundingBox();	
-		var x = obj.geometry.boundingBox.max.x - obj.geometry.boundingBox.min.x;
-		var y = obj.geometry.boundingBox.max.y - obj.geometry.boundingBox.min.y;
-		var z = obj.geometry.boundingBox.max.z - obj.geometry.boundingBox.min.z;	
-		inf.size = {x: x * obj.scale.x, y: y * obj.scale.y, z: z * obj.scale.z}; 
-		
-		inf.size.x = Math.round(inf.size.x * 100)/100;
-		inf.size.y = Math.round(inf.size.y * 100)/100;
-		inf.size.z = Math.round(inf.size.z * 100)/100;
-	}	
-	
-	if( isCheckExsistFunction(window['getLotIdObject3D']) ) { getLotIdObject3D(inf); };	
-	
 	getInfoObj_UndoRedo({obj: obj});
 	
 	// объект добавлен в сцену через каталог, то отправляем в undo/redo, что его можно удалить

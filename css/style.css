@@ -1380,7 +1380,32 @@ canvas
 	opacity: 0;
 	visibility: hidden;
 	position: absolute;		
-}	
+}
+
+
+.bd_input_properties 
+{ 
+	display: block;
+	min-height: 50px;
+	margin: auto auto 10px auto;
+	width: 99%;
+	font-family: arial,sans-serif;
+	font-size: 14px;
+	text-align: center;
+	color: #666;
+	text-decoration: none;
+	line-height: 2em;
+	padding: 0;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	background-color: #fff;	
+}
+
+.bd_input_properties:hover 
+{
+	cursor: text;
+}
+	
 
 /*  <--- right_panel  */
 

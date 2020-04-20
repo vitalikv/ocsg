@@ -1843,7 +1843,7 @@ document.addEventListener("keydown", function (e)
 	}	
 
 
-	if(e.keyCode == 46 || e.keyCode == 8) { detectDeleteObj(); }
+	if(e.keyCode == 46) { detectDeleteObj(); }
 	
 	if(e.keyCode == 90 && e.ctrlKey || e.keyCode == 90 && e.keyCode == 91) { setInfoEvent1( 'undo' ); }	// ctrl + z
 	if(e.keyCode == 89 && e.ctrlKey || e.keyCode == 89 && e.keyCode == 91) { setInfoEvent1( 'redo' ); }	// ctrl + y	

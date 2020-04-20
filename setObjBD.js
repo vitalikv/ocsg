@@ -40,31 +40,44 @@ function getBoundObject(cdm)
 	
 	console.log(pos1);
 	//box.position.copy(obj.position);
-	box.position.add(pos1.clone().sub(pos2)); 
+	box.position.add(pos1.clone().sub(pos2));  
 
 	var clone = obj.children[0].clone();
 	var preview = null;		//var preview = saveAsImagePreview();
 	
-	saveObjSql({id: 0, name: 'объект 1', size: size, json: clone, preview: preview}); 	
+	var name = $('[nameId="rp_obj_name"]').val();
+	name = name.trim();
+	
+	var type = $('[nameId="bd_input_type"]').val();
+	type = type.trim();
+
+	var properties = $('[nameId="bd_input_properties"]').text();
+	properties = properties.trim();
+	properties = JSON.parse(properties);
+
+	
+	saveObjSql({lotid: 0, name: name, size: size, type: type, json: clone, properties: properties, preview: preview}); 	
 }
 
 
 
 
 
-// получаем с сервера список проектов принадлежащих пользователю
+// сохраняем объект в базе 
 function saveObjSql(cdm)
 {  
 	var name = JSON.stringify( cdm.name );
 	var size = JSON.stringify( cdm.size );
+	var type = JSON.stringify( cdm.type );
 	var json = JSON.stringify( cdm.json );
+	var properties = JSON.stringify( cdm.properties );
 	var preview = cdm.preview;
 	
-	$.ajax
+	$.ajax 
 	({
 		type: "POST",					
-		url: infProject.path+'components_2/saveObjSql.php',
-		data: { id: cdm.id, name: name, size: size, json: json, preview: preview },
+		url: infProject.path+'components_2/saveObjSql.php', 
+		data: { id: cdm.lotid, name: name, type: type, size: size, json: json, properties: properties, preview: preview },
 		dataType: 'json',
 		success: function(data)
 		{  
@@ -75,20 +88,45 @@ function saveObjSql(cdm)
 
 
 
-function getObjSql(cdm)
-{  
+// получаем инфо из базы по выделенному объекту и заполняем этими данными UI
+async function getInfObjFromBD(cdm)
+{
+	var obj = cdm.obj;
 	
-	$.ajax
-	({
-		type: "POST",					
-		url: infProject.path+'components_2/getObjSql.php',
-		data: { id: cdm.id },
-		dataType: 'json',
-		success: function(data)
-		{  
-			console.log(JSON.parse(data.id), JSON.parse(data.name), JSON.parse(data.size), JSON.parse(data.json));			
-		}
-	});	
+	$('[nameId="rp_obj_name"]').val('');
+	$('[nameId="bd_input_obj_id"]').val(null);
+	$('[nameId="bd_input_type"]').val(null);	
+	
+	var res = await getObjSql({lotid: obj.userData.obj3D.lotid}); 
+	
+	if(!res) return;
+		
+	if(res.name) $('[nameId="rp_obj_name"]').val(res.name);
+	if(res.id) $('[nameId="bd_input_obj_id"]').val(res.id);
+	if(res.type) $('[nameId="bd_input_type"]').val(res.type);
+	if(res.properties) $('[nameId="bd_input_properties"]').text(JSON.stringify(res.properties)); 
+}
+
+
+
+// делаем запрос к базе, ищем объект по lotid
+async function getObjSql(cdm)
+{  
+	console.log(44444, cdm); 
+	var lotid = cdm.lotid;
+	if(!lotid) return;
+	if(!isNumeric(lotid)) return; 
+	
+	var response = await fetch(infProject.path+'components_2/getObjSql.php?id='+lotid, { method: 'GET' });
+	var json = await response.json();		
+	
+	if(!json.error)
+	{
+		console.log(json);
+		return json; 
+	}
+	
+	return;
 }
 
 

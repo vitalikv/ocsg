@@ -202,15 +202,18 @@ function activeObjRightPanelUI_1(cdm)
 			}			
 		}
 		
+		$('[nameId="rp_obj_name"]').val('стена');
 		$('[nameId="rp_menu_wall"]').show();
 		$('[nameId="size_wall_width_1"]').val(obj.userData.wall.width);				
 	}
 	else if(obj.userData.tag == 'door')
 	{
+		$('[nameId="rp_obj_name"]').val('дверь');
 		$('[nameId="rp_menu_wd"]').show();
 	}
 	else if(obj.userData.tag == 'window')
 	{
+		$('[nameId="rp_obj_name"]').val('окно');
 		$('[nameId="rp_item_wd_h1"]').show();
 		$('[nameId="rp_menu_wd"]').show();
 	}	
@@ -221,13 +224,17 @@ function activeObjRightPanelUI_1(cdm)
 			$('[nameId="rp_bl_light"]').show();
 			sliderSunIntensity({value: obj.children[1].intensity});			
 		}
-		    
+		
+		$('[nameId="rp_obj_name"]').val(obj.userData.obj3D.nameRus);		
 		$('[nameId="bl_object_3d"]').show();
+		
+		getInfObjFromBD({obj: obj});
 	}	
 	else if(obj.userData.tag == 'room')
 	{
 		$('[nameId="rp_menu_room"]').show();
 		
+		$('[nameId="rp_obj_name"]').val('пол');
 		showHideMenuTexture_2({type: 1});
 		changeTextureRoom_UI_1({obj: obj});
 	}		
@@ -237,37 +244,6 @@ function activeObjRightPanelUI_1(cdm)
 }
 
 
-
-// при выделении объекта меняем боковое меню
-function clickObjUI(cdm)
-{
-	if(!cdm) { cdm = {}; }	
-	if(!cdm.obj) return;
-	
-	var obj = cdm.obj;
-	
-	$('[nameId="rp_obj_name"]').val(obj.userData.obj3D.nameRus);
-}
-
-
-
-
-function createTextUI_1(cdm)
-{
-	var obj = cdm.obj;
-	var nameId = cdm.nameId;
-	var uuid = cdm.uuid;
-	var nameRus = cdm.nameRus;
-	
-	// добавляем в список группу	
-	var str = 
-	'<div class="right_panel_1_1_list_item" uuid="'+uuid+'" group_item_obj="">\
-	<div class="right_panel_1_1_list_item_text">'+nameRus+'</div>\
-	</div>';	
-	
-	$('[nameId="'+nameId+'"]').append(str); 
-	var el = $($('[nameId="'+nameId+'"]')[0].children[$('[nameId="'+nameId+'"]')[0].children.length - 1]);			
-}
 
 
 

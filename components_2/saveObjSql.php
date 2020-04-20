@@ -4,8 +4,10 @@ require_once ($_SERVER['DOCUMENT_ROOT']."/include/bd_1.php");
 
 $id = trim($_POST['id']);
 $name = trim($_POST['name']);
-$size = $_POST['size']; 
-$json = $_POST['json']; 
+$type = trim($_POST['type']);
+$size = trim($_POST['size']); 
+$json = trim($_POST['json']);
+$properties = trim($_POST['properties']); 
 $preview = trim($_POST['preview']);
 //$date = date("Y-m-d-G-i");
 
@@ -14,12 +16,14 @@ $preview = trim($_POST['preview']);
 
 if($id == 0)
 {
-	$sql = "INSERT INTO list_obj (name, size, json, preview) VALUES (:name, :size, :json, :preview)";
+	$sql = "INSERT INTO list_obj (name, type, size, json, properties, preview) VALUES (:name, :type, :size, :json, :properties, :preview)";
 
 	$r = $db->prepare($sql);
 	$r->bindValue(':name', $name);
+	$r->bindValue(':type', $type);
 	$r->bindValue(':size', $size);
 	$r->bindValue(':json', $json);
+	$r->bindValue(':properties', $properties);
 	$r->bindValue(':preview', $preview);
 	$r->execute();
 

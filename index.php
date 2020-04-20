@@ -89,14 +89,6 @@
 			opacity: .4;
 		}
 	</style>	
-
-	<script>
-		function getLotIdObject3D(object)
-		{
-			console.log(object.lotid);
-			console.log(object.size);
-		}
-	</script>
 	
 	<script src="<?=$path?>meshBSP.js"></script> 	
     <script src="<?=$path?>calculationArea.js?<?=$vrs?>"></script>

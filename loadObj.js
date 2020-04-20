@@ -368,7 +368,7 @@ function addObjInScene(inf, cdm)
 	obj.userData.tag = 'obj';
 	obj.userData.obj3D = {};
 	obj.userData.obj3D.lotid = cdm.lotid;
-	obj.userData.obj3D.nameRus = inf.name;
+	obj.userData.obj3D.nameRus = (inf.name) ? inf.name : 'объект';
 	obj.userData.obj3D.typeGroup = '';
 	obj.userData.obj3D.helper = null;
 	
