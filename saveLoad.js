@@ -369,19 +369,7 @@ function compileJsonFile()
 	// version
 
 	json.version.id = 2;
-	json.version.rooms = { contour: [] };
 	
-	var contour = getYardageSpace( infProject.scene.array.floor );
-	
-	for(var i = 0; i < contour.length; i++)
-	{
-		for(var i2 = 0; i2 < contour[i].length; i2++)
-		{
-			contour[i][i2] = {x: contour[i][i2].x, z: contour[i][i2].z};
-		}
-	}
-	
-	json.version.rooms.contour = contour;
 	
 	return json;
 }

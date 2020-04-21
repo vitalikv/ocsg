@@ -14,49 +14,58 @@ function getBoundObject(cdm)
 
 	var bound = obj.geometry.boundingBox;
 	
-	var material = new THREE.MeshStandardMaterial({ color: 0xcccccc, transparent: true, opacity: 0.5 });
 	var size = {x: bound.max.x-bound.min.x, y: bound.max.y-bound.min.y, z: bound.max.z-bound.min.z};
-	var geometry = createGeometryCube(size.x, size.y, size.z);
 	
-	var v = geometry.vertices;
-	//v[0].y = v[3].y = v[4].y = v[7].y = bound.min.y;
-	//v[1].y = v[2].y = v[5].y = v[6].y = bound.max.y;
+	
+	// создаем box-форму
+	if(1==1)
+	{
+		var material = new THREE.MeshStandardMaterial({ color: 0xcccccc, transparent: true, opacity: 0.5 });
+		var geometry = createGeometryCube(size.x, size.y, size.z);
 		
-	var box = new THREE.Mesh( geometry, material ); 	
-	//box.position.copy(centP);
-	scene.add(box);
-	
-	box.position.copy(obj.position);
-	box.rotation.copy(obj.rotation);
-	
-	box.updateMatrixWorld();
-	box.geometry.computeBoundingBox();	
-	box.geometry.computeBoundingSphere();	
-	
-	
-	var pos1 = obj.localToWorld( obj.geometry.boundingSphere.center.clone() );
-	var pos2 = box.localToWorld( box.geometry.boundingSphere.center.clone() );
-	
-	
-	console.log(pos1);
-	//box.position.copy(obj.position);
-	box.position.add(pos1.clone().sub(pos2));  
+		var box = new THREE.Mesh( geometry, material ); 	
+		scene.add(box);
+		
+		box.position.copy(obj.position);
+		box.rotation.copy(obj.rotation);
+		
+		box.updateMatrixWorld();
+		box.geometry.computeBoundingBox();	
+		box.geometry.computeBoundingSphere();
 
-	var clone = obj.children[0].clone();
-	var preview = null;		//var preview = saveAsImagePreview();
+		var pos1 = obj.localToWorld( obj.geometry.boundingSphere.center.clone() );
+		var pos2 = box.localToWorld( box.geometry.boundingSphere.center.clone() );
+		box.position.add(pos1.clone().sub(pos2));  		
+	}
+	
+	
+	
+	var lotid = $('[nameId="bd_input_obj_id"]').val();
+	lotid = lotid.trim();
+	if(lotid == '') { lotid = 0; }	
 	
 	var name = $('[nameId="rp_obj_name"]').val();
 	name = name.trim();
+	if(name == '') { name = null; }
 	
 	var type = $('[nameId="bd_input_type"]').val();
 	type = type.trim();
+	if(type == '') { type = null; }
+	
+	var clone = obj.children[0].clone();
 
 	var properties = $('[nameId="bd_input_properties"]').text();
 	properties = properties.trim();
-	properties = JSON.parse(properties);
-
+	if(properties == '') { properties = null; }
+	else { properties = JSON.parse(properties); }
 	
-	saveObjSql({lotid: 0, name: name, size: size, type: type, json: clone, properties: properties, preview: preview}); 	
+	var preview = null;		
+	//var preview = saveAsImagePreview();
+
+
+	if(!name) { console.log('name empty'); return; }
+	
+	saveObjSql({lotid: lotid, name: name, size: size, type: type, json: clone, properties: properties, preview: preview}); 	
 }
 
 
@@ -66,18 +75,18 @@ function getBoundObject(cdm)
 // сохраняем объект в базе 
 function saveObjSql(cdm)
 {  
-	var name = JSON.stringify( cdm.name );
-	var size = JSON.stringify( cdm.size );
-	var type = JSON.stringify( cdm.type );
-	var json = JSON.stringify( cdm.json );
-	var properties = JSON.stringify( cdm.properties );
+	var name = (cdm.name) ? JSON.stringify( cdm.name ) : null;
+	var size = (cdm.size) ? JSON.stringify( cdm.size ) : null;
+	var type = (cdm.type) ? JSON.stringify( cdm.type ) : null;
+	var json = (cdm.json) ? JSON.stringify( cdm.json ) : null;
+	var properties = (cdm.properties) ? JSON.stringify( cdm.properties ) : null;
 	var preview = cdm.preview;
 	
 	$.ajax 
 	({
 		type: "POST",					
 		url: infProject.path+'components_2/saveObjSql.php', 
-		data: { id: cdm.lotid, name: name, type: type, size: size, json: json, properties: properties, preview: preview },
+		data: { id: cdm.lotid, name: name, type: type, size: size, properties: properties, json: json, preview: preview },
 		dataType: 'json',
 		success: function(data)
 		{  

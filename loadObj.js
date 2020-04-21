@@ -636,7 +636,7 @@ function loadInputFile(cdm)
 		setParamObj({obj: obj});			
 	}
 
-
+	$('[nameId="window_main_load_obj"]').css({"display":"none"});
 }
 
 
@@ -657,7 +657,7 @@ function loadUrlFile()
 	{
 		url = 'https://files.planoplan.com/upload/catalog/lot/201810/40a5dafd.unity3d';
 		//url = 'https://files.planoplan.com/upload/catalog/lot/201903/bf730220.unity3d';	
-		url = 'https://files.planoplan.com/upload/catalog/lot/201803/04bea56c.unity3d';	
+		//url = 'https://files.planoplan.com/upload/catalog/lot/201803/04bea56c.unity3d';	
 		
 		var loader = new THREE.ObjectLoader();
 		loader.load( url, function ( obj ) 						
@@ -665,9 +665,7 @@ function loadUrlFile()
 			var box = createBoundObject({obj: obj});
 			box.add(obj);
 			
-			var inf = {obj: box, pos: new THREE.Vector3(0,1,0)};
-			
-			addObjInScene(inf, {});
+			setParamObj({obj: box})
 		});			
 	}
 
@@ -700,93 +698,35 @@ function loadUrlFile()
 
 
 function setParamObj(cdm)
-{
-	$('[nameId="window_main_load_obj"]').css({"display":"none"});
-	//resetScene();
-	
+{	
 	var obj = cdm.obj;
 	
-	var obj = obj.children[0];		
-	obj.position.y = 1;	
+	//var obj = obj.children[0];		
+	obj.position.y = 0;	
 
-	planeMath.position.y = 1; 
+	planeMath.position.y = 0; 
 	planeMath.rotation.set(-Math.PI/2, 0, 0);
 	planeMath.updateMatrixWorld(); 	
-	
+ 
 	obj.userData.tag = 'obj';
 	obj.userData.obj3D = {};
 	obj.userData.obj3D.lotid = 0;
 	obj.userData.obj3D.nameRus = 'неизвестный объект';
 	obj.userData.obj3D.typeGroup = '';
- 
+	obj.userData.obj3D.helper = null;
 	
-	
-	// накладываем тени
-	obj.traverse(function(child) 
-	{
-		if(child.isMesh) 
-		{ 
-			child.castShadow = true;	
-			child.receiveShadow = true;				
-		}
-	});			
+	obj.userData.obj3D.ur = {};
+	obj.userData.obj3D.ur.pos = new THREE.Vector3();
+	obj.userData.obj3D.ur.q = new THREE.Quaternion();	
+			
 
-	obj.material.visible = false;		
+	//obj.material.visible = false;		
 	
 	infProject.scene.array.obj[infProject.scene.array.obj.length] = obj;
 
-	scene.add( obj );
+	scene.add( obj );	
 	
-	
-	// CubeCamera
-	checkReflectionMaterial({obj: obj});
-
-	
-	if(1==2)
-	{
-		var options = 
-		{
-			trs: true,
-			onlyVisible: false,
-			truncateDrawRange: true,
-			binary: true,
-			forceIndices: false,
-			forcePowerOfTwoTextures: false,
-			maxTextureSize: Number( 20000 ) 
-		};
-	
-		var exporter = new THREE.GLTFExporter();
-
-		// Parse the input and generate the glTF output
-		exporter.parse( [obj], function ( gltf ) 
-		{
-			
-			var link = document.createElement( 'a' );
-			link.style.display = 'none';
-			document.body.appendChild( link );			
-			
-			if ( gltf instanceof ArrayBuffer ) 
-			{ 
-				console.log( gltf ); 
-				link.href = URL.createObjectURL( new Blob( [ gltf ], { type: 'application/octet-stream' } ) );
-				link.download = 'file.glb';				
-			}
-			else
-			{
-				console.log( gltf );
-				var gltf = JSON.stringify( gltf, null, 2 );
-				
-				link.href = URL.createObjectURL( new Blob( [ gltf ], { type: 'text/plain' } ) );
-				link.download = 'file.gltf';				
-			}
-
-			link.click();			
-			
-		}, options );
-		
-	}
-	
-	//clickO.move = obj;
+	clickO.move = obj;
 	
 	renderCamera();	
 }
