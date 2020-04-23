@@ -256,13 +256,6 @@ $('[nameId="button_close_main_menu"]').mousedown(function ()
 
 $('[nameId="window_main_menu"]').mousedown(function (e) { e.stopPropagation(); });
 	
-	
-
-$('[nameId="button_check_reg_1"]').mousedown(function () { changeMainMenuRegistMenuUI({el: this}); });
-$('[nameId="button_check_reg_2"]').mousedown(function () { changeMainMenuRegistMenuUI({el: this}); });	
-
-
-
 
 //  <--- modal_wind_3 
 

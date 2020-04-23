@@ -16,25 +16,20 @@ canvas
 	height: 100%;
 	top: 0;
 	left: 0;
-
-	-webkit-touch-callout: none; /* iOS Safari */
-	-webkit-user-select: none;   /* Chrome/Safari/Opera */
-	-khtml-user-select: none;    /* Konqueror */
-	-moz-user-select: none;      /* Firefox */
-	-ms-user-select: none;       /* Internet Explorer/Edge */
-	user-select: none; 
 }
 
 
-#htmlBlock 
+.block_select_text
 {
 	-webkit-touch-callout: none; /* iOS Safari */
 	-webkit-user-select: none;   /* Chrome/Safari/Opera */
 	-khtml-user-select: none;    /* Konqueror */
 	-moz-user-select: none;      /* Firefox */
 	-ms-user-select: none;       /* Internet Explorer/Edge */
-	user-select: none; 
+	user-select: none; 	
 }
+
+
 
 
 .flex_1 
@@ -176,15 +171,7 @@ canvas
 	padding-right: 30px;
 }
 
-.modal_header-body 
-{
-	display: -webkit-box;
-	display: flex;
-	-webkit-box-flex: 1;
-	flex: 1 0 0;
-	-webkit-box-pack: end;
-	justify-content: flex-end;
-}
+
 
 .modal_title 
 {
@@ -221,16 +208,6 @@ canvas
 	height: 100%;
 }
 
-.modal_body_content
-{
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	bottom: 0px;	
-}
-
-
 
 
 
@@ -245,18 +222,7 @@ canvas
 	background: #e8e8e8;	
 }
 
-.modal_body_content_grid
-{	
-	display: -ms-grid;
-	display: grid;
-	grid-gap: 1rem;
-	-ms-grid-columns: (1fr)[5];
-	grid-template-columns: repeat(5,1fr);
-	grid-auto-rows: 140px;
-	border-radius: 8px;	
-	margin: auto;
-	padding: 50px; 
-}
+
 
 
 .block_form_1
@@ -614,7 +580,8 @@ canvas
 	-moz-box-shadow: 0px 0px 2px #bababa,  inset 0px 0px 2px rgba(154, 147, 140, 0.5);  
 	box-shadow:0px 0px 2px #bababa, inset 0px 0px 2px rgba(154, 147, 140, 0.5); 
 	
-	overflow: auto;	
+	overflow: auto;
+	overflow-x: hidden;
 	height: 100%;	
 }
 
@@ -624,6 +591,7 @@ canvas
 	display: -webkit-box;
 	display: flex;
 	
+	background: #fff;
 	padding: 3px;
 	margin: 4px 0;
 	border: 1px solid #ccc;
@@ -762,13 +730,13 @@ canvas
 
 
 
-/*  modal_wind_3 --->  */
+/*  modal_wind_ --->  */
 
 
 
 .background_main_menu 
 {
-	display: none;
+	display: block;
 	left: 0;
 	right: 0;
 	top: 0;
@@ -777,7 +745,7 @@ canvas
 	background-color: rgba(0, 0, 0, 0.5);
 	z-index: 100;
 }
-
+ 
 .window_main_menu 
 {
 	position: relative;
@@ -797,247 +765,15 @@ canvas
 	flex-direction: column;
 }
 
-.window_main_menu_content_1
-{	
-	position: relative;
-	margin: 30px auto 0 0;
-}
 
 
-.window_main_menu_content_1_row
+.modal_body_content
 {
-
-}
-
-.window_main_menu_content_1_column
-{
-	display: -webkit-box;
-	display: flex;
-	flex-direction: column;
-	-webkit-flex-direction: column;
-}
-
-.window_main_menu_content_1_column:nth-child(2) 
-{
-	display: block;
-	flex: 1 1 100%;
-	/*background: orange;*/
-}
-
-.window_main_menu_content_1_item
-{
-	margin: 5px 20px;
-	padding: 10px 0;
-	width: 250px;	
-	
-	font-family: arial,sans-serif;
-	font-size: 18px;
-	color: #666;
-	text-decoration: none;
-	text-align:  center;	
-	
-	border: 1px solid #b3b3b3; 
-	border-radius: 3px;
-	background-color:#f1f1f1;
-	cursor: pointer;
-}
-
-
-.window_main_menu_content_1_h1
-{
-	display: flex; /* Флексы */
-	align-items: center; /* Выравнивание текста по вертикали */
-	justify-content: center; /* Выравнивание текста по горизонтали */
-	height: 50px;
-
-	font-family: arial,sans-serif;
-	font-size: 24px;
-	color: #666;	
-}
-
-
-
-.window_main_menu_content_block_1
-{
-	display: flex; /* Флексы */
-	align-items: center; /* Выравнивание текста по вертикали */
-	justify-content: center; /* Выравнивание текста по горизонтали */
-	
-	margin: 20px auto;
-	padding: 10px 0;	
-	max-width: 350px;
-	height: 20px;
-	
-	font-family: arial,sans-serif;
-	font-size: 18px;
-	color: #666;
-	text-decoration: none;
-	text-align:  center;	
-	
-	border: 1px solid #b3b3b3; 
-	border-radius: 10px;
-	background-color:#f1f1f1;
-	cursor: pointer;
-}
-
-
-.window_main_menu_form_reg_block_1
-{
-	margin: 35px auto;
-	max-width: 450px;
-	
-	border: 1px solid #b3b3b3; 
-	border-radius: 10px;
-	background-color:#f1f1f1;	
-}
-
-
-.window_main_menu_form_reg_top_1
-{
-	position: relative;
-	display: -webkit-box;
-	display: flex;
-	margin: 10px;
-	margin-bottom: 50px;
-	border-bottom: 1px solid #ccc;	
-}
-
-.window_main_menu_form_reg_top_1_block
-{
-	height: 30px;
-	width: auto;	
-	border: 1px solid #ccc;
-	border-bottom: none;
-	background-color:#fff;
-	cursor: pointer;
-}
-
-
-.window_main_menu_form_reg_top_1_block_text
-{
-	margin:0.5em 15px;
-	
-	font-family: arial,sans-serif;
-	font-size: 14px;
-	color: #666;
-	text-align:center;
-}
-
-
-.window_main_menu_form_reg_block_1_1
-{
-	display: -webkit-box;
-	display: flex;
-	padding: 10px 10px;
-}
-
-.window_main_menu_form_reg_block_1_label
-{
-	display: flex; /* Флексы */
-	align-items: center; /* Выравнивание текста по вертикали */
-	justify-content: center; /* Выравнивание текста по горизонтали */
-	width: 100px;
-	
-	font-family: arial,sans-serif;
-	font-size: 18px;
-	color: #666;	
-}
-
-.input_form_reg
-{
-	display: block;
-	width:80%;
-	margin: auto;
-	
-	border-radius: 3px;	
-	font-family: arial,sans-serif;
-	font-size: 17px;
-	color: #666;
-	
-	line-height: 2em;
-	padding: 0 10px;
-}
-
-.wm_reg_text_1
-{
-	font:15px Arial, Helvetica, sans-serif;
-	text-align:center;	
-}
-
-
-.wm_reg_12
-{
-	margin: 30px auto 0 auto;
-	padding: 20px;		
-}
-
-
-.wm_reg_13
-{
-	margin: 30px auto 0 auto;
-	width:70%;
-	padding: 40px;
-	font-size: 17px;
-}
-
-
-.wm_reg_border_1
-{
-	background-color:#ffffff;
-	border:solid 1px #b3b3b3; 
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px; 
-	border-radius: 3px;	
-}
-
-
-
-
-.window_main_menu_button_reg_1
-{
-	width: auto;
-	height: 20px; 
-	margin: 10px;
-	margin-top: 50px;
-	text-decoration:none; 
-	text-align:center; 
-	padding:11px 11px; 
-	border:solid 1px #b3b3b3; 
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px; 
-	border-radius: 3px; 
-	font:18px Arial, Helvetica, sans-serif; 
-	font-weight:bold; 
-	color:#737373; 
-
-	cursor: pointer;
-}
-
-.inf_contact
-{
-	margin: 50px auto;
-	
-	max-width: 550px;
-	height: 250px;		
-	
-	border: 1px solid #b3b3b3; 
-	border-radius: 3px;
-}
-
-
-.inf_contact_text
-{
-	display: flex; /* Флексы */
-	align-items: center; /* Выравнивание текста по вертикали */
-	justify-content: center; /* Выравнивание текста по горизонтали */
-
-	margin: auto;
-	width: 80%;
-	height: 100%;
-	
-	font-family: arial,sans-serif;
-	font-size: 25px;
-	color: #666;	
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;	
 }
 
 
@@ -1105,34 +841,7 @@ canvas
 
 
 
-
-@media screen and (max-width:850px), screen and (max-device-width:850px) 
-{
-	.window_main_menu_content_1_item
-	{
-		width: 150px;
-		font-size: 16px;
-	}
-	
-	.window_main_menu_content_1_h1
-	{
-		font-size: 18px;	
-	}
-	
-	.inf_contact
-	{
-		height: 150px;
-		width: 90%;
-	}	
-	
-	.inf_contact_text
-	{
-		font-size: 18px;	
-	}	
-}
-
-
-/*  <--- modal_wind_3  */
+/*  <--- modal_wind_  */
 
 
 

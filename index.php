@@ -47,8 +47,11 @@
 	<script src="<?=$path?>js/export/GLTFExporter.js?<?=$vrs?>"></script>
 	
 	
+	<? require_once("include/admin_menu.php"); ?>
+	
+	
 	<div id="canvasFrame" style="position: fixed; width: 100%; height: 100%; top: 0; right: 0; overflow: hidden;">
-		<div class="frame">
+		<div class="frame block_select_text">
 				
 			<div class="flex_1 height100">
 				
@@ -67,7 +70,7 @@
 
 		<div id='selectBoxFrame'></div>
 		
-		<div id='htmlBlock'></div>
+		<div id='htmlBlock' class="block_select_text"></div>
 		
 	</div>
 	
