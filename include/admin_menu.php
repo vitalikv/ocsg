@@ -77,16 +77,10 @@ function clickDragDrop(cdm)
 
 	// запомнить переносимый объект
 	dragObject.elem = elem;
-
-	var top = parseInt(elem.style.top, 10);
-	top = 0;
-	// запомнить координаты, с которых начат перенос объекта
-	dragObject.downX = e.pageX;
-	dragObject.downY = e.pageY - top;
+	var container = document.querySelector('[list_ui="admin_catalog"]');
+	dragObject.listItems = container.querySelectorAll('[add_lotid]');
 	
-	//var pos = getScreenMousePosition(e);
-  
-	console.log(dragObject, elem.style.top, elem.style.left);
+	console.log(dragObject, elem.offsetTop);
 }
 
 
@@ -97,33 +91,77 @@ function moveDragDrop(cdm)
 	
 	if (!dragObject.elem) return; // элемент не зажат
 
-	if (!dragObject.avatar) { // элемент нажат, но пока не начали его двигать
-	//...начать перенос, присвоить dragObject.avatar = переносимый элемент
+	var elem = dragObject.elem;
+	
+	// элемент нажат, но пока не начали его двигать
+	if (!dragObject.move) 
+	{ 
+		dragObject.move = true;
+		
+		var top = parseInt(elem.style.top, 10);
+		//top = 0;
+		// запомнить координаты, с которых начат перенос объекта
+		dragObject.downX = e.pageX;
+		dragObject.downY = e.pageY - top;
+		
+		//document.querySelector('.modal_wrap').appendChild(elem);		
 	}
-	
-	
-	var elem = dragObject.elem;	
+			
 	
     elem.style.zIndex = 9999;
-    elem.style.position = 'absolute';	
+    //elem.style.position = 'absolute';	
 	
 	elem.style.top = (e.pageY - dragObject.downY)+'px';
-	elem.style.left = (e.pageX - dragObject.downX)+'px';
-
-
-	console.log(elem.style.top);  
+	//elem.style.left = (e.pageX - 0)+'px'; 
 }
 
 
 function clickUpDragDrop(cdm)
 {
-	if(dragObject)
+	if(dragObject.move)
 	{
 		var elem = dragObject.elem;
 		
+		//document.querySelector('[list_ui="admin_catalog"]').appendChild(elem);
+		var list = document.querySelector('[list_ui="admin_catalog"]');
+		
+		
 		elem.style.zIndex = '';
-		elem.style.position = 'relative';
+		//elem.style.position = 'relative';
 
+	
+
+		
+		var sortList = [];
+		
+		for ( var i = 0; i < dragObject.listItems.length; i++ )
+		{
+			var item = dragObject.listItems[i];
+			
+			item.userData = {offsetTop: item.offsetTop};
+			
+			sortList[sortList.length] = item;
+			
+			if(item == elem) { console.log('----', elem.offsetTop, elem.style.top); }
+			else { console.log(item.offsetTop); }
+			
+			for ( var i2 = 0; i2 < dragObject.listItems.length; i2++ )
+			{
+				
+			}
+		} 
+		
+		list.innerHTML = "";
+		
+		sortList.sort(function(a, b) { return a.userData.offsetTop - b.userData.offsetTop; });		
+		
+		//console.log(sortList);
+		
+		for ( var i = 0; i < sortList.length; i++ )
+		{
+			list.appendChild(sortList[i]);
+		}
+		
 		elem.style.top = '0px';
 		elem.style.left = '0px';		
 	}
@@ -154,7 +192,7 @@ function clickUpDragDrop(cdm)
 			</div>
 			<div class='modal_body'>
 				<div class='modal_body_content'>
-					<div class='right_panel_1_1_list block_select_text' list_ui="admin_catalog">
+					<div class='right_panel_1_1_list relative_1 block_select_text' list_ui="admin_catalog">
 
 					</div>
 				</div>			
