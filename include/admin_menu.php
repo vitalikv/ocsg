@@ -98,21 +98,24 @@ function moveDragDrop(cdm)
 	{ 
 		dragObject.move = true;
 		
-		var top = parseInt(elem.style.top, 10);
-		//top = 0;
+		//var top = parseInt(elem.style.top, 10);
+		
 		// запомнить координаты, с которых начат перенос объекта
 		dragObject.downX = e.pageX;
-		dragObject.downY = e.pageY - top;
+		dragObject.downY = e.pageY;	
 		
-		//document.querySelector('.modal_wrap').appendChild(elem);		
+		elem.style.zIndex = 9999;
+		elem.style.borderColor = '#ff0000';
 	}
-			
+		//console.log(dragObject.downY);
+		
 	
-    elem.style.zIndex = 9999;
-    //elem.style.position = 'absolute';	
+    	
 	
 	elem.style.top = (e.pageY - dragObject.downY)+'px';
 	//elem.style.left = (e.pageX - 0)+'px'; 
+	
+	sortDragDropAdminMenU({elem: elem, event: e});	
 }
 
 
@@ -122,52 +125,90 @@ function clickUpDragDrop(cdm)
 	{
 		var elem = dragObject.elem;
 		
-		//document.querySelector('[list_ui="admin_catalog"]').appendChild(elem);
-		var list = document.querySelector('[list_ui="admin_catalog"]');
-		
-		
 		elem.style.zIndex = '';
-		//elem.style.position = 'relative';
-
+		elem.style.borderColor = '';
 	
-
-		
-		var sortList = [];
-		
-		for ( var i = 0; i < dragObject.listItems.length; i++ )
-		{
-			var item = dragObject.listItems[i];
-			
-			item.userData = {offsetTop: item.offsetTop};
-			
-			sortList[sortList.length] = item;
-			
-			if(item == elem) { console.log('----', elem.offsetTop, elem.style.top); }
-			else { console.log(item.offsetTop); }
-			
-			for ( var i2 = 0; i2 < dragObject.listItems.length; i2++ )
-			{
-				
-			}
-		} 
-		
-		list.innerHTML = "";
-		
-		sortList.sort(function(a, b) { return a.userData.offsetTop - b.userData.offsetTop; });		
-		
-		//console.log(sortList);
-		
-		for ( var i = 0; i < sortList.length; i++ )
-		{
-			list.appendChild(sortList[i]);
-		}
-		
-		elem.style.top = '0px';
-		elem.style.left = '0px';		
+		sortDragDropAdminMenU({elem: elem, resetOffset: true});
 	}
 	
 	dragObject = {};
 }
+
+
+// сортеруем пункты меню и правильно расставляем 
+function sortDragDropAdminMenU(cdm)
+{
+	var elem = cdm.elem;		
+	
+	// создаем массив из пунктов меню
+	var sortList = [];	
+	for ( var i = 0; i < dragObject.listItems.length; i++ )
+	{
+		var item = dragObject.listItems[i];
+		
+		item.userData = {offsetTop: item.offsetTop};
+		
+		sortList[sortList.length] = item;
+		
+		if(elem == item) { item.userData.id = i; }
+	} 
+	
+	sortList.sort(function(a, b) { return a.userData.offsetTop - b.userData.offsetTop; });
+	
+	
+	var flag = false;
+	
+	// определяем поменялся ли порядок html элементы в меню
+	for ( var i = 0; i < sortList.length; i++ )
+	{		
+		if(sortList[i].userData.id != undefined) 
+		{ 						
+			if(sortList[i].userData.id != i)
+			{
+				//console.log('sort', sortList[i].userData.id, i); 
+				
+				flag = true;
+			}
+		}
+	}
+	
+	// изменился порядок расположений html элементов
+	if(flag)
+	{
+		var list = document.querySelector('[list_ui="admin_catalog"]');
+		
+		// очищаем меню от html элементов
+		list.innerHTML = "";
+
+		dragObject.listItems = [];
+		
+		// добавляем html элементы в меню
+		for ( var i = 0; i < sortList.length; i++ )
+		{
+			list.appendChild(sortList[i]);
+			
+			dragObject.listItems[i] = sortList[i];
+		}
+
+		// очщаем смещение 
+		elem.style.top = '0px';
+		elem.style.left = '0px';
+		
+		if(cdm.event)
+		{
+			dragObject.downX = cdm.event.pageX;
+			dragObject.downY = cdm.event.pageY;
+		}		
+	}
+	
+	if(cdm.resetOffset)
+	{
+		// очщаем смещение 
+		elem.style.top = '0px';
+		elem.style.left = '0px';			
+	}
+}
+
 
 //document.addEventListener( 'mouseup', onDocumentMouseUp, false );
 
