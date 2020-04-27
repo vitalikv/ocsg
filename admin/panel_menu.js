@@ -2,7 +2,7 @@
 
 var dragObject = {};
 
-addObjInCatalogUI_2();			// наполняем admin каталог объектов UI
+addItemAdminPanel_1();			// наполняем admin каталог объектов UI
 
 
 $(document).ready(function()
@@ -22,6 +22,7 @@ $(document).ready(function()
 	
 	$('[nameId="save_admin_panel"]').mousedown(function () { saveJsonAdminPanel(); });
 	
+	$('[nameId="button_add_new_item_admin_panel"]').mousedown(function () { addGroupItemAdminPanel(); });
 	
 });	
 
@@ -31,7 +32,7 @@ $(document).ready(function()
 
 
 // добавляем объекты в каталог UI 
-async function addObjInCatalogUI_2(cdm) 
+async function addItemAdminPanel_1(cdm) 
 {
 	var url = infProject.settings.api.list;
 	
@@ -65,7 +66,7 @@ async function addObjInCatalogUI_2(cdm)
 		(function(n) 
 		{
 			//el[0].userData = {id: i};
-			el.on('mousedown', function(e){ clickDragDrop({event: e}); });
+			el.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); });
 		}(n));		
 	}
 	
@@ -82,7 +83,7 @@ function clickDragDrop(cdm)
 
 	if (e.which != 1) { return; }		// если клик правой кнопкой мыши, то он не запускает перенос
 
-	var elem = e.target;
+	var elem = cdm.elem;
 
 	if (!elem) return; // не нашли, клик вне draggable-объекта
 
@@ -91,7 +92,7 @@ function clickDragDrop(cdm)
 	var container = document.querySelector('[list_ui="admin_catalog"]');
 	dragObject.listItems = container.querySelectorAll('[add_lotid]');
 	
-	console.log(dragObject, elem.offsetTop);
+	console.log(dragObject);
 }
 
 
@@ -235,7 +236,7 @@ function saveJsonAdminPanel()
 		var item = items[i];
 		
 		var inf = {};
-		inf.id = i;
+		inf.id = item.attributes.add_lotid.value;
 		inf.name = items[i].innerText;
 		
 		list[list.length] = inf;
@@ -243,7 +244,7 @@ function saveJsonAdminPanel()
 
 	console.log(items, list);
 	
-	//return;
+	return; 
 	
 	
 	var json = JSON.stringify( list );
@@ -255,13 +256,60 @@ function saveJsonAdminPanel()
 		type: 'POST',
 		data: {json: json},
 		dataType: 'json',
-		success: function(json)
+		success: function(json) 
 		{ 			
 			console.log(json); 
 		},
 		error: function(json){ console.log(json);  }
 	});			
 }
+
+
+
+function addGroupItemAdminPanel()
+{	
+	//var button = document.querySelector('[nameId="add_new_item_admin_panel"]');
+	
+	var listItems = document.querySelector('[list_ui="admin_catalog"]');
+	
+	var inf = {};
+	inf.name = $('[nameId="input_add_group_admin_panel"]').val();
+	inf.lotid = 'group';
+	
+	
+	var str_button = 
+	'<div nameId="shCp_1" style="width: 20px; height: 20px;">\
+		<div style="width: 10px; height: 10px; right: 0px;">\
+			<svg height="100%" width="100%" viewBox="0 0 100 100">\
+				<polygon points="0,0 100,0 50,100" style="fill:#ffffff;stroke:#000000;stroke-width:4" />\
+			</svg>\
+		</div>\
+	</div>';
+		
+	var item = 
+	'<div class="right_panel_2_1_list_item" add_lotid="'+inf.lotid+'" style="top:0px; left:0px">\
+		<div class="flex_1 relative_1" style="margin: auto;">\
+			<div class="right_panel_1_1_list_item_text">'+inf.name+'</div>\
+			'+str_button+'\
+		</div>\
+		<div nameId="groupItem" style="display: block;">\
+		</div>\
+	</div>';
+	
+	
+	var el = $(item).prependTo('[list_ui="admin_catalog"]');
+	//listItems.appendChild(item);
+	
+	//el.onmousedown = function(e) { console.log(222222); }
+	
+	
+	var n = 1;
+	(function(n) 
+	{
+		el.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); });
+	}(n));		
+}
+
 
 
 

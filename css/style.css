@@ -585,7 +585,7 @@ canvas
 	height: 100%;	
 }
 
-.right_panel_1_1_list_item
+.right_panel_1_1_list_item, .right_panel_2_1_list_item
 {
 	position: relative;
 	display: -webkit-box;
@@ -600,8 +600,16 @@ canvas
 }
 
 
+.right_panel_2_1_list_item
+{
+	display: block;
+	border: 1px solid #0000ff;
+}
+
+
 .right_panel_1_1_list_item_text
 {
+	/*margin-left: 20px; */
 	margin: auto;
 	font-family: arial,sans-serif;
 	font-size: 15px;
@@ -620,7 +628,7 @@ canvas
 
 
 
-.right_panel_1 input
+.right_panel_1 input, .input_add_group_admin_panel
 {
 	display: block;
 	margin: auto;
@@ -631,7 +639,7 @@ canvas
 	text-align: center;
 	color: #666;
 	
-	text-decoration: none;
+	text-decoration: none; 
 	line-height: 2em;
 	padding: 0;
 	

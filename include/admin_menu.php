@@ -19,6 +19,15 @@
 			</div>
 			<div class='modal_body'>
 				<div class='modal_body_content'>
+					<div class="flex_1">						
+						<div class="button1 button_gradient_1" nameId="button_add_new_item_admin_panel" style="margin: 15px 0 15px 40px; padding: 4px 11px;">Раздел</div>  
+						
+						<div class="flex_1 align_items" style="width: auto;">
+							<input type="text" class="input_add_group_admin_panel" style="width: 300px; margin:5px 0 5px 45px;" nameId="input_add_group_admin_panel" value="">
+						</div>							
+					</div>
+					
+				
 					<div class='right_panel_1_1_list relative_1 block_select_text' list_ui="admin_catalog">
 
 					</div>
