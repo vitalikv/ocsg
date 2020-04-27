@@ -9,14 +9,30 @@ async function addObjInCatalogUI_1(cdm)
 	
 	var arr = [];
 	
-	var response = await fetch(url, { method: 'GET' });
-	var json = await response.json();
+	if(1==2)
+	{
+		var response = await fetch(url, { method: 'GET' });
+		var json = await response.json();
+		
+		for(var i = 0; i < json.length; i++)
+		{			
+			arr[i] = { lotid: json[i].id, name: json[i].name };		
+		}		
+	}
+	else
+	{
+		var response = await fetch('t/catalog.json', { method: 'GET' });
+		var json = await response.json();
+		
+		
+		for(var i = 0; i < json.length; i++)
+		{			
+			arr[i] = { lotid: json[i].id, name: json[i].name };		
+		}			
+	}
 	
-	for(var i = 0; i < json.length; i++)
-	{			
-		arr[i] = { lotid: json[i].id, name: json[i].name };		
-	}		
-
+	
+	
 
 	arr[arr.length] =
 	{
