@@ -90,9 +90,19 @@ function clickDragDrop(cdm)
 	// запомнить переносимый объект
 	dragObject.elem = elem;
 	var container = document.querySelector('[list_ui="admin_catalog"]');
-	dragObject.listItems = container.querySelectorAll('[add_lotid]');
+	//dragObject.listItems = container.querySelectorAll('[add_lotid]');
 	
-	console.log(dragObject);
+	var listItems = [];	
+	for ( var i = 0; i < container.children.length; i++ )
+	{
+		var item = container.children[i];
+		
+		listItems[listItems.length] = item;
+	} 
+
+	dragObject.listItems = listItems;
+	
+	console.log(document);
 }
 
 
@@ -119,10 +129,7 @@ function moveDragDrop(cdm)
 		elem.style.zIndex = 9999;
 		elem.style.borderColor = '#ff0000';
 	}
-		//console.log(dragObject.downY);
-		
-	
-    	
+		//console.log(dragObject.downY);	
 	
 	elem.style.top = (e.pageY - dragObject.downY)+'px';
 	//elem.style.left = (e.pageX - 0)+'px'; 
@@ -159,14 +166,54 @@ function sortDragDropAdminMenU(cdm)
 	{
 		var item = dragObject.listItems[i];
 		
-		item.userData = {offsetTop: item.offsetTop};
+		item.userData = {offsetTop: item.offsetTop, offsetHeight: item.offsetHeight, coordsY: getCoords_1({elem: item}).top};
 		
 		sortList[sortList.length] = item;
+		
+		item.style.borderColor = '';
 		
 		if(elem == item) { item.userData.id = i; }
 	} 
 	
-	sortList.sort(function(a, b) { return a.userData.offsetTop - b.userData.offsetTop; });
+	
+	
+	if(cdm.event)
+	{
+		elem.userData.coordsY = cdm.event.pageY;
+		
+		for ( var i = 0; i < dragObject.listItems.length; i++ )
+		{
+			var item = dragObject.listItems[i];
+			
+			if(elem == item) continue;
+			
+			if(cdm.event.pageY > item.userData.coordsY && cdm.event.pageY < item.userData.coordsY + item.offsetHeight)
+			{
+				item.style.borderColor = '#00ff00';
+				
+				if(item.attributes.add_lotid.value == 'group')
+				{
+					console.log(item);
+					
+					var container = item.querySelector('[nameid="groupItem"]');
+					
+					console.log(container);
+					
+					container.appendChild(elem);
+					
+					// очщаем смещение 
+					elem.style.top = '0px';
+					elem.style.left = '0px';	
+
+					dragObject.downX = cdm.event.pageX;
+					dragObject.downY = cdm.event.pageY;					
+				}
+				
+			}
+		} 
+	}	
+	
+	sortList.sort(function(a, b) { return a.userData.coordsY - b.userData.coordsY; });
 	
 	
 	var flag = false;
@@ -179,6 +226,7 @@ function sortDragDropAdminMenU(cdm)
 			if(sortList[i].userData.id != i)
 			{				
 				flag = true;
+				break;
 			}
 		}
 	}
@@ -220,6 +268,15 @@ function sortDragDropAdminMenU(cdm)
 	}
 }
 
+
+
+function getCoords_1(cdm) 
+{ 
+	var elem = cdm.elem;
+	var box = elem.getBoundingClientRect();
+
+	return { top: box.top + document.body.scrollTop, left: box.left + document.body.scrollLeft };
+}
 
 
 
