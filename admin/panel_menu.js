@@ -102,7 +102,10 @@ function clickDragDrop(cdm)
 
 	dragObject.listItems = listItems;
 	
-	console.log(document);
+	var coordsY = getCoords_1({elem: elem}).top;
+	console.log(e.pageY, coordsY, (e.pageY - coordsY));
+
+	dragObject.offsetY = e.pageY - coordsY;
 }
 
 
@@ -170,9 +173,8 @@ function sortDragDropAdminMenU(cdm)
 		
 		sortList[sortList.length] = item;
 		
-		item.style.borderColor = '';
-		
 		if(elem == item) { item.userData.id = i; }
+		else { item.style.borderColor = ''; }
 	} 
 	
 	
@@ -256,7 +258,7 @@ function sortDragDropAdminMenU(cdm)
 		if(cdm.event)
 		{
 			dragObject.downX = cdm.event.pageX;
-			dragObject.downY = cdm.event.pageY;
+			dragObject.downY = cdm.event.pageY + dragObject.offsetY;			
 		}		
 	}
 	
