@@ -179,15 +179,36 @@ function sortDragDropAdminMenU(cdm)
 		else { item.style.borderColor = ''; }
 	} 
 	
+	
+	var elemChilds = elem.querySelectorAll('[add_lotid]');
+	if(!elemChilds) elemChilds = [];
+	
+	function existChilds(cdm)
+	{
+		var exist = false;
+		var list = cdm.list;
+		var elem = cdm.elem;
+		
+		for ( var i = 0; i < list.length; i++ )
+		{
+			if(elem == list[i]) { exist = true; break; }
+		}
+		
+		return exist;
+	}
+	
 
-	//console.log('----------');
+	
 	//elem.userData.coordsY = cdm.event.pageY;
+	var elem_2 = null;
 	
 	for ( var i = 0; i < dragObject.listItems.length; i++ )
 	{
 		var item = dragObject.listItems[i];
 		
-		if(elem == item) { console.log('elem', i, elem.userData.coordsY); continue; }
+		if(elem == item) { continue; }
+		
+		if(existChilds({elem: item, list: elemChilds})) { continue; }
 		
 		//console.log(i, item.userData.coordsY);
 		if(elem.userData.coordsY + elem.offsetHeight > item.userData.coordsY && elem.userData.coordsY < item.userData.coordsY + item.offsetHeight)
@@ -200,7 +221,7 @@ function sortDragDropAdminMenU(cdm)
 				
 				var container = item.querySelector('[nameid="groupItem"]');
 				
-				container.appendChild(elem);
+				container.append(elem);
 				
 				// очщаем смещение 
 				elem.style.top = '0px';
@@ -214,7 +235,12 @@ function sortDragDropAdminMenU(cdm)
 				
 				return;
 			}
+			else
+			{
+				elem_2 = item;
+			}
 			
+			break;
 		}
 	} 
 	
@@ -243,21 +269,41 @@ function sortDragDropAdminMenU(cdm)
 	// изменился порядок расположений html элементов
 	if(flag)
 	{
-		var list = document.querySelector('[list_ui="admin_catalog"]');
 		
-		// очищаем меню от html элементов
-		list.innerHTML = "";
-
-		dragObject.listItems = [];
+		var container = document.querySelector('[list_ui="admin_catalog"]');
+		var listItems = container.querySelectorAll('[add_lotid]');		
 		
-		// добавляем html элементы в меню
-		for ( var i = 0; i < sortList.length; i++ )
+		for ( var i = 0; i < listItems.length; i++ )
 		{
-			list.appendChild(sortList[i]);
-			
-			dragObject.listItems[i] = sortList[i];
+			if(elem_2 == listItems[i]) 
+			{
+				//console.log(elem_2, elem);
+				//elem.remove();
+				elem_2.before(elem);
+				break;
+			}
 		}
+		//container.append(elem);
+		dragObject.listItems = container.querySelectorAll('[add_lotid]');
 		
+		
+		if(1==2)
+		{
+			var list = document.querySelector('[list_ui="admin_catalog"]');
+			
+			// очищаем меню от html элементов
+			list.innerHTML = "";
+
+			dragObject.listItems = [];
+			
+			// добавляем html элементы в меню
+			for ( var i = 0; i < sortList.length; i++ )
+			{
+				list.appendChild(sortList[i]);
+				
+				dragObject.listItems[i] = sortList[i];
+			}
+		}
 		
 		
 
