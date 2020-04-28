@@ -2,6 +2,7 @@
 
 var dragObject = {};
 
+addGroupItemAdminPanel({name: 111});
 addItemAdminPanel_1();			// наполняем admin каталог объектов UI
 
 
@@ -66,7 +67,7 @@ async function addItemAdminPanel_1(cdm)
 		(function(n) 
 		{
 			//el[0].userData = {id: i};
-			el.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); });
+			el.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); });
 		}(n));		
 	}
 	
@@ -100,10 +101,11 @@ function clickDragDrop(cdm)
 		listItems[listItems.length] = item;
 	} 
 
-	dragObject.listItems = listItems;
+	
+	dragObject.listItems = container.querySelectorAll('[add_lotid]');
 	
 	var coordsY = getCoords_1({elem: elem}).top;
-	console.log(e.pageY, coordsY, (e.pageY - coordsY));
+	console.log(e.pageY, dragObject);
 
 	dragObject.offsetY = e.pageY - coordsY;
 }
@@ -173,20 +175,21 @@ function sortDragDropAdminMenU(cdm)
 		
 		sortList[sortList.length] = item;
 		
-		if(elem == item) { item.userData.id = i; }
+		if(elem == item) { item.userData.id = i; if(cdm.event) { item.userData.coordsY = cdm.event.pageY; } }
 		else { item.style.borderColor = ''; }
 	} 
 	
 
+	//console.log('----------');
 	//elem.userData.coordsY = cdm.event.pageY;
 	
 	for ( var i = 0; i < dragObject.listItems.length; i++ )
 	{
 		var item = dragObject.listItems[i];
 		
-		if(elem == item) continue;
+		if(elem == item) { console.log('elem', i, elem.userData.coordsY); continue; }
 		
-		
+		//console.log(i, item.userData.coordsY);
 		if(elem.userData.coordsY + elem.offsetHeight > item.userData.coordsY && elem.userData.coordsY < item.userData.coordsY + item.offsetHeight)
 		{
 			if(cdm.event) { item.style.borderColor = '#00ff00'; }
@@ -204,7 +207,12 @@ function sortDragDropAdminMenU(cdm)
 				elem.style.left = '0px';	
 
 				//dragObject.downX = cdm.event.pageX;
-				dragObject.downY = elem.userData.coordsY + dragObject.offsetY;					
+				dragObject.downY = elem.userData.coordsY + dragObject.offsetY;
+				
+				var container = document.querySelector('[list_ui="admin_catalog"]');
+				dragObject.listItems = container.querySelectorAll('[add_lotid]');
+				
+				return;
 			}
 			
 		}
@@ -249,6 +257,9 @@ function sortDragDropAdminMenU(cdm)
 			
 			dragObject.listItems[i] = sortList[i];
 		}
+		
+		
+		
 
 		// очщаем смещение 
 		elem.style.top = '0px';
@@ -320,14 +331,15 @@ function saveJsonAdminPanel()
 
 
 
-function addGroupItemAdminPanel()
+function addGroupItemAdminPanel(cdm)
 {	
+	if(!cdm) cdm = {};
 	//var button = document.querySelector('[nameId="add_new_item_admin_panel"]');
 	
 	var listItems = document.querySelector('[list_ui="admin_catalog"]');
 	
 	var inf = {};
-	inf.name = $('[nameId="input_add_group_admin_panel"]').val();
+	inf.name = (cdm.name) ? cdm.name : $('[nameId="input_add_group_admin_panel"]').val();
 	inf.lotid = 'group';
 	
 	
@@ -360,7 +372,7 @@ function addGroupItemAdminPanel()
 	var n = 1;
 	(function(n) 
 	{
-		el.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); });
+		el.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); });
 	}(n));		
 }
 
