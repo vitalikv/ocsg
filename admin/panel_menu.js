@@ -375,12 +375,10 @@ function addGroupItemAdminPanel(cdm)
 	
 	
 	var str_button = 
-	'<div nameId="shCp_1" style="width: 20px; height: 20px;">\
-		<div style="width: 10px; height: 10px; right: 0px;">\
-			<svg height="100%" width="100%" viewBox="0 0 100 100">\
-				<polygon points="0,0 100,0 50,100" style="fill:#ffffff;stroke:#000000;stroke-width:4" />\
-			</svg>\
-		</div>\
+	'<div nameId="shCp_1" style="display: block; width: 10px; height: 10px; margin: auto 0;">\
+		<svg height="100%" width="100%" viewBox="0 0 100 100">\
+			<polygon points="0,0 100,0 50,100" style="fill:#ffffff;stroke:#000000;stroke-width:4" />\
+		</svg>\
 	</div>';
 		
 	var item = 
