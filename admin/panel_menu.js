@@ -177,45 +177,44 @@ function sortDragDropAdminMenU(cdm)
 		else { item.style.borderColor = ''; }
 	} 
 	
-	
-	
-	if(cdm.event)
-	{
-		elem.userData.coordsY = cdm.event.pageY;
-		
-		for ( var i = 0; i < dragObject.listItems.length; i++ )
-		{
-			var item = dragObject.listItems[i];
-			
-			if(elem == item) continue;
-			
-			if(cdm.event.pageY > item.userData.coordsY && cdm.event.pageY < item.userData.coordsY + item.offsetHeight)
-			{
-				item.style.borderColor = '#00ff00';
-				
-				if(item.attributes.add_lotid.value == 'group')
-				{
-					console.log(item);
-					
-					var container = item.querySelector('[nameid="groupItem"]');
-					
-					console.log(container);
-					
-					container.appendChild(elem);
-					
-					// очщаем смещение 
-					elem.style.top = '0px';
-					elem.style.left = '0px';	
 
-					dragObject.downX = cdm.event.pageX;
-					dragObject.downY = cdm.event.pageY;					
-				}
-				
-			}
-		} 
-	}	
+	//elem.userData.coordsY = cdm.event.pageY;
 	
-	sortList.sort(function(a, b) { return a.userData.coordsY - b.userData.coordsY; });
+	for ( var i = 0; i < dragObject.listItems.length; i++ )
+	{
+		var item = dragObject.listItems[i];
+		
+		if(elem == item) continue;
+		
+		
+		if(elem.userData.coordsY + elem.offsetHeight > item.userData.coordsY && elem.userData.coordsY < item.userData.coordsY + item.offsetHeight)
+		{
+			if(cdm.event) { item.style.borderColor = '#00ff00'; }
+			
+			if(item.attributes.add_lotid.value == 'group')
+			{
+				//console.log(item);
+				
+				var container = item.querySelector('[nameid="groupItem"]');
+				
+				container.appendChild(elem);
+				
+				// очщаем смещение 
+				elem.style.top = '0px';
+				elem.style.left = '0px';	
+
+				//dragObject.downX = cdm.event.pageX;
+				dragObject.downY = elem.userData.coordsY + dragObject.offsetY;					
+			}
+			
+		}
+	} 
+	
+	var scroll = 0;
+	if(cdm.event) { scroll = cdm.event.pageY - dragObject.downY; }	
+	
+	if(scroll > 0) { sortList.sort(function(a, b) { return (a.userData.coordsY + a.offsetHeight) - (b.userData.coordsY + b.offsetHeight); }); }
+	else { sortList.sort(function(a, b) { return a.userData.coordsY - b.userData.coordsY; }); }
 	
 	
 	var flag = false;
@@ -254,12 +253,8 @@ function sortDragDropAdminMenU(cdm)
 		// очщаем смещение 
 		elem.style.top = '0px';
 		elem.style.left = '0px';
-		
-		if(cdm.event)
-		{
-			dragObject.downX = cdm.event.pageX;
-			dragObject.downY = cdm.event.pageY + dragObject.offsetY;			
-		}		
+
+		dragObject.downY = elem.userData.coordsY + dragObject.offsetY;
 	}
 	
 	if(cdm.resetOffset)
