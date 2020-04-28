@@ -108,6 +108,7 @@ function clickDragDrop(cdm)
 	console.log(e.pageY, dragObject);
 
 	dragObject.offsetY = e.pageY - coordsY;
+	dragObject.startPosY = e.pageY;
 }
 
 
@@ -229,6 +230,7 @@ function sortDragDropAdminMenU(cdm)
 
 				//dragObject.downX = cdm.event.pageX;
 				dragObject.downY = elem.userData.coordsY + dragObject.offsetY;
+				if(cdm.event) dragObject.startPosY = cdm.event.pageY;
 				
 				var container = document.querySelector('[list_ui="admin_catalog"]');
 				dragObject.listItems = container.querySelectorAll('[add_lotid]');
@@ -245,12 +247,12 @@ function sortDragDropAdminMenU(cdm)
 	} 
 	
 	var scroll = 0;
-	if(cdm.event) { scroll = cdm.event.pageY - dragObject.downY; }	
+	if(cdm.event) { scroll = cdm.event.pageY - dragObject.startPosY; }	
 	
 	if(scroll > 0) { sortList.sort(function(a, b) { return (a.userData.coordsY + a.offsetHeight) - (b.userData.coordsY + b.offsetHeight); }); }
 	else { sortList.sort(function(a, b) { return a.userData.coordsY - b.userData.coordsY; }); }
 	
-	
+	//console.log(scroll);
 	var flag = false;
 	
 	// определяем поменялся ли порядок html элементы в меню
@@ -279,38 +281,21 @@ function sortDragDropAdminMenU(cdm)
 			{
 				//console.log(elem_2, elem);
 				//elem.remove();
-				elem_2.before(elem);
+				if(scroll < 0) { elem_2.before(elem); }
+				else { elem_2.after(elem); }
+				
 				break;
 			}
 		}
-		//container.append(elem);
+		
+		
 		dragObject.listItems = container.querySelectorAll('[add_lotid]');
-		
-		
-		if(1==2)
-		{
-			var list = document.querySelector('[list_ui="admin_catalog"]');
-			
-			// очищаем меню от html элементов
-			list.innerHTML = "";
-
-			dragObject.listItems = [];
-			
-			// добавляем html элементы в меню
-			for ( var i = 0; i < sortList.length; i++ )
-			{
-				list.appendChild(sortList[i]);
-				
-				dragObject.listItems[i] = sortList[i];
-			}
-		}
-		
-		
 
 		// очщаем смещение 
 		elem.style.top = '0px';
 		elem.style.left = '0px';
 
+		if(cdm.event) dragObject.startPosY = cdm.event.pageY;
 		dragObject.downY = elem.userData.coordsY + dragObject.offsetY;
 	}
 	
