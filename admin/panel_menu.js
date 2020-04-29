@@ -3,6 +3,8 @@
 var dragObject = {};
 
 addGroupItemAdminPanel({name: 111});
+addGroupItemAdminPanel({name: 222});
+addGroupItemAdminPanel({name: 333});
 addItemAdminPanel_1();			// наполняем admin каталог объектов UI
 
 
@@ -105,7 +107,7 @@ function clickDragDrop(cdm)
 	dragObject.listItems = container.querySelectorAll('[add_lotid]');
 	
 	var coordsY = getCoords_1({elem: elem}).top;
-	console.log(e.pageY, dragObject);
+	//console.log(e.pageY, dragObject);
 
 	dragObject.offsetY = e.pageY - coordsY;
 	dragObject.startPosY = e.pageY;
@@ -154,7 +156,16 @@ function clickUpDragDrop(cdm)
 		elem.style.zIndex = '';
 		elem.style.borderColor = '';
 	
-		sortDragDropAdminMenU({elem: elem, resetOffset: true});
+		sortDragDropAdminMenU({elem: elem, event: cdm.event, resetOffset: true});
+		
+		
+		for ( var i = 0; i < dragObject.listItems.length; i++ )
+		{
+			var item = dragObject.listItems[i];
+			
+			item.style.borderColor = '';
+		}		
+		
 	}
 	
 	dragObject = {};
@@ -166,23 +177,24 @@ function sortDragDropAdminMenU(cdm)
 {
 	var elem = cdm.elem;		
 	
-	// создаем массив из пунктов меню
+	// создаем массив из пунктов меню и определяем их положение на странице (coordsY)
 	var sortList = [];	
 	for ( var i = 0; i < dragObject.listItems.length; i++ )
 	{
 		var item = dragObject.listItems[i];
 		
-		item.userData = {offsetTop: item.offsetTop, offsetHeight: item.offsetHeight, coordsY: getCoords_1({elem: item}).top};
+		item.userData = {offsetHeight: item.offsetHeight, coordsY: getCoords_1({elem: item}).top};
 		
 		sortList[sortList.length] = item;
 		
-		if(elem == item) { item.userData.id = i; if(cdm.event) { item.userData.coordsY = cdm.event.pageY; } }
+		if(elem == item) { item.userData.id = i; if(cdm.event) { item.userData.coordsY = cdm.event.pageY - dragObject.offsetY; } }
 		else { item.style.borderColor = ''; }
 	} 
 	
 	
-	var elemChilds = elem.querySelectorAll('[add_lotid]');
+	var elemChilds = elem.querySelectorAll('[add_lotid]');	// находим у elem подразделы, если есть
 	if(!elemChilds) elemChilds = [];
+	
 	
 	function existChilds(cdm)
 	{
@@ -199,7 +211,7 @@ function sortDragDropAdminMenU(cdm)
 	}
 	
 
-	
+	console.log('--------');
 	//elem.userData.coordsY = cdm.event.pageY;
 	var elem_2 = null;
 	
@@ -211,38 +223,45 @@ function sortDragDropAdminMenU(cdm)
 		
 		if(existChilds({elem: item, list: elemChilds})) { continue; }
 		
-		//console.log(i, item.userData.coordsY);
+		//console.log(i, item, elemChilds);
 		if(elem.userData.coordsY + elem.offsetHeight > item.userData.coordsY && elem.userData.coordsY < item.userData.coordsY + item.offsetHeight)
 		{
-			if(cdm.event) { item.style.borderColor = '#00ff00'; }
+			//console.log(item.attributes.add_lotid.value, elemChilds, item);
 			
 			if(item.attributes.add_lotid.value == 'group')
 			{
-				//console.log(item);
+				
 				
 				var container = item.querySelector('[nameid="groupItem"]');
+								
 				
-				container.append(elem);
-				
-				// очщаем смещение 
-				elem.style.top = '0px';
-				elem.style.left = '0px';	
+				if(container != elem.parentElement)
+				{
+					container.append(elem);
+					
+					// очщаем смещение 
+					elem.style.top = '0px';
+					elem.style.left = '0px';	
 
-				//dragObject.downX = cdm.event.pageX;
-				dragObject.downY = elem.userData.coordsY + dragObject.offsetY;
-				if(cdm.event) dragObject.startPosY = cdm.event.pageY;
-				
-				var container = document.querySelector('[list_ui="admin_catalog"]');
-				dragObject.listItems = container.querySelectorAll('[add_lotid]');
-				
-				return;
+					//dragObject.downX = cdm.event.pageX;
+					dragObject.downY = elem.userData.coordsY + dragObject.offsetY;
+					if(cdm.event) dragObject.startPosY = cdm.event.pageY;
+					
+					var container = document.querySelector('[list_ui="admin_catalog"]');
+					dragObject.listItems = container.querySelectorAll('[add_lotid]');
+					
+					if(cdm.event) { item.style.borderColor = '#00ff00'; }
+					
+					//return;
+				}
 			}
 			else
 			{
+				if(cdm.event) { item.style.borderColor = '#00ff00'; }
 				elem_2 = item;
 			}
 			
-			break;
+			//break;
 		}
 	} 
 	
