@@ -90,20 +90,12 @@ async function addItemAdminPanel_2(cdm)
 	
 	for(var i = 0; i < json.length; i++)
 	{
-		var item = getItemChilds({json: json[i]}).html;		
+		json[i] = getItemChilds({json: json[i]});		
 		
-		//var el = $(item).prependTo('[list_ui="admin_catalog"]');
-		var el = $(item).appendTo('[list_ui="admin_catalog"]');
-		
-		var n = 1;
-		(function(n) 
-		{
-			el.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); });
-		}(n));
-		
+		json[i].elem.appendTo('[list_ui="admin_catalog"]');
 	}
 	
-	
+	console.log(json);
 	
 	// находим дочерние объекты 
 	function getItemChilds(cdm)
@@ -118,16 +110,19 @@ async function addItemAdminPanel_2(cdm)
 				+json.name+
 				'</div>\
 			</div>';
+			
+			json.elem = $(json.html);
+			
+			var n = 1;
+			(function(n) 
+			{
+				json.elem.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); });
+			}(n));			
 		}
 		else
 		{
 			var groupItem = '';
-			
-			for ( var i = 0; i < json.child.length; i++ )
-			{
-				groupItem += getItemChilds({json: json.child[i]}).html;
-			}			
-			
+
 			var str_button = 
 			'<div nameId="shCp_1" style="display: block; width: 10px; height: 10px; margin: auto 0;">\
 				<svg height="100%" width="100%" viewBox="0 0 100 100">\
@@ -145,6 +140,23 @@ async function addItemAdminPanel_2(cdm)
 					'+groupItem+'\
 				</div>\
 			</div>';
+			
+			json.elem = $(json.html);
+			
+			var n = 1;
+			(function(n) 
+			{
+				json.elem.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); });
+			}(n));				
+			
+			var container = json.elem[0].querySelector('[nameid="groupItem"]');
+			
+			for ( var i = 0; i < json.child.length; i++ )
+			{
+				json.child[i] = getItemChilds({json: json.child[i]});
+				
+				json.child[i].elem.appendTo(container);
+			}			
 		}
 		
 		return json;
