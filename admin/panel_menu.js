@@ -2,10 +2,10 @@
 
 var dragObject = {};
 
-addGroupItemAdminPanel({name: 111});
-addGroupItemAdminPanel({name: 222});
-addGroupItemAdminPanel({name: 333});
-addItemAdminPanel_1();			// наполняем admin каталог объектов UI
+//addGroupItemAdminPanel({name: 111});
+//addGroupItemAdminPanel({name: 222});
+//addGroupItemAdminPanel({name: 333});
+addItemAdminPanel_2();			// наполняем admin каталог объектов UI
 
 
 $(document).ready(function()
@@ -76,6 +76,80 @@ async function addItemAdminPanel_1(cdm)
 }
 
 
+
+// добавляем структурированный каталог Json 
+async function addItemAdminPanel_2(cdm) 
+{
+	var url = 't/catalog_2.json';
+	
+	var arr = [];
+	
+	var response = await fetch(url, { method: 'GET' });
+	var json = await response.json();
+	
+	
+	for(var i = 0; i < json.length; i++)
+	{
+		var item = getItemChilds({json: json[i]}).html;		
+		
+		//var el = $(item).prependTo('[list_ui="admin_catalog"]');
+		var el = $(item).appendTo('[list_ui="admin_catalog"]');
+		
+		var n = 1;
+		(function(n) 
+		{
+			el.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); });
+		}(n));
+		
+	}
+	
+	
+	
+	// находим дочерние объекты 
+	function getItemChilds(cdm)
+	{
+		var json = cdm.json;
+		
+		if(json.id != 'group') 
+		{
+			json.html = 
+			'<div class="right_panel_1_1_list_item" add_lotid="'+json.id+'" style="top:0px; left:0px">\
+				<div class="right_panel_1_1_list_item_text">'
+				+json.name+
+				'</div>\
+			</div>';
+		}
+		else
+		{
+			var groupItem = '';
+			
+			for ( var i = 0; i < json.child.length; i++ )
+			{
+				groupItem += getItemChilds({json: json.child[i]}).html;
+			}			
+			
+			var str_button = 
+			'<div nameId="shCp_1" style="display: block; width: 10px; height: 10px; margin: auto 0;">\
+				<svg height="100%" width="100%" viewBox="0 0 100 100">\
+					<polygon points="0,0 100,0 50,100" style="fill:#ffffff;stroke:#000000;stroke-width:4" />\
+				</svg>\
+			</div>';
+				
+			json.html = 
+			'<div class="right_panel_2_1_list_item" add_lotid="'+json.id+'" style="top:0px; left:0px">\
+				<div class="flex_1 relative_1" style="margin: auto;">\
+					<div class="right_panel_1_1_list_item_text" nameid="nameItem">'+json.name+'</div>\
+					'+str_button+'\
+				</div>\
+				<div nameId="groupItem" style="display: block;">\
+					'+groupItem+'\
+				</div>\
+			</div>';
+		}
+		
+		return json;
+	}	
+}
 
 
 
@@ -327,7 +401,7 @@ function sortDragDropAdminMenU(cdm)
 }
 
 
-
+// находим глобальное положение html элементов на странице
 function getCoords_1(cdm) 
 { 
 	var elem = cdm.elem;
@@ -338,31 +412,63 @@ function getCoords_1(cdm)
 
 
 
+// сохранем структуру меню в json
 function saveJsonAdminPanel()
 {
-	var list = [];
 	var container = document.querySelector('[list_ui="admin_catalog"]');
-	var items = container.querySelectorAll('[add_lotid]');
-	
-	// добавляем html элементы в меню
-	for ( var i = 0; i < items.length; i++ )
-	{
-		
-		var item = items[i];
-		
-		var inf = {};
-		inf.id = item.attributes.add_lotid.value;
-		inf.name = items[i].innerText;
-		
-		list[list.length] = inf;
-	}
 
-	console.log(items, list);
 	
-	return; 
+	var listItems = [];	
+	for ( var i = 0; i < container.children.length; i++ )
+	{
+		var item = container.children[i];
+		
+		var value = item.attributes.add_lotid.value;
+		
+		var inf = getItemChilds({item: item});
+		
+		listItems[listItems.length] = inf;
+	}	
 	
 	
-	var json = JSON.stringify( list );
+	// находим дочерние объекты 
+	function getItemChilds(cdm)
+	{
+		var inf = {};
+		var item = cdm.item;
+		
+		var value = item.attributes.add_lotid.value;
+		
+		if(value != 'group') 
+		{
+			inf.id = item.attributes.add_lotid.value;
+			inf.name = item.innerText;
+			
+			return inf;
+		}
+		
+		var container = item.querySelector('[nameid="nameItem"]');
+		
+		inf.id = item.attributes.add_lotid.value;
+		inf.name = container.innerText;
+		inf.child = [];
+			
+		var container = item.querySelector('[nameid="groupItem"]');
+		
+		for ( var i = 0; i < container.children.length; i++ )
+		{
+			inf.child[i] = getItemChilds({item: container.children[i]});
+		}
+		
+		return inf;
+	}
+	
+	console.log(listItems);
+	
+	//return; 
+	
+	
+	var json = JSON.stringify( listItems );
 	
 	
 	$.ajax
@@ -403,7 +509,7 @@ function addGroupItemAdminPanel(cdm)
 	var item = 
 	'<div class="right_panel_2_1_list_item" add_lotid="'+inf.lotid+'" style="top:0px; left:0px">\
 		<div class="flex_1 relative_1" style="margin: auto;">\
-			<div class="right_panel_1_1_list_item_text">'+inf.name+'</div>\
+			<div class="right_panel_1_1_list_item_text" nameid="nameItem">'+inf.name+'</div>\
 			'+str_button+'\
 		</div>\
 		<div nameId="groupItem" style="display: block;">\
