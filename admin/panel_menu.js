@@ -273,56 +273,58 @@ function sortDragDropAdminMenU(cdm)
 		
 		sortList[sortList.length] = item;
 		
-		if(elem == item) { item.userData.id = i; if(cdm.event) { item.userData.coordsY = cdm.event.pageY - dragObject.offsetY; } }
+		if(elem == item) { item.userData.id = i; }
 		else { item.style.borderColor = ''; }
 	} 
 	
+
+	var scroll = 0;
+	if(cdm.event) { scroll = cdm.event.pageY - dragObject.startPosY; }	
+	//console.log(scroll);	
 	
-	var elemChilds = elem.querySelectorAll('[add_lotid]');	// находим у elem подразделы, если есть
-	if(!elemChilds) elemChilds = [];
+	var list = document.querySelector('[list_ui="admin_catalog"]').children;
+	
+	var elem_2 = findCrossElement({list: sortList, n: 0});
 	
 	
-	function existChilds(cdm)
+	function findCrossElement(cdm)
 	{
-		var exist = false;
 		var list = cdm.list;
-		var elem = cdm.elem;
+		var arr = [];
+		var str = null;
 		
 		for ( var i = 0; i < list.length; i++ )
 		{
-			if(elem == list[i]) { exist = true; break; }
-		}
-		
-		return exist;
-	}
-	
-
-	console.log('--------');
-	//elem.userData.coordsY = cdm.event.pageY;
-	var elem_2 = null;
-	
-	for ( var i = 0; i < dragObject.listItems.length; i++ )
-	{
-		var item = dragObject.listItems[i];
-		
-		if(elem == item) { continue; }
-		
-		if(existChilds({elem: item, list: elemChilds})) { continue; }
-		
-		//console.log(i, item, elemChilds);
-		if(elem.userData.coordsY + elem.offsetHeight > item.userData.coordsY && elem.userData.coordsY < item.userData.coordsY + item.offsetHeight)
-		{
-			//console.log(item.attributes.add_lotid.value, elemChilds, item);
+			var item = list[i];
+			
+			if(elem == item) { continue; }
 			
 			if(item.attributes.add_lotid.value == 'group')
 			{
-				
-				
 				var container = item.querySelector('[nameid="groupItem"]');
-								
 				
-				if(container != elem.parentElement)
+				if(container == elem.parentElement) continue;
+			}
+			
+			if(!checkScrollElement({elem: elem, item: item, scroll: scroll})) continue;
+			
+			
+			{
+				if(item.attributes.add_lotid.value == 'group')
 				{
+					var container = item.querySelector('[nameid="groupItem"]');
+					
+					for ( var i2 = 0; i2 < container.children.length; i2++ )
+					{
+						
+						//arr[arr.length] = container.children[i2];
+					}
+					
+					if(container.children.length == 0)
+					{
+						str = item;
+						
+						
 					container.append(elem);
 					
 					// очщаем смещение 
@@ -334,30 +336,101 @@ function sortDragDropAdminMenU(cdm)
 					if(cdm.event) dragObject.startPosY = cdm.event.pageY;
 					
 					var container = document.querySelector('[list_ui="admin_catalog"]');
-					dragObject.listItems = container.querySelectorAll('[add_lotid]');
-					
-					if(cdm.event) { item.style.borderColor = '#00ff00'; }
-					
-					//return;
+					dragObject.listItems = container.querySelectorAll('[add_lotid]');						
+						
+						return;
+					}
+				}
+				else
+				{
+					arr = [];
+					str = item;
+					break;
+				}				
+			}
+		}
+
+		if(arr.length > 0)
+		{
+			//var list = [];
+
+			console.log(cdm.n, arr);
+			if(cdm.n < 6)	str = findCrossElement({list: arr, n: cdm.n+1});
+		}
+
+		return str;
+	}
+	
+	
+	
+	function checkScrollElement(cdm)
+	{
+		var elem = cdm.elem;
+		var item = cdm.item;
+		var scroll = cdm.scroll;
+		
+		var result = null;
+		
+		if(scroll < 0)	// тащим вверх
+		{	
+			if(elem.offsetHeight > item.offsetHeight)
+			{
+				if(elem.userData.coordsY < item.userData.coordsY && elem.userData.coordsY + elem.offsetHeight > item.userData.coordsY + item.offsetHeight)
+				{
+					result = item;
 				}
 			}
-			else
+			if(!result)
 			{
-				if(cdm.event) { item.style.borderColor = '#00ff00'; }
-				elem_2 = item;
+				if(elem.userData.coordsY + elem.offsetHeight > item.userData.coordsY)
+				{
+					if(elem.userData.coordsY + elem.offsetHeight < item.userData.coordsY + item.offsetHeight)
+					{
+						result = item;
+					}				
+				}				
 			}
-			
-			//break;
 		}
-	} 
+		else	// тащим вниз
+		{ 
+			if(elem.offsetHeight > item.offsetHeight)
+			{ 
+				if(elem.userData.coordsY < item.userData.coordsY && elem.userData.coordsY + elem.offsetHeight > item.userData.coordsY + item.offsetHeight)
+				{
+					result = item; 
+				}
+			}		
+			if(!result)
+			{
+				if(elem.userData.coordsY > item.userData.coordsY)
+				{
+					if(elem.userData.coordsY < item.userData.coordsY + item.offsetHeight)
+					{
+						result = item;
+					}				
+				}				
+			}
+		}
+
+		return result;
+	}
 	
-	var scroll = 0;
-	if(cdm.event) { scroll = cdm.event.pageY - dragObject.startPosY; }	
+
+	console.log('--------', elem_2);
+	//elem.userData.coordsY = cdm.event.pageY;
 	
-	if(scroll > 0) { sortList.sort(function(a, b) { return (a.userData.coordsY + a.offsetHeight) - (b.userData.coordsY + b.offsetHeight); }); }
-	else { sortList.sort(function(a, b) { return a.userData.coordsY - b.userData.coordsY; }); }
+
+	if(scroll < 0)	// тащим вверх
+	{
+		sortList.sort(function(a, b) { return a.userData.coordsY - b.userData.coordsY; });
+	}
+	else	// тащим вниз
+	{
+		sortList.sort(function(a, b) { return (a.userData.coordsY + a.offsetHeight) - (b.userData.coordsY + b.offsetHeight); });
+	}
 	
-	//console.log(scroll);
+	
+	
 	var flag = false;
 	
 	// определяем поменялся ли порядок html элементы в меню
@@ -374,15 +447,12 @@ function sortDragDropAdminMenU(cdm)
 	}
 	
 	// изменился порядок расположений html элементов
-	if(flag)
-	{
+	if(flag && elem_2)
+	{			
 		
-		var container = document.querySelector('[list_ui="admin_catalog"]');
-		var listItems = container.querySelectorAll('[add_lotid]');		
-		
-		for ( var i = 0; i < listItems.length; i++ )
+		for ( var i = 0; i < dragObject.listItems.length; i++ )
 		{
-			if(elem_2 == listItems[i]) 
+			if(elem_2 == dragObject.listItems[i]) 
 			{
 				//console.log(elem_2, elem);
 				//elem.remove();
@@ -392,10 +462,10 @@ function sortDragDropAdminMenU(cdm)
 				break;
 			}
 		}
-		
-		
-		dragObject.listItems = container.querySelectorAll('[add_lotid]');
 
+		var container = document.querySelector('[list_ui="admin_catalog"]');
+		dragObject.listItems = container.querySelectorAll('[add_lotid]');
+		
 		// очщаем смещение 
 		elem.style.top = '0px';
 		elem.style.left = '0px';
