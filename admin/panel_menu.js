@@ -284,8 +284,36 @@ function sortDragDropAdminMenU(cdm)
 	
 	var list = document.querySelector('[list_ui="admin_catalog"]').children;
 	
-	var elem_2 = findCrossElement({list: sortList, n: 0});
 	
+	
+	
+	var elemChilds = elem.querySelectorAll('[add_lotid]');	// находим у elem подразделы, если есть
+	if(!elemChilds) elemChilds = [];
+	
+	if(scroll < 0)	// тащим вверх
+	{
+		sortList.sort(function(a, b) { return a.userData.coordsY - b.userData.coordsY; });
+	}
+	else	// тащим вниз
+	{
+		sortList.sort(function(a, b) { return (a.userData.coordsY + a.offsetHeight) - (b.userData.coordsY + b.offsetHeight); });
+	}	
+	
+	function existChilds(cdm)
+	{
+		var exist = false;
+		var list = cdm.list;
+		var elem = cdm.elem;
+		
+		for ( var i = 0; i < list.length; i++ )
+		{
+			if(elem == list[i]) { exist = true; break; }
+		}
+		
+		return exist;
+	}	
+	
+	var elem_2 = findCrossElement({list: sortList, n: 0});
 	
 	function findCrossElement(cdm)
 	{
@@ -303,8 +331,10 @@ function sortDragDropAdminMenU(cdm)
 			{
 				var container = item.querySelector('[nameid="groupItem"]');
 				
-				if(container == elem.parentElement) continue;
+				//if(container == elem.parentElement) continue;
 			}
+			
+			if(existChilds({elem: item, list: elemChilds})) { continue; }
 			
 			if(!checkScrollElement({elem: elem, item: item, scroll: scroll})) continue;
 			
@@ -339,6 +369,10 @@ function sortDragDropAdminMenU(cdm)
 					dragObject.listItems = container.querySelectorAll('[add_lotid]');						
 						
 						return;
+					}
+					else
+					{
+						str = item;
 					}
 				}
 				else
