@@ -197,6 +197,9 @@ function clickDragDrop(cdm)
 
 	dragObject.offsetY = e.pageY - coordsY;
 	dragObject.startPosY = e.pageY;
+	
+	console.log('previousElementSibling', elem.previousElementSibling);
+	console.log('nextElementSibling', elem.nextElementSibling);
 }
 
 
@@ -242,7 +245,17 @@ function clickUpDragDrop(cdm)
 		elem.style.zIndex = '';
 		elem.style.borderColor = '';
 	
-		sortDragDropAdminMenU({elem: elem, event: cdm.event, resetOffset: true});
+		//sortDragDropAdminMenU({elem: elem, event: cdm.event, resetOffset: true});
+		
+		var container = document.querySelector('[list_ui="admin_catalog"]');
+		dragObject.listItems = container.querySelectorAll('[add_lotid]');
+		
+		// очщаем смещение 
+		elem.style.top = '0px';
+		elem.style.left = '0px';
+
+		if(cdm.event) dragObject.startPosY = cdm.event.pageY;
+		dragObject.downY = elem.userData.coordsY + dragObject.offsetY;			
 		
 		
 		for ( var i = 0; i < dragObject.listItems.length; i++ )
@@ -263,139 +276,138 @@ function sortDragDropAdminMenU(cdm)
 {
 	var elem = cdm.elem;		
 	
-	// создаем массив из пунктов меню и определяем их положение на странице (coordsY)
-	var sortList = [];	
+	// создаем массив из пунктов меню и определяем их положение на странице (coordsY)	
 	for ( var i = 0; i < dragObject.listItems.length; i++ )
 	{
 		var item = dragObject.listItems[i];
 		
-		item.userData = {offsetHeight: item.offsetHeight, coordsY: getCoords_1({elem: item}).top};
-		
-		sortList[sortList.length] = item;
-		
-		if(elem == item) { item.userData.id = i; }
-		else { item.style.borderColor = ''; }
+		item.userData = { coordsY: getCoords_1({elem: item}).top };
 	} 
 	
 
 	var scroll = 0;
 	if(cdm.event) { scroll = cdm.event.pageY - dragObject.startPosY; }	
-	//console.log(scroll);	
-	
-	var list = document.querySelector('[list_ui="admin_catalog"]').children;
 	
 	
+	var prevElem = getParentElement({elem: elem, type: 'prev'});
+	var nextElem = getParentElement({elem: elem, type: 'next'});
+	
+	console.log('prevElem', prevElem);
+	console.log('nextElem', nextElem);
+	
+	function getParentElement(cdm)
+	{
+		var elem = cdm.elem;
+		var item = null;
+		
+		if(cdm.type == 'prev') { item = elem.previousElementSibling; }
+		if(cdm.type == 'next') { item = elem.nextElementSibling; }
+		
+		if(!item)
+		{
+			var parent = elem.parentElement;
+			if(parent.attributes.nameid)
+			{
+				if(parent.attributes.nameid.value == 'groupItem')
+				{
+					var itemGroup = parent.parentElement;	// add_lotid = 'group'
+					
+					var parent = itemGroup.parentElement;
+					
+					if(parent.attributes.nameid)
+					{
+						if(parent.attributes.nameid.value == 'groupItem')
+						{
+							//parent = parent.parentElement;
+							
+							itemGroup.after(elem);	// добавить в конец списка
+							
+							resetElem({elem: elem});
+							
+							return;
+							//if(cdm.type == 'prev') { item = parent.previousElementSibling; }
+							//if(cdm.type == 'next') { item = parent.nextElementSibling; }						
+						}						
+					}
+				}				
+			}
+			if(parent.attributes.add_lotid)
+			{
+				item = parent;
+			}
+		}
+
+		return item;
+	}
 	
 	
-	var elemChilds = elem.querySelectorAll('[add_lotid]');	// находим у elem подразделы, если есть
-	if(!elemChilds) elemChilds = [];
 	
+
 	if(scroll < 0)	// тащим вверх
 	{
-		sortList.sort(function(a, b) { return a.userData.coordsY - b.userData.coordsY; });
+
+		
+		if(prevElem)
+		{
+			if(prevElem.attributes.add_lotid.value == 'group')
+			{
+				if(elem.userData.coordsY < prevElem.userData.coordsY + prevElem.offsetHeight)
+				{
+					var container = prevElem.querySelector('[nameid="groupItem"]');
+					
+					container.append(elem);	// добавить в конец списка
+					
+					resetElem({elem: elem});					
+				}				
+			}
+			else
+			{
+				if(checkScrollElement({elem: elem, item: prevElem, scroll: scroll}))
+				{
+					prevElem.before(elem);	
+					
+					resetElem({elem: elem});
+					
+					
+				}
+			}
+		}
+		else
+		{
+			resetElem({elem: elem});
+		}		
 	}
 	else	// тащим вниз
 	{
-		sortList.sort(function(a, b) { return (a.userData.coordsY + a.offsetHeight) - (b.userData.coordsY + b.offsetHeight); });
-	}	
-	
-	function existChilds(cdm)
-	{
-		var exist = false;
-		var list = cdm.list;
-		var elem = cdm.elem;
-		
-		for ( var i = 0; i < list.length; i++ )
+		if(nextElem)
 		{
-			if(elem == list[i]) { exist = true; break; }
-		}
-		
-		return exist;
-	}	
-	
-	var elem_2 = findCrossElement({list: sortList, n: 0});
-	
-	function findCrossElement(cdm)
-	{
-		var list = cdm.list;
-		var arr = [];
-		var str = null;
-		
-		for ( var i = 0; i < list.length; i++ )
-		{
-			var item = list[i];
-			
-			if(elem == item) { continue; }
-			
-			if(item.attributes.add_lotid.value == 'group')
+			if(nextElem.attributes.add_lotid.value == 'group')
 			{
-				var container = item.querySelector('[nameid="groupItem"]');
-				
-				//if(container == elem.parentElement) continue;
-			}
-			
-			if(existChilds({elem: item, list: elemChilds})) { continue; }
-			
-			if(!checkScrollElement({elem: elem, item: item, scroll: scroll})) continue;
-			
-			
-			{
-				if(item.attributes.add_lotid.value == 'group')
+				if(elem.userData.coordsY + elem.offsetHeight > nextElem.userData.coordsY)
 				{
-					var container = item.querySelector('[nameid="groupItem"]');
+					var container = nextElem.querySelector('[nameid="groupItem"]');
 					
-					for ( var i2 = 0; i2 < container.children.length; i2++ )
-					{
-						
-						//arr[arr.length] = container.children[i2];
-					}
+					container.prepend(elem);	// добавить в начала списка
 					
-					if(container.children.length == 0)
-					{
-						str = item;
-						
-						
-					container.append(elem);
-					
-					// очщаем смещение 
-					elem.style.top = '0px';
-					elem.style.left = '0px';	
-
-					//dragObject.downX = cdm.event.pageX;
-					dragObject.downY = elem.userData.coordsY + dragObject.offsetY;
-					if(cdm.event) dragObject.startPosY = cdm.event.pageY;
-					
-					var container = document.querySelector('[list_ui="admin_catalog"]');
-					dragObject.listItems = container.querySelectorAll('[add_lotid]');						
-						
-						return;
-					}
-					else
-					{
-						str = item;
-					}
+					resetElem({elem: elem});					
 				}
-				else
+			}
+			else
+			{
+				if(checkScrollElement({elem: elem, item: nextElem, scroll: scroll}))
 				{
-					arr = [];
-					str = item;
-					break;
-				}				
+					nextElem.after(elem);
+					 
+					resetElem({elem: elem});
+				}
 			}
 		}
-
-		if(arr.length > 0)
+		else
 		{
-			//var list = [];
-
-			console.log(cdm.n, arr);
-			if(cdm.n < 6)	str = findCrossElement({list: arr, n: cdm.n+1});
+			resetElem({elem: elem});
 		}
-
-		return str;
 	}
-	
-	
+
 	
 	function checkScrollElement(cdm)
 	{
@@ -449,54 +461,11 @@ function sortDragDropAdminMenU(cdm)
 		return result;
 	}
 	
-
-	console.log('--------', elem_2);
-	//elem.userData.coordsY = cdm.event.pageY;
 	
-
-	if(scroll < 0)	// тащим вверх
+	function resetElem(cdm)
 	{
-		sortList.sort(function(a, b) { return a.userData.coordsY - b.userData.coordsY; });
-	}
-	else	// тащим вниз
-	{
-		sortList.sort(function(a, b) { return (a.userData.coordsY + a.offsetHeight) - (b.userData.coordsY + b.offsetHeight); });
-	}
-	
-	
-	
-	var flag = false;
-	
-	// определяем поменялся ли порядок html элементы в меню
-	for ( var i = 0; i < sortList.length; i++ )
-	{		
-		if(sortList[i].userData.id != undefined) 
-		{ 						
-			if(sortList[i].userData.id != i)
-			{				
-				flag = true;
-				break;
-			}
-		}
-	}
-	
-	// изменился порядок расположений html элементов
-	if(flag && elem_2)
-	{			
+		var elem = cdm.elem;
 		
-		for ( var i = 0; i < dragObject.listItems.length; i++ )
-		{
-			if(elem_2 == dragObject.listItems[i]) 
-			{
-				//console.log(elem_2, elem);
-				//elem.remove();
-				if(scroll < 0) { elem_2.before(elem); }
-				else { elem_2.after(elem); }
-				
-				break;
-			}
-		}
-
 		var container = document.querySelector('[list_ui="admin_catalog"]');
 		dragObject.listItems = container.querySelectorAll('[add_lotid]');
 		
@@ -505,15 +474,10 @@ function sortDragDropAdminMenU(cdm)
 		elem.style.left = '0px';
 
 		if(cdm.event) dragObject.startPosY = cdm.event.pageY;
-		dragObject.downY = elem.userData.coordsY + dragObject.offsetY;
+		dragObject.downY = elem.userData.coordsY + dragObject.offsetY;		
 	}
 	
-	if(cdm.resetOffset)
-	{
-		// очщаем смещение 
-		elem.style.top = '0px';
-		elem.style.left = '0px';			
-	}
+
 }
 
 
