@@ -25,7 +25,7 @@ $(document).ready(function()
 	
 	$('[nameId="save_admin_panel"]').mousedown(function () { saveJsonAdminPanel(); });
 	
-	$('[nameId="button_add_new_item_admin_panel"]').mousedown(function () { addGroupItemAdminPanel(); });
+	$('[nameId="button_add_new_item_admin_panel"]').mousedown(function () { addGroupItemAdminPanel({addItems: true}); });
 	
 });	
 
@@ -87,12 +87,14 @@ async function addItemAdminPanel_2(cdm)
 	var response = await fetch(url, { method: 'GET' });
 	var json = await response.json();
 	
+	var list = document.querySelector('[list_ui="admin_catalog"]');
 	
 	for(var i = 0; i < json.length; i++)
 	{
 		json[i] = getItemChilds({json: json[i]});		
 		
-		json[i].elem.appendTo('[list_ui="admin_catalog"]');
+		//json[i].elem.appendTo('[list_ui="admin_catalog"]');
+		list.append(json[i].elem);		// добавить в конец списка
 	}
 	
 	console.log(json);
@@ -104,63 +106,60 @@ async function addItemAdminPanel_2(cdm)
 		
 		if(json.id != 'group') 
 		{
-			json.html = 
+			var html = 
 			'<div class="right_panel_1_1_list_item" add_lotid="'+json.id+'" style="top:0px; left:0px">\
 				<div class="right_panel_1_1_list_item_text">'
 				+json.name+
 				'</div>\
 			</div>';
 			
-			json.elem = $(json.html);
+
+			// создаем из str -> html элемент
+			var div = document.createElement('div');
+			div.innerHTML = html;
+			json.elem = div.firstChild;
 			
-			var n = 1;
-			(function(n) 
-			{
-				json.elem.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); });
-			}(n));			
+			
+			// кликнули на elem
+			json.elem.onmousedown = function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); };			
 		}
 		else
-		{
-			var groupItem = '';
-
-			var str_button = 
-			'<div nameId="shCp_1" style="display: block; width: 10px; height: 10px; margin: auto 0;">\
-				<svg height="100%" width="100%" viewBox="0 0 100 100">\
-					<polygon points="0,0 100,0 50,100" style="fill:#ffffff;stroke:#000000;stroke-width:4" />\
-				</svg>\
-			</div>';
-				
-			json.html = 
-			'<div class="right_panel_2_1_list_item" add_lotid="'+json.id+'" style="top:0px; left:0px; background: rgb(235, 235, 235);">\
-				<div class="flex_1 relative_1" style="margin: auto;">\
-					<div class="right_panel_1_1_list_item_text" nameid="nameItem">'+json.name+'</div>\
-					'+str_button+'\
-				</div>\
-				<div nameId="groupItem" style="display: block;">\
-					'+groupItem+'\
-				</div>\
-			</div>';
+		{			
+			json.elem = addGroupItemAdminPanel({name: json.name});			
 			
-			json.elem = $(json.html);
-			
-			var n = 1;
-			(function(n) 
-			{
-				json.elem.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); });
-			}(n));				
-			
-			var container = json.elem[0].querySelector('[nameid="groupItem"]');
+			var container = json.elem.querySelector('[nameid="groupItem"]');
 			
 			for ( var i = 0; i < json.child.length; i++ )
 			{
 				json.child[i] = getItemChilds({json: json.child[i]});
 				
-				json.child[i].elem.appendTo(container);
+				container.append(json.child[i].elem);	// добавить в конец списка
 			}			
 		}
 		
 		return json;
 	}	
+}
+
+
+
+
+// кликнули на треугольник в меню  группы объекты (показываем/скрываем разъемы этого объекта)
+function clickAdminRtekUI_2(cdm)
+{
+	console.log(cdm, cdm.elem_2.style.display);
+	
+	var display = cdm.elem_2.style.display;
+	
+	var display = (display == 'none') ? 'block' : 'none';
+	
+	cdm.elem_2.style.display = display;
+	
+	var parentEl = cdm.elem_2.parentElement;	
+
+	if(display == 'block') { parentEl.style.backgroundColor = '#ebebeb'; }
+	else { parentEl.style.backgroundColor = '#ffffff'; }
+	
 }
 
 
@@ -178,24 +177,11 @@ function clickDragDrop(cdm)
 
 	// запомнить переносимый объект
 	dragObject.elem = elem;
+	
 	var container = document.querySelector('[list_ui="admin_catalog"]');
-	//dragObject.listItems = container.querySelectorAll('[add_lotid]');
-	
-	var listItems = [];	
-	for ( var i = 0; i < container.children.length; i++ )
-	{
-		var item = container.children[i];
-		
-		listItems[listItems.length] = item;
-	} 
-
-	
 	dragObject.listItems = container.querySelectorAll('[add_lotid]');
-	
-	var coordsY = getCoords_1({elem: elem}).top;
-	//console.log(e.pageY, dragObject);
 
-	dragObject.offsetY = e.pageY - coordsY;
+	dragObject.offsetY = e.pageY - getCoords_1({elem: elem}).top;
 	dragObject.startPosY = e.pageY;
 	
 	console.log('previousElementSibling', elem.previousElementSibling);
@@ -225,8 +211,7 @@ function moveDragDrop(cdm)
 		
 		elem.style.zIndex = 9999;
 		elem.style.borderColor = '#ff0000';
-	}
-		//console.log(dragObject.downY);	
+	}	
 	
 	elem.style.top = (e.pageY - dragObject.downY)+'px';
 	//elem.style.left = (e.pageX - 0)+'px'; 
@@ -566,15 +551,13 @@ function saveJsonAdminPanel()
 function addGroupItemAdminPanel(cdm)
 {	
 	if(!cdm) cdm = {};
-	//var button = document.querySelector('[nameId="add_new_item_admin_panel"]');
 	
-	var listItems = document.querySelector('[list_ui="admin_catalog"]');
-	
-	var inf = {};
-	inf.name = (cdm.name) ? cdm.name : $('[nameId="input_add_group_admin_panel"]').val();
-	inf.lotid = 'group';
-	
-	
+	var json = {};
+	json.name = (cdm.name) ? cdm.name : $('[nameId="input_add_group_admin_panel"]').val();
+	json.id = 'group';
+
+	var groupItem = '';
+
 	var str_button = 
 	'<div nameId="shCp_1" style="display: block; width: 10px; height: 10px; margin: auto 0;">\
 		<svg height="100%" width="100%" viewBox="0 0 100 100">\
@@ -582,28 +565,41 @@ function addGroupItemAdminPanel(cdm)
 		</svg>\
 	</div>';
 		
-	var item = 
-	'<div class="right_panel_2_1_list_item" add_lotid="'+inf.lotid+'" style="top:0px; left:0px">\
+	var html = 
+	'<div class="right_panel_2_1_list_item" add_lotid="'+json.id+'" style="top:0px; left:0px; background: rgb(235, 235, 235);">\
 		<div class="flex_1 relative_1" style="margin: auto;">\
-			<div class="right_panel_1_1_list_item_text" nameid="nameItem">'+inf.name+'</div>\
+			<div class="right_panel_1_1_list_item_text" nameid="nameItem">'+json.name+'</div>\
 			'+str_button+'\
 		</div>\
 		<div nameId="groupItem" style="display: block;">\
+			'+groupItem+'\
 		</div>\
 	</div>';
 	
+	// создаем из str -> html элемент
+	var div = document.createElement('div');
+	div.innerHTML = html;
+	json.elem = div.firstChild;
 	
-	var el = $(item).prependTo('[list_ui="admin_catalog"]');
-	//listItems.appendChild(item);
+	// кликнули на elem
+	json.elem.onmousedown = function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); };
+
+
+	// назначаем кнопки треугольник событие
+	var el_2 = json.elem.querySelector('[nameId="shCp_1"]');
+	var el_3 = json.elem.querySelector('[nameId="groupItem"]');
 	
-	//el.onmousedown = function(e) { console.log(222222); }
-	
-	
-	var n = 1;
-	(function(n) 
+	el_2.onmousedown = function(e){ clickAdminRtekUI_2({elem: this, elem_2: el_3}); e.stopPropagation(); };
+
+
+	if(cdm.addItems)
 	{
-		el.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); });
-	}(n));		
+		var list = document.querySelector('[list_ui="admin_catalog"]');
+		
+		list.prepend(json.elem);	// добавить в начала списка
+	}
+
+	return json.elem;
 }
 
 
