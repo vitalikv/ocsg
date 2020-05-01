@@ -131,7 +131,7 @@ async function addItemAdminPanel_2(cdm)
 			</div>';
 				
 			json.html = 
-			'<div class="right_panel_2_1_list_item" add_lotid="'+json.id+'" style="top:0px; left:0px">\
+			'<div class="right_panel_2_1_list_item" add_lotid="'+json.id+'" style="top:0px; left:0px; background: rgb(235, 235, 235);">\
 				<div class="flex_1 relative_1" style="margin: auto;">\
 					<div class="right_panel_1_1_list_item_text" nameid="nameItem">'+json.name+'</div>\
 					'+str_button+'\
@@ -289,12 +289,13 @@ function sortDragDropAdminMenU(cdm)
 	if(cdm.event) { scroll = cdm.event.pageY - dragObject.startPosY; }	
 	
 	
-	var prevElem = getParentElement({elem: elem, type: 'prev'});
-	var nextElem = getParentElement({elem: elem, type: 'next'});
+	var prevElem = getParentElement({elem: elem, type: 'prev'});	// сосед сверху
+	var nextElem = getParentElement({elem: elem, type: 'next'});	// сосед снизу
 	
-	console.log('prevElem', prevElem);
-	console.log('nextElem', nextElem);
+	//console.log('prevElem', prevElem);
+	//console.log('nextElem', nextElem);
 	
+	// находим для elem соседа сверху и снизу
 	function getParentElement(cdm)
 	{
 		var elem = cdm.elem;
@@ -312,28 +313,11 @@ function sortDragDropAdminMenU(cdm)
 				{
 					var itemGroup = parent.parentElement;	// add_lotid = 'group'
 					
-					var parent = itemGroup.parentElement;
+					item = itemGroup;
 					
-					if(parent.attributes.nameid)
-					{
-						if(parent.attributes.nameid.value == 'groupItem')
-						{
-							//parent = parent.parentElement;
-							
-							itemGroup.after(elem);	// добавить в конец списка
-							
-							resetElem({elem: elem});
-							
-							return;
-							//if(cdm.type == 'prev') { item = parent.previousElementSibling; }
-							//if(cdm.type == 'next') { item = parent.nextElementSibling; }						
-						}						
-					}
+					if(cdm.type == 'prev') { elem.userData.exitGroupPrev = true; }
+					if(cdm.type == 'next') { elem.userData.exitGroupNext = true; }
 				}				
-			}
-			if(parent.attributes.add_lotid)
-			{
-				item = parent;
 			}
 		}
 
@@ -345,11 +329,17 @@ function sortDragDropAdminMenU(cdm)
 
 	if(scroll < 0)	// тащим вверх
 	{
-
-		
 		if(prevElem)
 		{
-			if(prevElem.attributes.add_lotid.value == 'group')
+			if(elem.userData.exitGroupPrev)
+			{
+				if(elem.userData.coordsY < prevElem.userData.coordsY)
+				{
+					prevElem.before(elem);
+					resetElem({elem: elem});
+				}				
+			}
+			else if(prevElem.attributes.add_lotid.value == 'group')
 			{
 				if(elem.userData.coordsY < prevElem.userData.coordsY + prevElem.offsetHeight)
 				{
@@ -364,11 +354,8 @@ function sortDragDropAdminMenU(cdm)
 			{
 				if(checkScrollElement({elem: elem, item: prevElem, scroll: scroll}))
 				{
-					prevElem.before(elem);	
-					
+					prevElem.before(elem);						
 					resetElem({elem: elem});
-					
-					
 				}
 			}
 		}
@@ -381,7 +368,15 @@ function sortDragDropAdminMenU(cdm)
 	{
 		if(nextElem)
 		{
-			if(nextElem.attributes.add_lotid.value == 'group')
+			if(elem.userData.exitGroupNext)
+			{
+				if(elem.userData.coordsY + elem.offsetHeight > nextElem.userData.coordsY + nextElem.offsetHeight)
+				{
+					nextElem.after(elem);
+					resetElem({elem: elem});
+				}							
+			}			
+			else if(nextElem.attributes.add_lotid.value == 'group')
 			{
 				if(elem.userData.coordsY + elem.offsetHeight > nextElem.userData.coordsY)
 				{
@@ -462,6 +457,7 @@ function sortDragDropAdminMenU(cdm)
 	}
 	
 	
+	// после того, как elem знаял новое место сбрасываем настройки
 	function resetElem(cdm)
 	{
 		var elem = cdm.elem;
