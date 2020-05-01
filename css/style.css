@@ -588,8 +588,10 @@ canvas
 .right_panel_1_1_list_item, .right_panel_2_1_list_item
 {
 	position: relative;
-	display: -webkit-box;
-	display: flex;
+	/*display: -webkit-box;
+	display: flex; */
+	
+	display: block;
 	
 	background: #fff;
 	padding: 3px;

@@ -6,6 +6,7 @@
 $list = 'inputWall.js
 crossWall.js
 uiInterface.js
+uiInterface_catalog.js
 meshBSP.js 	
 calculationArea.js
 addPoint.js
