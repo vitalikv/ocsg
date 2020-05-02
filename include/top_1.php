@@ -46,7 +46,7 @@
 
 
 <div class="window_main_sett" nameId="window_main_sett" ui_1="" style="display: none;">
-	<div class="modal_window_close" nameId="button_close_main_sett">
+	<div class="modal_window_close x_close" nameId="button_close_main_sett">
 		+
 	</div>
 	<div class='modal_body'>
@@ -64,7 +64,7 @@
 
 
 <div class="window_main_load_obj" nameId="window_main_load_obj" ui_1="" style="display: none;">
-	<div class="modal_window_close" nameId="button_close_main_load_obj">
+	<div class="modal_window_close x_close" nameId="button_close_main_load_obj">
 		+
 	</div>
 	<div style="width: 80%; height: 160px; margin: auto; padding-top: 30px;">

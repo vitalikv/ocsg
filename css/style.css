@@ -140,19 +140,7 @@ canvas
 	top: 15px;
 	right: 20px;
 		
-	-webkit-transform: rotate(-45deg);
-	-moz-transform: rotate(-45deg);
-	-o-transform: rotate(-45deg);
-	-ms-transform: rotate(-45deg);
-	transform: rotate(-45deg);
-	
-	font-family: arial,sans-serif;
-	font-size: 70px;
-	text-align: center;
-	text-decoration: none;
-	line-height: 0.6em;
-	color: #666;
-	cursor: pointer;	
+	font-size: 70px;	
 }
 
 .modal_header 
@@ -854,6 +842,23 @@ canvas
 /*  <--- modal_wind_  */
 
 
+/*  крестик закрытия  */
+.x_close
+{
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+	
+	font-family: arial,sans-serif;
+	text-align: center;
+	text-decoration: none;
+	line-height: 0.6em;
+	color: #666;
+	cursor: pointer;	
+}
+
 
 
 /*  right_panel ---> */
@@ -865,20 +870,8 @@ canvas
 	height: 30px;
 	top: 10px;
 	right: 10px;
-		
-	-webkit-transform: rotate(-45deg);
-	-moz-transform: rotate(-45deg);
-	-o-transform: rotate(-45deg);
-	-ms-transform: rotate(-45deg);
-	transform: rotate(-45deg);
-	
-	font-family: arial,sans-serif;
+
 	font-size: 50px;
-	text-align: center;
-	text-decoration: none;
-	line-height: 0.6em;
-	color: #666;
-	cursor: pointer;	
 }
 
 

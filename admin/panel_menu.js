@@ -1,6 +1,7 @@
 
 
 var dragObject = {};
+var admin_catalog = {rename: null};
 
 //addGroupItemAdminPanel({name: 111});
 //addGroupItemAdminPanel({name: 222});
@@ -22,10 +23,10 @@ $(document).ready(function()
 	});		
 	
 	
+	$('[nameId="button_add_new_item_admin_panel"]').mousedown(function () { addGroupItemAdminPanel({addItems: true}); });
+	$('[nameId="button_rename_group_admin_panel"]').mousedown(function () { actRenameItemGroupAdminCatalog(); });
 	
 	$('[nameId="save_admin_panel"]').mousedown(function () { saveJsonAdminPanel(); });
-	
-	$('[nameId="button_add_new_item_admin_panel"]').mousedown(function () { addGroupItemAdminPanel({addItems: true}); });
 	
 });	
 
@@ -121,7 +122,12 @@ async function addItemAdminPanel_2(cdm)
 			
 			
 			// кликнули на elem
-			json.elem.onmousedown = function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); };			
+			json.elem.onmousedown = function(e)
+			{ 
+				clickDragDrop({event: e, elem: this}); 
+				showRenameItemGroupAdminCatalog({elem: null});
+				e.stopPropagation(); 
+			};			
 		}
 		else
 		{			
@@ -558,7 +564,7 @@ function saveJsonAdminPanel()
 }
 
 
-
+// создаем группу (при старте или по кнопке)
 function addGroupItemAdminPanel(cdm)
 {	
 	if(!cdm) cdm = {};
@@ -578,8 +584,11 @@ function addGroupItemAdminPanel(cdm)
 		
 	var html = 
 	'<div class="right_panel_2_1_list_item" add_lotid="'+json.id+'" style="top:0px; left:0px; background: rgb(235, 235, 235);">\
+		<div nameId="delGroupItem" class="x_close" nameId="button_close_main_menu" style="position: absolute; width: 15px; height: 15px; top: 5px; left: 10px; font-size: 25px; z-index: 1;">\
+			+\
+		</div>\
 		<div class="flex_1 relative_1" style="margin: auto;">\
-			<div class="right_panel_1_1_list_item_text" nameid="nameItem">'+json.name+'</div>\
+			<div class="right_panel_1_1_list_item_text" nameId="nameItem">'+json.name+'</div>\
 			'+str_button+'\
 		</div>\
 		<div nameId="groupItem" style="display: block;">\
@@ -592,8 +601,15 @@ function addGroupItemAdminPanel(cdm)
 	div.innerHTML = html;
 	json.elem = div.firstChild;
 	
+	var el_1 = json.elem.querySelector('[nameId="nameItem"]');
+	
 	// кликнули на elem
-	json.elem.onmousedown = function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); };
+	json.elem.onmousedown = function(e)
+	{ 
+		clickDragDrop({event: e, elem: this});
+		showRenameItemGroupAdminCatalog({elem: el_1});
+		e.stopPropagation(); 
+	};
 
 
 	// назначаем кнопки треугольник событие
@@ -601,6 +617,10 @@ function addGroupItemAdminPanel(cdm)
 	var el_3 = json.elem.querySelector('[nameId="groupItem"]');
 	
 	el_2.onmousedown = function(e){ clickAdminRtekUI_2({elem: this, elem_2: el_3}); e.stopPropagation(); };
+	
+	
+	var el_4 = json.elem.querySelector('[nameId="delGroupItem"]');
+	el_4.onmousedown = function(e){ removeGroupItemAdminPanel({groupItem: el_3, parentElem: json.elem}); e.stopPropagation(); };
 
 
 	if(cdm.addItems)
@@ -613,6 +633,60 @@ function addGroupItemAdminPanel(cdm)
 	return json.elem;
 }
 
+
+
+// показываем название группы (или сбрасываем, если это объект)
+function showRenameItemGroupAdminCatalog(cdm)
+{
+	var elem = cdm.elem;
+	
+	admin_catalog.rename = elem;
+	
+	var divRename = document.querySelector('[nameId="input_rename_group_admin_panel"]');
+	
+	if(elem)
+	{
+		divRename.value = elem.innerText;		
+	}
+	else
+	{
+		divRename.value = '';
+	}
+}
+
+
+// нажали кнопку переименовываем группу
+function actRenameItemGroupAdminCatalog()
+{
+	var elem = admin_catalog.rename;
+	
+	if(!elem) return;
+	
+	var divRename = document.querySelector('[nameId="input_rename_group_admin_panel"]');
+	
+	elem.innerText = divRename.value;
+}
+
+
+// удаляем группу из списка админ каталога
+function removeGroupItemAdminPanel(cdm)
+{
+	var groupItem = cdm.groupItem;
+	var parentElem = cdm.parentElem;
+	
+	var arr = groupItem.querySelectorAll('[add_lotid]');
+	
+	//var container = document.querySelector('[list_ui="admin_catalog"]');
+	
+	for(var i = arr.length - 1; i > -1; i--)
+	{
+		parentElem.after(arr[i]);
+	}
+	
+	parentElem.remove();
+	
+	showRenameItemGroupAdminCatalog({elem: null});
+}
 
 
 

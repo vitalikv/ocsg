@@ -7,7 +7,7 @@
 <div class="background_main_menu" nameId="background_main_menu" ui_2="">
 	<div class="modal_wrap">
 		<div class="window_main_menu" nameId="window_main_menu" style="width: 1300px;">
-			<div class="modal_window_close" nameId="button_close_main_menu">
+			<div class="modal_window_close x_close" nameId="button_close_main_menu">
 				+
 			</div>
 			<div class="modal_header">
@@ -30,7 +30,7 @@
 							<input type="text" class="input_add_group_admin_panel" style="width: 200px; margin:5px 0 5px 25px;" nameId="input_rename_group_admin_panel" value="">
 						</div>
 
-						<div class="button1 button_gradient_1" nameId="button_add_new_item_admin_panel" style="margin: 15px 40px 15px 40px; padding: 4px 11px;">Переименовать</div> 
+						<div class="button1 button_gradient_1" nameId="button_rename_group_admin_panel" style="margin: 15px 40px 15px 40px; padding: 4px 11px;">Переименовать</div> 
 					</div>
 					
 				
