@@ -300,8 +300,8 @@ function sortDragDropAdminMenU(cdm)
 					
 					item = itemGroup;
 					
-					if(cdm.type == 'prev') { elem.userData.exitGroupPrev = true; }
-					if(cdm.type == 'next') { elem.userData.exitGroupNext = true; }
+					if(cdm.type == 'prev') { elem.userData.exitGroupPrev = true; }	// группа
+					if(cdm.type == 'next') { elem.userData.exitGroupNext = true; }	// группа
 				}				
 			}
 		}
@@ -316,7 +316,13 @@ function sortDragDropAdminMenU(cdm)
 	{
 		if(prevElem)
 		{
-			if(elem.userData.exitGroupPrev)
+			var flag = true;
+			if(prevElem.attributes.add_lotid.value == 'group')
+			{
+				if(prevElem.querySelector('[nameid="groupItem"]').style.display == 'none') { flag = false; }	// группа скрыта/сложина
+			}
+			
+			if(elem.userData.exitGroupPrev && flag)	// группа/объект находятся внутри группы и мы вытаскиваем из группы
 			{
 				if(elem.userData.coordsY < prevElem.userData.coordsY)
 				{
@@ -324,7 +330,7 @@ function sortDragDropAdminMenU(cdm)
 					resetElem({elem: elem});
 				}				
 			}
-			else if(prevElem.attributes.add_lotid.value == 'group')
+			else if(prevElem.attributes.add_lotid.value == 'group' && flag)	// группа
 			{
 				if(elem.userData.coordsY < prevElem.userData.coordsY + prevElem.offsetHeight)
 				{
@@ -335,7 +341,7 @@ function sortDragDropAdminMenU(cdm)
 					resetElem({elem: elem});					
 				}				
 			}
-			else
+			else	// объект
 			{
 				if(checkScrollElement({elem: elem, item: prevElem, scroll: scroll}))
 				{
@@ -353,7 +359,13 @@ function sortDragDropAdminMenU(cdm)
 	{
 		if(nextElem)
 		{
-			if(elem.userData.exitGroupNext)
+			var flag = true;
+			if(nextElem.attributes.add_lotid.value == 'group')
+			{
+				if(nextElem.querySelector('[nameid="groupItem"]').style.display == 'none') { flag = false; }	// группа скрыта/сложина
+			}			
+			
+			if(elem.userData.exitGroupNext && flag)	// группа/объект находятся внутри группы и мы вытаскиваем из группы
 			{
 				if(elem.userData.coordsY + elem.offsetHeight > nextElem.userData.coordsY + nextElem.offsetHeight)
 				{
@@ -361,7 +373,7 @@ function sortDragDropAdminMenU(cdm)
 					resetElem({elem: elem});
 				}							
 			}			
-			else if(nextElem.attributes.add_lotid.value == 'group')
+			else if(nextElem.attributes.add_lotid.value == 'group' && flag)	// группа
 			{
 				if(elem.userData.coordsY + elem.offsetHeight > nextElem.userData.coordsY)
 				{
@@ -372,12 +384,11 @@ function sortDragDropAdminMenU(cdm)
 					resetElem({elem: elem});					
 				}
 			}
-			else
+			else	// объект
 			{
 				if(checkScrollElement({elem: elem, item: nextElem, scroll: scroll}))
 				{
-					nextElem.after(elem);
-					 
+					nextElem.after(elem);					 
 					resetElem({elem: elem});
 				}
 			}
