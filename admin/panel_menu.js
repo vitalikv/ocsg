@@ -3,10 +3,9 @@
 var dragObject = {};
 var admin_catalog = {rename: null};
 
-//addGroupItemAdminPanel({name: 111});
-//addGroupItemAdminPanel({name: 222});
-//addGroupItemAdminPanel({name: 333});
+
 addItemAdminPanel_2();			// наполняем admin каталог объектов UI
+addItemAdminPanel_1();
 
 
 $(document).ready(function()
@@ -23,11 +22,11 @@ $(document).ready(function()
 	});		
 	
 	
-	$('[nameId="button_add_new_item_admin_panel"]').mousedown(function () { addGroupItemAdminPanel({addItems: true}); });
+	$('[nameId="button_add_group_admin_panel"]').mousedown(function () { addGroupItemAdminPanel({addItems: true}); });
 	$('[nameId="button_rename_group_admin_panel"]').mousedown(function () { actRenameItemGroupAdminCatalog(); });
 	
 	$('[nameId="save_admin_panel"]').mousedown(function () { saveJsonAdminPanel(); });
-	
+	$('[nameId="reset_admin_panel"]').mousedown(function () { resetAdminPanel(); });
 });	
 
 
@@ -35,7 +34,7 @@ $(document).ready(function()
 
 
 
-// добавляем объекты в каталог UI 
+// получаем объекты из BD добавляем в список объектов UI 
 async function addItemAdminPanel_1(cdm) 
 {
 	var url = infProject.settings.api.list;
@@ -50,28 +49,22 @@ async function addItemAdminPanel_1(cdm)
 		arr[i] = { lotid: json[i].id, name: json[i].name };		
 	}		
 
+	var list = document.querySelector('[list_ui="admin_obj_bd"]');
 	
 	for(var i = 0; i < arr.length; i++)
 	{
-		var o = arr[i];
+		var o = arr[i];		
 		
-		if(o.stopUI) continue;
+		var elem = addItemAdminPanel({lotid: o.lotid, name: o.name, addImem: true});
 		
-		var str = 
-		'<div class="right_panel_1_1_list_item" add_lotid="'+o.lotid+'" style="top:0px; left:0px">\
-			<div class="right_panel_1_1_list_item_text">'
-			+o.name+
-			'</div>\
-		</div>';
+		var el_1 = elem.querySelector('[nameId="addImem"]');
 		
-		
-		var el = $(str).appendTo('[list_ui="admin_catalog"]');
-		var n = o.lotid;
-		(function(n) 
+		(function(elem) 
 		{
-			//el[0].userData = {id: i};
-			el.on('mousedown', function(e){ clickDragDrop({event: e, elem: this}); e.stopPropagation(); });
-		}(n));		
+			el_1.onmousedown = function(e){ transitItemToCatalogAdminPanel({elem: elem}); e.stopPropagation(); };	
+		}(elem));		
+		
+		list.append(elem);	// добавить в конец списка
 	}
 	
 }
@@ -107,19 +100,7 @@ async function addItemAdminPanel_2(cdm)
 		
 		if(json.id != 'group') 
 		{
-			var html = 
-			'<div class="right_panel_1_1_list_item" add_lotid="'+json.id+'" style="top:0px; left:0px">\
-				<div class="right_panel_1_1_list_item_text">'
-				+json.name+
-				'</div>\
-			</div>';
-			
-
-			// создаем из str -> html элемент
-			var div = document.createElement('div');
-			div.innerHTML = html;
-			json.elem = div.firstChild;
-			
+			json.elem = addItemAdminPanel({lotid: json.id, name: json.name, delItem: true});			
 			
 			// кликнули на elem
 			json.elem.onmousedown = function(e)
@@ -127,7 +108,11 @@ async function addItemAdminPanel_2(cdm)
 				clickDragDrop({event: e, elem: this}); 
 				showRenameItemGroupAdminCatalog({elem: null});
 				e.stopPropagation(); 
-			};			
+			};
+
+	
+			var el_1 = json.elem.querySelector('[nameId="delItem"]');
+			el_1.onmousedown = function(e){ removeItemAdminPanel({elem: json.elem}); e.stopPropagation(); };			
 		}
 		else
 		{			
@@ -490,78 +475,94 @@ function getCoords_1(cdm)
 
 
 
-// сохранем структуру меню в json
-function saveJsonAdminPanel()
-{
-	var container = document.querySelector('[list_ui="admin_catalog"]');
 
+
+// создаем пункт (при старте/по кнопке)
+function addItemAdminPanel(cdm)
+{
+	var lotid = cdm.lotid;
+	var name = cdm.name;
 	
-	var listItems = [];	
-	for ( var i = 0; i < container.children.length; i++ )
+	var delItem = '';
+	var addImem = '';
+	
+	if(cdm.delItem)
 	{
-		var item = container.children[i];
-		
-		var value = item.attributes.add_lotid.value;
-		
-		var inf = getItemChilds({item: item});
-		
-		listItems[listItems.length] = inf;
-	}	
-	
-	
-	// находим дочерние объекты 
-	function getItemChilds(cdm)
-	{
-		var inf = {};
-		var item = cdm.item;
-		
-		var value = item.attributes.add_lotid.value;
-		
-		if(value != 'group') 
-		{
-			inf.id = item.attributes.add_lotid.value;
-			inf.name = item.innerText;
-			
-			return inf;
-		}
-		
-		var container = item.querySelector('[nameid="nameItem"]');
-		
-		inf.id = item.attributes.add_lotid.value;
-		inf.name = container.innerText;
-		inf.child = [];
-			
-		var container = item.querySelector('[nameid="groupItem"]');
-		
-		for ( var i = 0; i < container.children.length; i++ )
-		{
-			inf.child[i] = getItemChilds({item: container.children[i]});
-		}
-		
-		return inf;
+		delItem = 
+		'<div nameId="delItem" class="x_close" style="position: absolute; width: 15px; height: 15px; top: 5px; left: 10px; font-size: 25px; z-index: 1;">\
+			+\
+		</div>';
 	}
 	
-	console.log(listItems);
+	if(cdm.addImem)
+	{
+		addImem = 
+		'<div nameId="addImem" style="position: absolute; width: 15px; height: 15px; top: 5px; left: 10px; z-index: 1;">\
+			<svg height="100%" width="100%" viewBox="0 0 100 100">\
+				<polygon points="0,50 100,0 100,100" style="fill:#ffffff;stroke:#000000;stroke-width:4" />\
+			</svg>\
+		</div>';		
+	}
 	
-	//return; 
+	var html = 
+	'<div class="right_panel_1_1_list_item" add_lotid="'+lotid+'" style="top:0px; left:0px">\
+		'+delItem+'\
+		'+addImem+'\
+		<div class="right_panel_1_1_list_item_text" nameId="nameItem">'
+			+name+
+		'</div>\
+	</div>';
 	
-	
-	var json = JSON.stringify( listItems );
-	
-	
-	$.ajax
-	({
-		url: infProject.path+'admin/savePanelJson.php',
-		type: 'POST',
-		data: {json: json},
-		dataType: 'json',
-		success: function(json) 
-		{ 			
-			console.log(json); 
-		},
-		error: function(json){ console.log(json);  }
-	});			
+
+	// создаем из str -> html элемент
+	var div = document.createElement('div');
+	div.innerHTML = html;
+	var elem = div.firstChild;
+
+	return elem;
 }
+
+
+
+// удаляем пункт из списка админ каталога
+function removeItemAdminPanel(cdm)
+{
+	var elem = cdm.elem;
+	
+	elem.remove();
+}
+
+
+// перенести пункт из правого каталога в левый(основной для пользователей)
+function transitItemToCatalogAdminPanel(cdm)
+{
+	var elem = cdm.elem;
+	
+	var container = elem.querySelector('[nameId="nameItem"]');
+	var id = elem.attributes.add_lotid.value;
+	var name = container.innerText;	
+	
+	elem.remove();
+	
+	var elem = addItemAdminPanel({lotid: id, name: name, delItem: true});			
+	
+	// кликнули на elem
+	elem.onmousedown = function(e)
+	{ 
+		clickDragDrop({event: e, elem: this}); 
+		showRenameItemGroupAdminCatalog({elem: null});
+		e.stopPropagation(); 
+	};
+
+	var el_1 = elem.querySelector('[nameId="delItem"]');
+	el_1.onmousedown = function(e){ removeItemAdminPanel({elem: elem}); e.stopPropagation(); };
+	
+	
+	var list = document.querySelector('[list_ui="admin_catalog"]');	
+	list.append(elem);	// добавить в конец списка	
+}
+
+
 
 
 // создаем группу (при старте или по кнопке)
@@ -584,7 +585,7 @@ function addGroupItemAdminPanel(cdm)
 		
 	var html = 
 	'<div class="right_panel_2_1_list_item" add_lotid="'+json.id+'" style="top:0px; left:0px; background: rgb(235, 235, 235);">\
-		<div nameId="delGroupItem" class="x_close" nameId="button_close_main_menu" style="position: absolute; width: 15px; height: 15px; top: 5px; left: 10px; font-size: 25px; z-index: 1;">\
+		<div nameId="delGroupItem" class="x_close" style="position: absolute; width: 15px; height: 15px; top: 5px; left: 10px; font-size: 25px; z-index: 1;">\
 			+\
 		</div>\
 		<div class="flex_1 relative_1" style="margin: auto;">\
@@ -688,6 +689,91 @@ function removeGroupItemAdminPanel(cdm)
 	showRenameItemGroupAdminCatalog({elem: null});
 }
 
+
+
+
+// сохранем структуру меню в json
+function saveJsonAdminPanel()
+{
+	var container = document.querySelector('[list_ui="admin_catalog"]');
+
+	
+	var listItems = [];	
+	for ( var i = 0; i < container.children.length; i++ )
+	{
+		var item = container.children[i];
+		
+		var value = item.attributes.add_lotid.value;
+		
+		var inf = getItemChilds({item: item});
+		
+		listItems[listItems.length] = inf;
+	}	
+	
+	
+	// находим дочерние объекты 
+	function getItemChilds(cdm)
+	{
+		var inf = {};
+		var item = cdm.item;
+		
+		var value = item.attributes.add_lotid.value;
+		
+		if(value != 'group') 
+		{
+			var container = item.querySelector('[nameId="nameItem"]');
+			inf.id = item.attributes.add_lotid.value;
+			inf.name = container.innerText;
+			
+			return inf;
+		}
+		
+		var container = item.querySelector('[nameId="nameItem"]');
+		
+		inf.id = item.attributes.add_lotid.value;
+		inf.name = container.innerText;
+		inf.child = [];
+			
+		var container = item.querySelector('[nameId="groupItem"]');
+		
+		for ( var i = 0; i < container.children.length; i++ )
+		{
+			inf.child[i] = getItemChilds({item: container.children[i]});
+		}
+		
+		return inf;
+	}
+	
+	console.log(listItems);
+	
+	//return; 
+	
+	
+	var json = JSON.stringify( listItems );
+	
+	
+	$.ajax
+	({
+		url: infProject.path+'admin/savePanelJson.php',
+		type: 'POST',
+		data: {json: json},
+		dataType: 'json',
+		success: function(json) 
+		{ 			
+			console.log(json); 
+		},
+		error: function(json){ console.log(json);  }
+	});			
+}
+
+
+
+// очищаем admin каталог
+function resetAdminPanel()
+{
+	var list = document.querySelector('[list_ui="admin_catalog"]');
+	list.innerHTML = '';
+}
 
 
 
