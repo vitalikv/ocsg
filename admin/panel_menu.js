@@ -1,10 +1,15 @@
 
 
 var dragObject = {};
-var admin_catalog = {rename: null};
+var admin_panel = {};
+admin_panel.user_catalog = {};
+admin_panel.user_catalog.groupItem = null;
+admin_panel.bd_obj = {arr:[]};
 
 
-addItemAdminPanel_2();			// наполняем admin каталог объектов UI
+
+
+
 addItemAdminPanel_1();
 
 
@@ -46,7 +51,7 @@ async function addItemAdminPanel_1(cdm)
 	
 	for(var i = 0; i < json.length; i++)
 	{			
-		arr[i] = { lotid: json[i].id, name: json[i].name };		
+		arr[i] = { lotid: json[i].id, name: json[i].name };
 	}		
 
 	var list = document.querySelector('[list_ui="admin_obj_bd"]');
@@ -65,8 +70,11 @@ async function addItemAdminPanel_1(cdm)
 		}(elem));		
 		
 		list.append(elem);	// добавить в конец списка
+		
+		admin_panel.bd_obj.arr[i] = { elem: elem, lotid: o.lotid, name: o.name };
 	}
 	
+	addItemAdminPanel_2();			// наполняем каталог 
 }
 
 
@@ -476,12 +484,28 @@ function getCoords_1(cdm)
 
 
 
+function showHideItemFromBdAdminPanel(cdm)
+{
+	var lotid = cdm.lotid;
+	var arr = admin_panel.bd_obj.arr;
+	
+	for ( var i = 0; i < arr.length; i++ )
+	{
+		if(arr[i].lotid == lotid)
+		{
+			arr[i].elem.style.display = cdm.display;
+		}
+	}
+}
+
 
 // создаем пункт (при старте/по кнопке)
 function addItemAdminPanel(cdm)
 {
 	var lotid = cdm.lotid;
 	var name = cdm.name;
+	
+	showHideItemFromBdAdminPanel({lotid: lotid, display: 'none'});
 	
 	var delItem = '';
 	var addImem = '';
@@ -529,6 +553,9 @@ function removeItemAdminPanel(cdm)
 {
 	var elem = cdm.elem;
 	
+	var lotid = elem.attributes.add_lotid.value;
+	showHideItemFromBdAdminPanel({lotid: lotid, display: 'block'});
+	
 	elem.remove();
 }
 
@@ -542,7 +569,7 @@ function transitItemToCatalogAdminPanel(cdm)
 	var id = elem.attributes.add_lotid.value;
 	var name = container.innerText;	
 	
-	elem.remove();
+	showHideItemFromBdAdminPanel({lotid: elem.attributes.add_lotid.value, display: 'none'});
 	
 	var elem = addItemAdminPanel({lotid: id, name: name, delItem: true});			
 	
@@ -641,7 +668,7 @@ function showRenameItemGroupAdminCatalog(cdm)
 {
 	var elem = cdm.elem;
 	
-	admin_catalog.rename = elem;
+	admin_panel.user_catalog.groupItem = elem;
 	
 	var divRename = document.querySelector('[nameId="input_rename_group_admin_panel"]');
 	
@@ -659,7 +686,7 @@ function showRenameItemGroupAdminCatalog(cdm)
 // нажали кнопку переименовываем группу
 function actRenameItemGroupAdminCatalog()
 {
-	var elem = admin_catalog.rename;
+	var elem = admin_panel.user_catalog.groupItem;
 	
 	if(!elem) return;
 	
@@ -772,6 +799,14 @@ function saveJsonAdminPanel()
 function resetAdminPanel()
 {
 	var list = document.querySelector('[list_ui="admin_catalog"]');
+	var arrElem = list.querySelectorAll('[add_lotid]');
+	
+	for ( var i = 0; i < arrElem.length; i++ )
+	{
+		showHideItemFromBdAdminPanel({lotid: arrElem[i].attributes.add_lotid.value, display: 'block'});
+	}	
+	
+	
 	list.innerHTML = '';
 }
 
