@@ -15,6 +15,19 @@ addItemAdminPanel_1();
 
 $(document).ready(function()
 {
+	$('[nameId="background_admin_panel"]').mousedown(function () 
+	{	 
+		$('[nameId="background_admin_panel"]').css({"display":"none"}); 
+	});
+
+				
+	$('[nameId="button_close_admin_panel"]').mousedown(function () 
+	{  
+		$('[nameId="background_admin_panel"]').css({"display":"none"}); 
+	});
+
+	$('[nameId="window_admin_panel"]').mousedown(function (e) { e.stopPropagation(); });	
+	
 	
 	document.querySelector('[ui_2]').addEventListener( 'mousemove', function (e)
 	{
@@ -27,7 +40,7 @@ $(document).ready(function()
 	});		
 	
 	
-	$('[nameId="button_add_group_admin_panel"]').mousedown(function () { addGroupItemAdminPanel({addItems: true}); });
+	$('[nameId="button_add_group_admin_panel"]').mousedown(function () { createGroupItemAdminPanel({addItems: true}); });
 	$('[nameId="button_rename_group_admin_panel"]').mousedown(function () { actRenameItemGroupAdminCatalog(); });
 	
 	$('[nameId="save_admin_panel"]').mousedown(function () { saveJsonAdminPanel(); });
@@ -60,7 +73,7 @@ async function addItemAdminPanel_1(cdm)
 	{
 		var o = arr[i];		
 		
-		var elem = addItemAdminPanel({lotid: o.lotid, name: o.name, addImem: true});
+		var elem = createItemAdminPanel({lotid: o.lotid, name: o.name, addImem: true});
 		
 		var el_1 = elem.querySelector('[nameId="addImem"]');
 		
@@ -108,7 +121,7 @@ async function addItemAdminPanel_2(cdm)
 		
 		if(json.id != 'group') 
 		{
-			json.elem = addItemAdminPanel({lotid: json.id, name: json.name, delItem: true});			
+			json.elem = createItemAdminPanel({lotid: json.id, name: json.name, delItem: true});			
 			
 			// кликнули на elem
 			json.elem.onmousedown = function(e)
@@ -124,7 +137,7 @@ async function addItemAdminPanel_2(cdm)
 		}
 		else
 		{			
-			json.elem = addGroupItemAdminPanel({name: json.name});			
+			json.elem = createGroupItemAdminPanel({name: json.name});			
 			
 			var container = json.elem.querySelector('[nameid="groupItem"]');
 			
@@ -178,7 +191,7 @@ function clickDragDrop(cdm)
 	dragObject.elem = elem;
 	
 	var container = document.querySelector('[list_ui="admin_catalog"]');
-	dragObject.listItems = container.querySelectorAll('[add_lotid]');
+	dragObject.listItems = container.querySelectorAll('[idItem]');
 
 	dragObject.offsetY = e.pageY - getCoords_1({elem: elem}).top;
 	dragObject.startPosY = e.pageY;
@@ -232,7 +245,7 @@ function clickUpDragDrop(cdm)
 		//sortDragDropAdminMenU({elem: elem, event: cdm.event, resetOffset: true});
 		
 		var container = document.querySelector('[list_ui="admin_catalog"]');
-		dragObject.listItems = container.querySelectorAll('[add_lotid]');
+		dragObject.listItems = container.querySelectorAll('[idItem]');
 		
 		// очщаем смещение 
 		elem.style.top = '0px';
@@ -295,7 +308,7 @@ function sortDragDropAdminMenU(cdm)
 			{
 				if(parent.attributes.nameid.value == 'groupItem')
 				{
-					var itemGroup = parent.parentElement;	// add_lotid = 'group'
+					var itemGroup = parent.parentElement;	// 'group'
 					
 					item = itemGroup;
 					
@@ -316,7 +329,7 @@ function sortDragDropAdminMenU(cdm)
 		if(prevElem)
 		{
 			var flag = true;
-			if(prevElem.attributes.add_lotid.value == 'group')
+			if(prevElem.attributes.idItem.value == 'group')
 			{
 				if(prevElem.querySelector('[nameid="groupItem"]').style.display == 'none') { flag = false; }	// группа скрыта/сложина
 			}
@@ -329,7 +342,7 @@ function sortDragDropAdminMenU(cdm)
 					resetElem({elem: elem});
 				}				
 			}
-			else if(prevElem.attributes.add_lotid.value == 'group' && flag)	// группа
+			else if(prevElem.attributes.idItem.value == 'group' && flag)	// группа
 			{
 				if(elem.userData.coordsY < prevElem.userData.coordsY + prevElem.offsetHeight)
 				{
@@ -359,7 +372,7 @@ function sortDragDropAdminMenU(cdm)
 		if(nextElem)
 		{
 			var flag = true;
-			if(nextElem.attributes.add_lotid.value == 'group')
+			if(nextElem.attributes.idItem.value == 'group')
 			{
 				if(nextElem.querySelector('[nameid="groupItem"]').style.display == 'none') { flag = false; }	// группа скрыта/сложина
 			}			
@@ -372,7 +385,7 @@ function sortDragDropAdminMenU(cdm)
 					resetElem({elem: elem});
 				}							
 			}			
-			else if(nextElem.attributes.add_lotid.value == 'group' && flag)	// группа
+			else if(nextElem.attributes.idItem.value == 'group' && flag)	// группа
 			{
 				if(elem.userData.coordsY + elem.offsetHeight > nextElem.userData.coordsY)
 				{
@@ -458,7 +471,7 @@ function sortDragDropAdminMenU(cdm)
 		var elem = cdm.elem;
 		
 		var container = document.querySelector('[list_ui="admin_catalog"]');
-		dragObject.listItems = container.querySelectorAll('[add_lotid]');
+		dragObject.listItems = container.querySelectorAll('[idItem]');
 		
 		// очщаем смещение 
 		elem.style.top = '0px';
@@ -500,7 +513,7 @@ function showHideItemFromBdAdminPanel(cdm)
 
 
 // создаем пункт (при старте/по кнопке)
-function addItemAdminPanel(cdm)
+function createItemAdminPanel(cdm)
 {
 	var lotid = cdm.lotid;
 	var name = cdm.name;
@@ -529,7 +542,7 @@ function addItemAdminPanel(cdm)
 	}
 	
 	var html = 
-	'<div class="right_panel_1_1_list_item" add_lotid="'+lotid+'" style="top:0px; left:0px">\
+	'<div class="right_panel_1_1_list_item" idItem="'+lotid+'" style="top:0px; left:0px">\
 		'+delItem+'\
 		'+addImem+'\
 		<div class="right_panel_1_1_list_item_text" nameId="nameItem">'
@@ -553,7 +566,7 @@ function removeItemAdminPanel(cdm)
 {
 	var elem = cdm.elem;
 	
-	var lotid = elem.attributes.add_lotid.value;
+	var lotid = elem.attributes.idItem.value;
 	showHideItemFromBdAdminPanel({lotid: lotid, display: 'block'});
 	
 	elem.remove();
@@ -566,12 +579,12 @@ function transitItemToCatalogAdminPanel(cdm)
 	var elem = cdm.elem;
 	
 	var container = elem.querySelector('[nameId="nameItem"]');
-	var id = elem.attributes.add_lotid.value;
+	var id = elem.attributes.idItem.value;
 	var name = container.innerText;	
 	
-	showHideItemFromBdAdminPanel({lotid: elem.attributes.add_lotid.value, display: 'none'});
+	showHideItemFromBdAdminPanel({lotid: elem.attributes.idItem.value, display: 'none'});
 	
-	var elem = addItemAdminPanel({lotid: id, name: name, delItem: true});			
+	var elem = createItemAdminPanel({lotid: id, name: name, delItem: true});			
 	
 	// кликнули на elem
 	elem.onmousedown = function(e)
@@ -593,7 +606,7 @@ function transitItemToCatalogAdminPanel(cdm)
 
 
 // создаем группу (при старте или по кнопке)
-function addGroupItemAdminPanel(cdm)
+function createGroupItemAdminPanel(cdm)
 {	
 	if(!cdm) cdm = {};
 	
@@ -611,7 +624,7 @@ function addGroupItemAdminPanel(cdm)
 	</div>';
 		
 	var html = 
-	'<div class="right_panel_2_1_list_item" add_lotid="'+json.id+'" style="top:0px; left:0px; background: rgb(235, 235, 235);">\
+	'<div class="right_panel_2_1_list_item" idItem="'+json.id+'" style="top:0px; left:0px; background: rgb(235, 235, 235);">\
 		<div nameId="delGroupItem" class="x_close" style="position: absolute; width: 15px; height: 15px; top: 5px; left: 10px; font-size: 25px; z-index: 1;">\
 			+\
 		</div>\
@@ -702,7 +715,7 @@ function removeGroupItemAdminPanel(cdm)
 	var groupItem = cdm.groupItem;
 	var parentElem = cdm.parentElem;
 	
-	var arr = groupItem.querySelectorAll('[add_lotid]');
+	var arr = groupItem.querySelectorAll('[idItem]');
 	
 	//var container = document.querySelector('[list_ui="admin_catalog"]');
 	
@@ -730,7 +743,7 @@ function saveJsonAdminPanel()
 	{
 		var item = container.children[i];
 		
-		var value = item.attributes.add_lotid.value;
+		var value = item.attributes.idItem.value;
 		
 		var inf = getItemChilds({item: item});
 		
@@ -744,12 +757,12 @@ function saveJsonAdminPanel()
 		var inf = {};
 		var item = cdm.item;
 		
-		var value = item.attributes.add_lotid.value;
+		var value = item.attributes.idItem.value;
 		
 		if(value != 'group') 
 		{
 			var container = item.querySelector('[nameId="nameItem"]');
-			inf.id = item.attributes.add_lotid.value;
+			inf.id = item.attributes.idItem.value;
 			inf.name = container.innerText;
 			
 			return inf;
@@ -757,7 +770,7 @@ function saveJsonAdminPanel()
 		
 		var container = item.querySelector('[nameId="nameItem"]');
 		
-		inf.id = item.attributes.add_lotid.value;
+		inf.id = item.attributes.idItem.value;
 		inf.name = container.innerText;
 		inf.child = [];
 			
@@ -799,11 +812,11 @@ function saveJsonAdminPanel()
 function resetAdminPanel()
 {
 	var list = document.querySelector('[list_ui="admin_catalog"]');
-	var arrElem = list.querySelectorAll('[add_lotid]');
+	var arrElem = list.querySelectorAll('[idItem]');
 	
 	for ( var i = 0; i < arrElem.length; i++ )
 	{
-		showHideItemFromBdAdminPanel({lotid: arrElem[i].attributes.add_lotid.value, display: 'block'});
+		showHideItemFromBdAdminPanel({lotid: arrElem[i].attributes.idItem.value, display: 'block'});
 	}	
 	
 	

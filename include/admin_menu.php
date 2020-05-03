@@ -4,10 +4,10 @@
 
 
 
-<div class="background_main_menu" nameId="background_main_menu" ui_2="">
+<div class="background_main_menu" nameId="background_admin_panel" ui_2="">
 	<div class="modal_wrap">
-		<div class="window_main_menu" nameId="window_main_menu" style="width: 1300px; height: 80%;">
-			<div class="modal_window_close x_close" nameId="button_close_main_menu">
+		<div class="window_main_menu" nameId="window_admin_panel" style="width: 1300px; height: 80%;">
+			<div class="modal_window_close x_close" nameId="button_close_admin_panel">
 				+
 			</div>
 			<div class="modal_header">
