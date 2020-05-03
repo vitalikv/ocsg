@@ -1,7 +1,7 @@
 
 
-var dragObject = {};
 var admin_panel = {};
+admin_panel.dragItem = {};
 admin_panel.user_catalog = {};
 admin_panel.user_catalog.groupItem = null;
 admin_panel.bd_obj = {arr:[]};
@@ -188,13 +188,13 @@ function clickDragDrop(cdm)
 	if (!elem) return; // не нашли, клик вне draggable-объекта
 
 	// запомнить переносимый объект
-	dragObject.elem = elem;
+	admin_panel.dragItem.elem = elem;
 	
 	var container = document.querySelector('[list_ui="admin_catalog"]');
-	dragObject.listItems = container.querySelectorAll('[idItem]');
+	admin_panel.dragItem.listItems = container.querySelectorAll('[idItem]');
 
-	dragObject.offsetY = e.pageY - getCoords_1({elem: elem}).top;
-	dragObject.startPosY = e.pageY;
+	admin_panel.dragItem.offsetY = e.pageY - getCoords_1({elem: elem}).top;
+	admin_panel.dragItem.startPosY = e.pageY;
 	
 	console.log('previousElementSibling', elem.previousElementSibling);
 	console.log('nextElementSibling', elem.nextElementSibling);
@@ -206,26 +206,26 @@ function moveDragDrop(cdm)
 {
 	var e = cdm.event;
 	
-	if (!dragObject.elem) return; // элемент не зажат
+	if (!admin_panel.dragItem.elem) return; // элемент не зажат
 
-	var elem = dragObject.elem;
+	var elem = admin_panel.dragItem.elem;
 	
 	// элемент нажат, но пока не начали его двигать
-	if (!dragObject.move) 
+	if (!admin_panel.dragItem.move) 
 	{ 
-		dragObject.move = true;
+		admin_panel.dragItem.move = true;
 		
 		//var top = parseInt(elem.style.top, 10);
 		
 		// запомнить координаты, с которых начат перенос объекта
-		dragObject.downX = e.pageX;
-		dragObject.downY = e.pageY;	
+		admin_panel.dragItem.downX = e.pageX;
+		admin_panel.dragItem.downY = e.pageY;	
 		
 		elem.style.zIndex = 9999;
 		elem.style.borderColor = '#ff0000';
 	}	
 	
-	elem.style.top = (e.pageY - dragObject.downY)+'px';
+	elem.style.top = (e.pageY - admin_panel.dragItem.downY)+'px';
 	//elem.style.left = (e.pageX - 0)+'px'; 
 	
 	sortDragDropAdminMenU({elem: elem, event: e});	
@@ -235,9 +235,9 @@ function moveDragDrop(cdm)
 // закончили перетаскивать пункт меню (html элемент)
 function clickUpDragDrop(cdm)
 {
-	if(dragObject.move)
+	if(admin_panel.dragItem.move)
 	{
-		var elem = dragObject.elem;
+		var elem = admin_panel.dragItem.elem;
 		
 		elem.style.zIndex = '';
 		elem.style.borderColor = '';
@@ -245,26 +245,26 @@ function clickUpDragDrop(cdm)
 		//sortDragDropAdminMenU({elem: elem, event: cdm.event, resetOffset: true});
 		
 		var container = document.querySelector('[list_ui="admin_catalog"]');
-		dragObject.listItems = container.querySelectorAll('[idItem]');
+		admin_panel.dragItem.listItems = container.querySelectorAll('[idItem]');
 		
 		// очщаем смещение 
 		elem.style.top = '0px';
 		elem.style.left = '0px';
 
-		if(cdm.event) dragObject.startPosY = cdm.event.pageY;
-		dragObject.downY = elem.userData.coordsY + dragObject.offsetY;			
+		if(cdm.event) admin_panel.dragItem.startPosY = cdm.event.pageY;
+		admin_panel.dragItem.downY = elem.userData.coordsY + admin_panel.dragItem.offsetY;			
 		
 		
-		for ( var i = 0; i < dragObject.listItems.length; i++ )
+		for ( var i = 0; i < admin_panel.dragItem.listItems.length; i++ )
 		{
-			var item = dragObject.listItems[i];
+			var item = admin_panel.dragItem.listItems[i];
 			
 			item.style.borderColor = '';
 		}		
 		
 	}
 	
-	dragObject = {};
+	admin_panel.dragItem = {};
 }
 
 
@@ -274,16 +274,16 @@ function sortDragDropAdminMenU(cdm)
 	var elem = cdm.elem;		
 	
 	// создаем массив из пунктов меню и определяем их положение на странице (coordsY)	
-	for ( var i = 0; i < dragObject.listItems.length; i++ )
+	for ( var i = 0; i < admin_panel.dragItem.listItems.length; i++ )
 	{
-		var item = dragObject.listItems[i];
+		var item = admin_panel.dragItem.listItems[i];
 		
 		item.userData = { coordsY: getCoords_1({elem: item}).top };
 	} 
 	
 
 	var scroll = 0;
-	if(cdm.event) { scroll = cdm.event.pageY - dragObject.startPosY; }	
+	if(cdm.event) { scroll = cdm.event.pageY - admin_panel.dragItem.startPosY; }	
 	
 	
 	var prevElem = getParentElement({elem: elem, type: 'prev'});	// сосед сверху
@@ -471,14 +471,14 @@ function sortDragDropAdminMenU(cdm)
 		var elem = cdm.elem;
 		
 		var container = document.querySelector('[list_ui="admin_catalog"]');
-		dragObject.listItems = container.querySelectorAll('[idItem]');
+		admin_panel.dragItem.listItems = container.querySelectorAll('[idItem]');
 		
 		// очщаем смещение 
 		elem.style.top = '0px';
 		elem.style.left = '0px';
 
-		if(cdm.event) dragObject.startPosY = cdm.event.pageY;
-		dragObject.downY = elem.userData.coordsY + dragObject.offsetY;		
+		if(cdm.event) admin_panel.dragItem.startPosY = cdm.event.pageY;
+		admin_panel.dragItem.downY = elem.userData.coordsY + admin_panel.dragItem.offsetY;		
 	}
 	
 
