@@ -1,13 +1,70 @@
 
 
+<style>
+
+.background_admin_panel
+{
+	display: block;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	position: fixed;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 100;	
+}
+
+
+.window_admin_panel 
+{
+	position: relative;
+	margin: auto;
+	width: 900px;
+	height: 700px;	
+	
+	background: white;
+	border-radius: 8px;
+	box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.5);
+	display: -webkit-box;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	flex-direction: column;
+}
+
+
+.button_close_admin_panel
+{
+	position: absolute;
+	width: 40px;	
+	height: 40px;
+	top: 15px;
+	right: 20px;
+		
+	font-size: 70px;
+
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+	
+	font-family: arial,sans-serif;
+	text-align: center;
+	text-decoration: none;
+	line-height: 0.6em;
+	color: #666;
+	cursor: pointer;	
+}
+
+</style>
 
 
 
-
-<div class="background_main_menu" nameId="background_admin_panel" ui_2="">
+<div class="background_admin_panel" nameId="background_admin_panel" ui_2="">
 	<div class="modal_wrap">
-		<div class="window_main_menu" nameId="window_admin_panel" style="width: 1300px; height: 80%;">
-			<div class="modal_window_close x_close" nameId="button_close_admin_panel">
+		<div class="window_admin_panel" nameId="window_admin_panel" style="width: 1300px; height: 80%;">
+			<div class="button_close_admin_panel" nameId="button_close_admin_panel">
 				+
 			</div>
 			<div class="modal_header">
