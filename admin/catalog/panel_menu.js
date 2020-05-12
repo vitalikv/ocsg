@@ -55,7 +55,7 @@ $(document).ready(function()
 // получаем объекты из BD добавляем в список объектов UI 
 async function addItemAdminPanel_1(cdm) 
 {
-	var url = infProject.settings.api.list;
+	var url = infProject.path+'components_2/getListObjSql.php'; 
 	
 	var arr = [];
 	

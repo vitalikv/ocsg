@@ -259,21 +259,6 @@ function saveObjSql(cdm)
 
 
 
-function getObjSql(cdm)
-{  
-	
-	$.ajax
-	({
-		type: "POST",					
-		url: infProject.path+'admin/obj/getObjSql.php',
-		data: { id: cdm.id },
-		dataType: 'json',
-		success: function(data)
-		{  
-			console.log(data);			
-		}
-	});	
-}
 
 
 

@@ -56,7 +56,7 @@ async function getInfoObj(cdm)
 {
 	var lotid = cdm.lotid;	
 	
-	var url = infProject.settings.api.obj + '?id='+lotid;
+	var url = infProject.path+'components_2/getObjSql.php?id='+lotid;  
 	
 	var response = await fetch(url, { method: 'GET' });	
 	var json = await response.json();

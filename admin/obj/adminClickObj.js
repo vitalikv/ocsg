@@ -45,7 +45,7 @@ async function getInfObjFromBD(cdm)
 	$('[nameId="bd_input_type"]').val(null);	
 	$('[nameId="bd_input_properties"]').text('');
 	
-	var response = await fetch(infProject.path+'admin/obj/getObjSql.php?id='+lotid, { method: 'GET' });
+	var response = await fetch(infProject.path+'components_2/getObjSql.php?id='+lotid, { method: 'GET' });
 	var json = await response.json();
 
 	if(json.error)
