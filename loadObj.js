@@ -111,7 +111,7 @@ async function loadObjServer(cdm)
 	var obj = getObjFromBase({lotid: lotid});	// проверяем есть ли объект в кэше
 	
 	if(cdm.loadFromFile){ obj = null; }
-	
+	console.log(4444, inf);
 	if(obj)		// объект есть в кэше
 	{ 
 		inf.obj = obj.clone();
@@ -124,11 +124,11 @@ async function loadObjServer(cdm)
 		if(cdm.loadFromFile){}
 		//else { createSpotObj(inf, cdm); }
 	
-		if(inf.json)
+		if(inf.model)
 		{ 	
 			new THREE.ObjectLoader().parse
 			(
-				inf.json, 
+				inf.model, 
 				
 				function ( obj ) 
 				{

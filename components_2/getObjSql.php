@@ -43,9 +43,9 @@ if($res)
 		$data['size'] = json_decode($res['size']);	
 	}
 	
-	if($res['json'])
+	if($res['model'])
 	{
-		$data['json'] = json_decode($res['json']);	
+		$data['model'] = json_decode($res['model']);	
 	}
 
 	if($res['properties'])
