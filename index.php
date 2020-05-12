@@ -47,7 +47,7 @@
 	<script src="<?=$path?>js/export/GLTFExporter.js?<?=$vrs?>"></script>
 	
 	
-	<? if($_SERVER['SERVER_NAME']=='ocsg') { require_once("include/admin_menu.php"); } ?>
+	<? if($_SERVER['SERVER_NAME']=='ocsg') { require_once("admin/admin_menu.php"); } ?>
 	
 	
 	<div id="canvasFrame" style="position: fixed; width: 100%; height: 100%; top: 0; right: 0; overflow: hidden;">
@@ -120,7 +120,7 @@
 	<script src="<?=$path?>getScreenshot.js?<?=$vrs?>"></script>
 	<script src="<?=$path?>undoRedo.js?<?=$vrs?>"></script>
 	
-	<script src="<?=$path?>admin/panel_menu.js?<?=$vrs?>"></script>
+	
 	
 	<script src="<?=$path?>setObjBD.js?<?=$vrs?>"></script>
 	<script src="<?=$path?>hideWall.js?<?=$vrs?>"></script>
@@ -132,7 +132,11 @@
 	<script src="<?=$path?>eventClick.js?<?=$vrs?>"></script>
     <script src="<?=$path?>script.js?<?=$vrs?>"></script>    		 
 		
-
+		
+	<? if($_SERVER['SERVER_NAME']=='ocsg') 
+	{?> 
+		<script src="<?=$path?>admin/panel_menu.js?<?=$vrs?>"></script>
+	<?}?>
 
 
 </body>

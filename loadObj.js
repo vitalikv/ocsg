@@ -68,27 +68,6 @@ async function getInfoObj(cdm)
 		
 		return inf;
 	}
-	else
-	{
-		var arr = [];		
-
-		arr[arr.length] =
-		{
-			lotid : 34,
-			url : infProject.path+'import/vm_light_point_1.fbx', 
-			name : 'светильник',
-			type: 'light point',
-			planeMath : infProject.settings.height - 0.05,
-		};		
-		
-		for(var i = 0; i < arr.length; i++)
-		{
-			if(lotid == arr[i].lotid)
-			{  
-				return arr[i];
-			}
-		}		
-	}
 	
 	return null;
 }
@@ -111,7 +90,7 @@ async function loadObjServer(cdm)
 	var obj = getObjFromBase({lotid: lotid});	// проверяем есть ли объект в кэше
 	
 	if(cdm.loadFromFile){ obj = null; }
-	console.log(4444, inf);
+	
 	if(obj)		// объект есть в кэше
 	{ 
 		inf.obj = obj.clone();
@@ -143,53 +122,8 @@ async function loadObjServer(cdm)
 				}
 				
 			);				
-		}	
-		else if(inf.glb)
-		{ 
-			var loader = new THREE.GLTFLoader();
-			loader.load( inf.url, function ( object ) 						
-			{ 
-				var obj = object.scene.children[0];
-				
-				var obj = addObjInBase({lotid: lotid, inf: inf, obj: obj});
-				
-				if(cdm.loadFromFile)	// загрузка из сохраненного файла json 
-				{
-					loadObjFromBase({lotid: lotid, furn: cdm.furn});
-				}
-				else					// добавляем объект в сцену 
-				{
-					inf.obj = obj;
-					
-					addObjInScene(inf, cdm);							
-				}
-			});				
-		}
-		else
-		{
-			var loader = new THREE.FBXLoader();
-			loader.load( inf.url, function ( object ) 						
-			{ 
-				//object.scale.set(0.1, 0.1, 0.1);
-				
-				var obj = object.children[0];
-				
-				var obj = addObjInBase({lotid: lotid, inf: inf, obj: obj});
-				
-				if(cdm.loadFromFile)	// загрузка из сохраненного файла json 
-				{
-					loadObjFromBase({lotid: lotid, furn: cdm.furn});
-				}
-				else					// добавляем объект в сцену 
-				{
-					inf.obj = obj;
-					
-					addObjInScene(inf, cdm);							
-				}
-			});			
-		}	
-	}
-	
+		}		
+	}	
 	
 }
 
