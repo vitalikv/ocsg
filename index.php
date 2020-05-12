@@ -47,8 +47,11 @@
 	<script src="<?=$path?>js/export/GLTFExporter.js?<?=$vrs?>"></script>
 	
 	
-	<? if($_SERVER['SERVER_NAME']=='ocsg') { require_once("admin/admin_menu.php"); } ?>
-	
+	<? if($_SERVER['SERVER_NAME']=='ocsg') 
+	{ 
+		require_once("admin/catalog/admin_menu.php");
+		require_once("admin/obj/adminInputLoadObj.php");
+	} ?>
 	
 	<div id="canvasFrame" style="position: fixed; width: 100%; height: 100%; top: 0; right: 0; overflow: hidden;">
 		<div class="frame block_select_text">
@@ -56,7 +59,8 @@
 			<div class="flex_1 height100">
 				
 				<div style="flex-grow:1; position: relative;">
-					<? require_once("include/top_1.php"); ?>										 							
+					<? require_once("include/top_1.php"); ?>
+					
 				</div>
 				
 				<? require_once("include/right_panel_1.php"); ?>
@@ -121,8 +125,6 @@
 	<script src="<?=$path?>undoRedo.js?<?=$vrs?>"></script>
 	
 	
-	
-	<script src="<?=$path?>setObjBD.js?<?=$vrs?>"></script>
 	<script src="<?=$path?>hideWall.js?<?=$vrs?>"></script>
     <script src="<?=$path?>inputWall.js?<?=$vrs?>"></script>  	
 	<script src="<?=$path?>clickActiveObj.js?<?=$vrs?>"></script>    
@@ -135,7 +137,9 @@
 		
 	<? if($_SERVER['SERVER_NAME']=='ocsg') 
 	{?> 
-		<script src="<?=$path?>admin/panel_menu.js?<?=$vrs?>"></script>
+		<script src="<?=$path?>admin/catalog/panel_menu.js?<?=$vrs?>"></script>
+		<script src="<?=$path?>admin/obj/adminLoadObj.js?<?=$vrs?>"></script>
+		<script src="<?=$path?>admin/obj/adminClickObj.js?<?=$vrs?>"></script>		
 	<?}?>
 
 

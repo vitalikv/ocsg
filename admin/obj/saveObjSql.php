@@ -6,7 +6,7 @@ $id = trim($_POST['id']);
 $name = trim($_POST['name']);
 $type = trim($_POST['type']);
 $size = trim($_POST['size']); 
-$json = trim($_POST['json']);
+$model = trim($_POST['model']);
 $properties = trim($_POST['properties']); 
 $preview = trim($_POST['preview']);
 //$date = date("Y-m-d-G-i");
@@ -16,13 +16,13 @@ $preview = trim($_POST['preview']);
 
 if($id == 0)
 {
-	$sql = "INSERT INTO list_obj (name, type, size, json, properties, preview) VALUES (:name, :type, :size, :json, :properties, :preview)";
+	$sql = "INSERT INTO list_obj (name, type, size, model, properties, preview) VALUES (:name, :type, :size, :model, :properties, :preview)";
 
 	$r = $db->prepare($sql);
 	$r->bindValue(':name', $name);
 	$r->bindValue(':type', $type);
 	$r->bindValue(':size', $size);
-	$r->bindValue(':json', $json);
+	$r->bindValue(':model', $model);
 	$r->bindValue(':properties', $properties);
 	$r->bindValue(':preview', $preview);
 	$r->execute();
@@ -38,18 +38,20 @@ if($id == 0)
 }
 else
 {
+	$sql = "UPDATE list_obj SET name = :name, type = :type, model = :model, properties = :properties WHERE id = :id";
 	//$sql = "UPDATE list_obj SET json = :json, size = :size, name = :name WHERE id = :id";
-	$sql = "UPDATE list_obj SET name = :name WHERE id = :id";
 	$r = $db->prepare($sql);
 	$r->bindValue(':id', $id);
 	$r->bindValue(':name', $name);
-	//$r->bindValue(':size', $size);
-	//$r->bindValue(':json', $json);
+	$r->bindValue(':type', $type);
+	$r->bindValue(':model', $model);
+	$r->bindValue(':properties', $properties);
+	//$r->bindValue(':preview', $preview);
 	$f = $r->execute();
 
 	if($f=='1'){ $inf['success'] = true; } // проверяем записались ли данные	
 }
- 
+
 echo json_encode( $inf );
 
 ?>

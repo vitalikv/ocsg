@@ -24,7 +24,6 @@ $('[nameId="sw_dw_2"]').mousedown(function () { swSetDW_1({obj: clickO.last_obj,
 $('[nameId="obj_rotate_reset"]').mousedown(function () { objRotateReset(); });	
 $('[nameId="button_copy_obj"]').mousedown(function () { copyObj(); });
 $('[nameId="button_delete_obj"]').mousedown(function () { deleteObjectPop(); });
-$('[nameId="button_save_obj"]').mousedown(function () { getBoundObject({obj: clickO.last_obj}); });
 
 
 $('[data-action="wall"]').mousedown(function () { clickInterface({button:'point_1'}); });
@@ -286,33 +285,6 @@ function showHideCatalogMenuUI(cdm)
 //  <--- right_panel
 
 
-
-
-// загрузка obj --->
-
-$('#load_obj_1').change(readURL_2);
-
-function readURL_2(e) 
-{
-	if (this.files[0]) 
-	{		
-		var reader = new FileReader();
-		reader.onload = function (e) 
-		{						
-			loadInputFile({data: e.target.result});
-		};				
-
-		reader.readAsArrayBuffer(this.files[0]);  									
-	};
-};
-
-
-$('[nameId="butt_main_load_obj"]').mousedown(function () { $('[nameId="window_main_load_obj"]').css({"display":"block"}); });
-
-$('[nameId="button_close_main_load_obj"]').mousedown(function () { $('[nameId="window_main_load_obj"]').css({"display":"none"}); });
-
-$('[nameId="butt_load_obj_2"]').mousedown(function () { loadUrlFile(); });
-// <--- загрузка obj
 
 
 });

@@ -4,7 +4,7 @@
 
 .background_admin_panel
 {
-	display: block;
+	display: none;
 	left: 0;
 	right: 0;
 	top: 0;

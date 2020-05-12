@@ -8,7 +8,7 @@ $array = $_POST['json'];
 
 
 // Открываем файл, флаг W означает - файл открыт на запись
-$f_hdl = fopen('../t/catalog_2.json', 'w');
+$f_hdl = fopen('../../t/catalog_2.json', 'w');
 
 // Записываем в файл $text
 fwrite($f_hdl, $array);

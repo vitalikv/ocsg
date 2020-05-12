@@ -179,7 +179,7 @@ function activeObjRightPanelUI_1(cdm)
 		$('[nameId="rp_obj_name"]').val(obj.userData.obj3D.nameRus);		
 		$('[nameId="bl_object_3d"]').show();
 		
-		getInfObjFromBD({obj: obj});
+		if( isCheckExsistFunction(window['getInfObjFromBD']) ) { getInfObjFromBD({obj: obj}); };
 	}	
 	else if(obj.userData.tag == 'room')
 	{

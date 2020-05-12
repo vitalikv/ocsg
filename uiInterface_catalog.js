@@ -4,7 +4,8 @@
 // добавляем структурированный каталог Json 
 async function addObjInCatalogUI_1(cdm) 
 {
-	var url = 't/catalog_2.json';
+	var url = infProject.path+'t/catalog_2.json';
+	var url = infProject.path+'components_2/getListObjSql.php';
 	
 	var arr = [];
 	

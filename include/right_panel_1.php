@@ -373,19 +373,8 @@
 					</div>									
 					
 								
-					<div class="button1 button_gradient_1" nameId="button_save_obj" style="margin-top: 40px;">
-						сохранить	
-					</div>
+					<div nameId="sp_block_drt">
 
-					<div class="rp_obj_name">
-						<input type="text" nameId="bd_input_obj_id" value="">					
-					</div>
-					<div class="rp_obj_name">
-						<input type="text" nameId="bd_input_type" value="">					
-					</div>
-
-					<div class="rp_obj_name">
-						<div class="bd_input_properties" nameId="bd_input_properties" contenteditable="true" spellcheck="true"></div>
 					</div> 
 				</div> 
 			</div>	
