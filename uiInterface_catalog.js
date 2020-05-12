@@ -5,12 +5,19 @@
 async function addObjInCatalogUI_1(cdm) 
 {
 	var url = infProject.path+'t/catalog_2.json';
-	var url = infProject.path+'components_2/getListObjSql.php';
+	var url = infProject.path+'components_2/getListObjSql.php';	
 	
-	var arr = [];
-	
-	var response = await fetch(url, { method: 'GET' });
-	var json = await response.json();
+	var response = await fetch(url, 
+	{
+		method: 'POST',
+		body: 'select_list=id, name' ,
+		headers: 
+		{
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},		
+		
+	});
+	var json = await response.json(); 
 	
 	json[json.length] =
 	{

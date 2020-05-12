@@ -55,12 +55,22 @@ $(document).ready(function()
 // получаем объекты из BD добавляем в список объектов UI 
 async function addItemAdminPanel_1(cdm) 
 {
-	var url = infProject.path+'components_2/getListObjSql.php'; 
+	var url = infProject.path+'components_2/getListObjSql.php';	
+	
+	var response = await fetch(url, 
+	{
+		method: 'POST',
+		body: 'select_list=id, name' ,
+		headers: 
+		{
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},		
+		
+	});
+	var json = await response.json();	
+	
 	
 	var arr = [];
-	
-	var response = await fetch(url, { method: 'GET' });
-	var json = await response.json();
 	
 	for(var i = 0; i < json.length; i++)
 	{			
