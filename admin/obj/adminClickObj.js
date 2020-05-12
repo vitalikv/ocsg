@@ -37,15 +37,25 @@ async function getInfObjFromBD(cdm)
 { 
 	var obj = cdm.obj;
 	
-	var lotid = obj.userData.obj3D.lotid;
-	if(!lotid) return;
-	
 	$('[nameId="rp_obj_name"]').val('');
 	$('[nameId="bd_input_obj_id"]').val(null);
 	$('[nameId="bd_input_type"]').val(null);	
 	$('[nameId="bd_input_properties"]').text('');
 	
-	var response = await fetch(infProject.path+'components_2/getObjSql.php?id='+lotid, { method: 'GET' });
+	var lotid = obj.userData.obj3D.lotid;
+	if(!lotid) return;	
+	
+	//var response = await fetch(infProject.path+'components_2/getObjSql.php?id='+lotid, { method: 'GET' });
+	var response = await fetch(infProject.path+'components_2/getObjSql.php', 
+	{
+		method: 'POST',
+		body: 'id='+lotid+'&select_list=id, name, type, properties' ,
+		headers: 
+		{
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},		
+		
+	});
 	var json = await response.json();
 
 	if(json.error)

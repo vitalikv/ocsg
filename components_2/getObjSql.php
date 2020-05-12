@@ -4,14 +4,24 @@ require_once ($_SERVER['DOCUMENT_ROOT']."/include/bd_1.php");
 
 
 
-$id = trim($_GET['id']);
+if($_GET['id']) $id = trim($_GET['id']);
+if($_POST['id']) 
+{
+	$id = trim($_POST['id']);
+	
+	if($_POST['select_list'])
+	{
+		$select_list = $_POST['select_list'];
+	}
+}
+
 $id = addslashes($id);
 if(!preg_match("/^[0-9]+$/i", $id)) { exit; }
 
-
+if(!isset($select_list)) { $select_list = '*'; }
 
 // находим e-mail, Имя, codepro
-$sql = "SELECT * FROM list_obj WHERE id = :id";
+$sql = "SELECT {$select_list} FROM list_obj WHERE id = :id";
 $r = $db->prepare($sql);
 $r->bindValue(':id', $id, PDO::PARAM_STR);
 $r->execute();
