@@ -546,7 +546,7 @@ function loadFile(cdm)
 
 
 async function loadFilePL(arr) 
-{     
+{
 	resetScene();
 
 	await getListRoomTypesApi();	// получаем типы помещений из api, добавляем в меню
@@ -559,7 +559,7 @@ async function loadFilePL(arr)
 	if(!arr.walls) { arr.walls = []; }
 	if(!arr.rooms) { arr.rooms = []; }
 	if(!arr.object) { arr.object = []; }
-	if(!arr.height) { arr.height = 3.2; }
+	if(!arr.height) { arr.height = 2.8; }
 	
 	infProject.project = { file: arr, load: { furn: [] } };
 		
@@ -728,7 +728,7 @@ async function loadFilePL(arr)
 	  
 	assignListRoomTypesApi({arr: rooms});	// получаем типы помещений, добавляем в меню и назначаем всем построеннным комнатам тип помещения
 	
-	//loadObjInBase({furn: furn});
+	await loadObjInBase({furn: furn});
 	
 	readyProject(); 
 }
@@ -808,7 +808,7 @@ function loadTextureInBase(cdm)
 
 
 // сохранение объектов в базу (создаем уникальную копию)
-function loadObjInBase(cdm)
+async function loadObjInBase(cdm)
 {
 	var furn = cdm.furn;
 	var lotid = [];
@@ -817,43 +817,50 @@ function loadObjInBase(cdm)
 	{
 		lotid[lotid.length] = Number(furn[i].lotid);
 
-		var inf = getInfoObj({lotid: furn[i].lotid}); 
-		if(!inf) continue;	// объект не существует в API
-
-		createSpotObj(inf, furn[i]);
+		//createSpotObj(inf, furn[i]);
 	}
 	
 	lotid = [...new Set(lotid)];  
 	
+	var strId = '';
+	
 	for ( var i = 0; i < lotid.length; i++ )
 	{
-		loadObjServer({lotid: lotid[i], loadFromFile: true, furn: furn});
-	}	
-}
+		strId += '&id['+i+']='+lotid[i];
+	}
 
+	var url = infProject.path+'components_2/getListObjSql.php';		
+	var response = await fetch(url, 
+	{
+		method: 'POST',
+		body: 'select_list=id, name, size'+strId ,
+		headers: 
+		{
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},		
+		
+	});
+	var json = await response.json();
 
-// получаем объект из базы (копируем копию объекта и добавляем в сцену)
-function loadObjFromBase(cdm)
-{ 
-	var furn = cdm.furn;
 	
-	for ( var i = 0; i < furn.length; i++ )
-	{  
-		if(Number(cdm.lotid) == Number(furn[i].lotid))
-		{			
-			loadObjServer(furn[i]);  
-
-			infProject.project.load.furn[infProject.project.load.furn.length] = furn[i].id;
-			
-			$('[nameId="txt_loader_slider_UI"]').text((Math.round(infProject.project.load.furn.length/infProject.project.file.object.length)*100) + '%');
-			
-			if(infProject.project.load.furn.length == infProject.project.file.object.length)
+	for ( var i = 0; i < json.length; i++ )
+	{		
+		for ( var i2 = 0; i2 < furn.length; i2++ )
+		{
+			if(furn[i2].lotid == json[i].id) 
 			{ 
-				readyProject();				
+				await loadObjServer(furn[i2]);
+
+				infProject.project.load.furn[infProject.project.load.furn.length] = furn[i2].lotid;				
+				
+				var rat = (Math.round((infProject.project.load.furn.length/infProject.project.file.object.length)*100)) + '%';
+				$('[nameId="txt_loader_slider_UI"]').text(rat);
 			}
 		}
-	}	
+	}
 }
+
+
 
 
 
@@ -874,8 +881,7 @@ function readyProject(cdm)
 	
 	console.log('READY', countId);
 	
-	if(infProject.project.file.object.length == 0) { $('[nameId="menu_loader_slider_UI"]').hide(); }
-	else if(infProject.project.load.furn.length == infProject.project.file.object.length) { $('[nameId="menu_loader_slider_UI"]').hide(); }
+	$('[nameId="menu_loader_slider_UI"]').hide();
 	
 	changeCamera(cameraTop);
 	centerCamera2D();

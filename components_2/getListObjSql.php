@@ -3,21 +3,32 @@ require_once ($_SERVER['DOCUMENT_ROOT']."/include/bd_1.php");
 
 
 
-if($_GET['select_list']) 
-{
-	$select_list = $_GET['select_list'];
-}
-
-if($_POST['select_list']) 
-{
-	$select_list = $_POST['select_list'];
-}
-
-
+if($_GET['select_list']) { $select_list = $_GET['select_list']; }
+if($_POST['select_list']) { $select_list = $_POST['select_list']; }
 if(!isset($select_list)) { $select_list = '*'; }
 
 
-$sql = "SELECT {$select_list} FROM list_obj";
+if($_GET['id']) { $arrId = $_GET['id']; }
+if($_POST['id']) { $arrId = $_POST['id']; }
+
+if(isset($arrId))
+{
+	$strId = 'WHERE id IN (';
+	
+	for ($i = 0; $i < count($arrId); $i++)
+	{
+		if($i > 0) { $strId .= ','; }
+		$strId .= $arrId[$i];
+	}
+
+	$strId .= ')';	
+}
+
+
+
+
+
+$sql = "SELECT {$select_list} FROM list_obj {$strId}";
 $r = $db->prepare($sql);
 $r->execute();
 $res = $r->fetchAll(PDO::FETCH_ASSOC);

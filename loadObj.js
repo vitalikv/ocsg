@@ -51,10 +51,21 @@ function infoListTexture()
 }
 
 
-// получаем параметры объекта из api
-async function getInfoObj(cdm)
+
+// ищем был ли до этого объект добавлен в сцену (если был, то береме сохраненную копию, усли нет, то ищем в базе)
+async function getObjFromBase(cdm)
 {
-	var lotid = cdm.lotid;	
+	var lotid = cdm.lotid;								// объекты в сцене 
+	var base = infProject.scene.array.base;		// объекты в памяти	
+	
+	for(var i = 0; i < base.length; i++)
+	{
+		if(base[i].id == lotid)
+		{
+			return base[i];		// объект есть в кэше
+		}
+	}
+
 	
 	var url = infProject.path+'components_2/getObjSql.php?id='+lotid;  
 	
@@ -67,10 +78,11 @@ async function getInfoObj(cdm)
 		inf.planeMath = 0.0;
 		
 		return inf;
-	}
+	}	
 	
 	return null;
 }
+
 
 
 
@@ -82,20 +94,18 @@ async function loadObjServer(cdm)
 	
 	if(!cdm.lotid) return;
 	
-	var lotid = cdm.lotid;
+	var lotid = cdm.lotid;	
 	
-	var inf = await getInfoObj({lotid: lotid});		// проверяем, есть ли такой id в api
+	var inf = await getObjFromBase({lotid: lotid});
 	if(!inf) return;	// объект не существует в API/каталоге
 	
-	var obj = getObjFromBase({lotid: lotid});	// проверяем есть ли объект в кэше
+	//if(cdm.loadFromFile){ obj = null; }
 	
-	if(cdm.loadFromFile){ obj = null; }
-	
-	if(obj)		// объект есть в кэше
+	if(inf.obj)		// объект есть в кэше
 	{ 
-		inf.obj = obj.clone();
+		inf.obj = inf.obj.clone();
 		console.log('---------');
-		if(obj) { addObjInScene(inf, cdm); }
+		addObjInScene(inf, cdm);
 	}
 	else		// объекта нет в кэше, сохраняем/добавляем в кэш
 	{
@@ -105,69 +115,30 @@ async function loadObjServer(cdm)
 	
 		if(inf.model)
 		{ 	
-			new THREE.ObjectLoader().parse
-			(
-				inf.model, 
-				
-				function ( obj ) 
-				{
-					var box = createBoundObject({obj: obj});	// создаем box-форму объекта
-					box.add(obj);
-					
-					var obj = addObjInBase({lotid: lotid, inf: inf, obj: box});
-					
-					inf.obj = obj;
-					
-					addObjInScene(inf, cdm);		
-				}
-				
-			);				
+			var obj = new THREE.ObjectLoader().parse( inf.model );
+			
+			var obj = addObjInBase(inf, obj);
+			inf.obj = obj;
+			addObjInScene(inf, cdm);
+			
+			
 		}		
 	}	
 	
+	return true;
 }
 
 
 
 
 
-// ищем был ли до этого объект добавлен в сцену (если был, то береме сохраненную копию)
-function getObjFromBase(cdm)
-{
-	var lotid = cdm.lotid;								// объекты в сцене 
-	var arrObj = infProject.scene.array.base;		// объекты в памяти	
-	
-	for(var i = 0; i < arrObj.length; i++)
-	{
-		if(arrObj[i].lotid == lotid)
-		{
-			return arrObj[i].obj;
-		}
-	}
-	
-	return null;
-}
 
 
 
 // добавляем новый объект в базу/кэш (добавляются только уникальные объекты, которых нет в базе)
-function addObjInBase(cdm)
+function addObjInBase(inf, obj)
 {
-	var lotid = cdm.lotid;								// объекты в сцене
-	var obj = cdm.obj;
-	var base = infProject.scene.array.base;			// объекты в памяти	
-	
-	for(var i = 0; i < base.length; i++)
-	{
-		if(base[i].lotid == lotid)
-		{  
-			return obj;
-		}
-	}	
-	
 	obj.geometry.computeBoundingBox();	
-	
-	var geometries = [];
 	
 	// накладываем на материал объекта lightMap
 	obj.traverse(function(child) 
@@ -183,10 +154,13 @@ function addObjInBase(cdm)
 			child.castShadow = true;	
 			child.receiveShadow = true;				
 		}
-	});		
-	
-	base[base.length] = {lotid: lotid, obj: obj.clone()};
+	});
 
+	var inf_2 = JSON.parse( JSON.stringify( inf ) );
+	inf_2.obj = obj.clone();	
+	
+	infProject.scene.array.base[infProject.scene.array.base.length] = inf_2;
+	
 	return obj;
 }
 
