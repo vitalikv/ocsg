@@ -184,7 +184,7 @@ function resetScene()
 	infProject.scene.light.lamp = [];
 	
 	
-	getConsoleRendererInfo();
+	//getConsoleRendererInfo();
 }
 
 

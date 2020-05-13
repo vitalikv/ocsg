@@ -31,8 +31,7 @@ async function addObjInCatalogUI_1(cdm)
 		
 		json[i].elem.appendTo('[list_ui="catalog"]');
 	}
-	
-	console.log(json);
+		
 	
 	// находим дочерние объекты 
 	function getItemChilds(cdm)

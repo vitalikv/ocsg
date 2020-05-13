@@ -122,7 +122,6 @@ async function addItemAdminPanel_2(cdm)
 		list.append(json[i].elem);		// добавить в конец списка
 	}
 	
-	console.log(json);
 	
 	// находим дочерние объекты 
 	function getItemChilds(cdm)

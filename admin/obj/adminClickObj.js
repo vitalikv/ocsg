@@ -23,7 +23,7 @@ var div = document.createElement('div');
 div.innerHTML = html;
 var elem = div;
 	
-console.log(elem);	
+
 block.append(elem); 
 
 
