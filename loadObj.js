@@ -86,46 +86,28 @@ async function getObjFromBase(cdm)
 
 
 
+// cdm - информация, которая пришла из вне
+// inf - статическая инфа из базы
 async function loadObjServer(cdm)
-{ 
-	// cdm - информация, которая пришла из вне
-	// inf - статическая инфа из базы
-	//console.log(cdm);
-	
+{ 	
 	if(!cdm.lotid) return;
 	
 	var lotid = cdm.lotid;	
 	
 	var inf = await getObjFromBase({lotid: lotid});
-	if(!inf) return;	// объект не существует в API/каталоге
-	
-	//if(cdm.loadFromFile){ obj = null; }
+	if(!inf) return;		// объект не существует в API/каталоге
 	
 	if(inf.obj)		// объект есть в кэше
 	{ 
-		inf.obj = inf.obj.clone();
 		console.log('---------');
-		addObjInScene(inf, cdm);
 	}
-	else		// объекта нет в кэше, сохраняем/добавляем в кэш
-	{
-		
-		if(cdm.loadFromFile){}
-		//else { createSpotObj(inf, cdm); }
-	
-		if(inf.model)
-		{ 	
-			var obj = new THREE.ObjectLoader().parse( inf.model );
-			
-			var obj = addObjInBase(inf, obj);
-			inf.obj = obj;
-			addObjInScene(inf, cdm);
-			
-			
-		}		
+	else if(inf.model)		// объекта нет в кэше, сохраняем/добавляем в кэш
+	{	
+		var obj = new THREE.ObjectLoader().parse( inf.model );			
+		addObjInBase(inf, obj);		
 	}	
 	
-	return true;
+	addObjInScene(inf, cdm);
 }
 
 
@@ -156,12 +138,11 @@ function addObjInBase(inf, obj)
 		}
 	});
 
-	var inf_2 = JSON.parse( JSON.stringify( inf ) );
-	inf_2.obj = obj.clone();	
+	//var inf_2 = JSON.parse( JSON.stringify( inf ) );
+	inf.model = null;
+	inf.obj = obj;	
 	
-	infProject.scene.array.base[infProject.scene.array.base.length] = inf_2;
-	
-	return obj;
+	infProject.scene.array.base[infProject.scene.array.base.length] = inf;
 }
 
 
@@ -248,6 +229,12 @@ function deleteSpotObj(cdm)
 // добавляем объект в сцену
 function addObjInScene(inf, cdm)
 {  
+	var obj = inf.obj.clone();
+	
+	var inf = JSON.parse( JSON.stringify( inf ) );	
+	inf.obj = obj;
+	
+	
 	// загрузка wd
 	if(cdm.wd)
 	{  
