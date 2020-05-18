@@ -72,32 +72,6 @@ function showHidePoint(cdm)
 }
 
 
-// screenshot сохраняем в bd
-function saveAsImagePreview() 
-{ 
-	try 
-	{		
-		var rd = 400/containerF.clientWidth;
-		
-		renderer.setSize( 400, containerF.clientHeight *rd );
-		renderer.antialias = true;
-		renderer.render( scene, camera );
-		
-		var imgData = renderer.domElement.toDataURL("image/jpeg", 0.7);	
-
-		renderer.setSize( containerF.clientWidth, containerF.clientHeight );
-		renderer.antialias = false;
-		renderer.render( scene, camera );
-		
-		return imgData;
-	} 
-	catch (e) 
-	{
-		console.log(e);
-		return null;
-	}
-}
-
 
 
 

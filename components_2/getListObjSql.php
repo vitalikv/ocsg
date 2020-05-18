@@ -65,6 +65,11 @@ foreach ($res as $text)
 	{
 		$data[$i]['properties'] = json_decode($text['properties']);	
 	}	
+
+	if($text['preview'])
+	{
+		$data[$i]['preview'] = $text['preview'];	
+	}
 	
 	$i++;
 }

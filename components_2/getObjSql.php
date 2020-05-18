@@ -61,6 +61,11 @@ if($res)
 	if($res['properties'])
 	{
 		$data['properties'] = json_decode($res['properties']);	
+	}
+
+	if($res['preview'])
+	{
+		$data['preview'] = $res['preview'];	
 	}	
 }
 

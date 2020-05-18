@@ -38,7 +38,7 @@ if($id == 0)
 }
 else
 {
-	$sql = "UPDATE list_obj SET name = :name, type = :type, model = :model, properties = :properties WHERE id = :id";
+	$sql = "UPDATE list_obj SET name=:name, type=:type, model=:model, properties=:properties, preview=:preview WHERE id = :id";
 	//$sql = "UPDATE list_obj SET json = :json, size = :size, name = :name WHERE id = :id";
 	$r = $db->prepare($sql);
 	$r->bindValue(':id', $id);
@@ -46,7 +46,7 @@ else
 	$r->bindValue(':type', $type);
 	$r->bindValue(':model', $model);
 	$r->bindValue(':properties', $properties);
-	//$r->bindValue(':preview', $preview);
+	$r->bindValue(':preview', $preview);
 	$f = $r->execute();
 
 	if($f=='1'){ $inf['success'] = true; } // проверяем записались ли данные	

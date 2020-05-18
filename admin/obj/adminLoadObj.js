@@ -201,64 +201,6 @@ function getBoundObject_1(cdm)
 
 
 
-// сохраняем объект на сервере в BD
-function saveObjSql(cdm)
-{
-	var obj = cdm.obj;
-	//console.log(cdm); return;
-	if(!obj) return;
-	
-	
-	obj.updateMatrixWorld();
-	obj.geometry.computeBoundingBox();	
-	obj.geometry.computeBoundingSphere();
-
-	var bound = obj.geometry.boundingBox;
-	var size = {x: bound.max.x-bound.min.x, y: bound.max.y-bound.min.y, z: bound.max.z-bound.min.z};
- 
-	
-	var lotid = $('[nameId="bd_input_obj_id"]').val();
-	lotid = lotid.trim();
-	if(lotid == '') { lotid = 0; }	
-	
-	var name = $('[nameId="rp_obj_name"]').val();
-	name = name.trim();
-	if(name == '') { name = null; }
-	
-	var type = $('[nameId="bd_input_type"]').val();
-	type = type.trim();
-	if(type == '') { type = null; }
-
-	var properties = $('[nameId="bd_input_properties"]').text();
-	properties = properties.trim();
-	if(properties == '') { properties = null; }
-	else { properties = JSON.parse(properties); }	
-	
-
-
-	var lotid = obj.userData.obj3D.lotid;
-	var name = (name) ? JSON.stringify( name ) : null;
-	var type = (type) ? JSON.stringify( type ) : null;
-	var size = (size) ? JSON.stringify( size ) : null;	
-	var model = JSON.stringify( obj ); 
-	var properties = (properties) ? JSON.stringify( properties ) : null;
-	var preview = null;
-	
-	$.ajax
-	({
-		type: "POST",					
-		url: infProject.path+'admin/obj/saveObjSql.php',
-		data: { id: lotid, name: name, type: type, size: size, model: model, properties: properties, preview: preview },
-		dataType: 'json',
-		success: function(data)
-		{  
-			console.log(data);			
-		}
-	});	
-}
-
-
-
 
 
 
