@@ -9,8 +9,9 @@ $('[data-action="left_panel_1"]').mousedown(function () { clickInterface(); });
 
 
 
-$('[nameId="butt_camera_2D"]').mousedown(function() { changeCamera(cameraTop); $(this).hide(); $('[nameId="butt_camera_3D"]').show(); });
-$('[nameId="butt_camera_3D"]').mousedown(function() { changeCamera(camera3D); $(this).hide(); $('[nameId="butt_camera_2D"]').show(); });
+$('[nameId="butt_camera_2D"]').mousedown(function() { changeCamera(cameraTop); $(this).hide(); $('[nameId="butt_camera_3D"]').show(); $('[nameId="butt_cam_walk"]').hide(); });
+$('[nameId="butt_camera_3D"]').mousedown(function() { changeCamera(camera3D); $(this).hide(); $('[nameId="butt_camera_2D"]').show(); $('[nameId="butt_cam_walk"]').show(); });
+$('[nameId="butt_cam_walk"]').mousedown(function() { switchCamera3D(); });
 
 
 $('[nameId="button_wrap_catalog"]').mousedown(function () { changeRightMenuUI_1({el: this}); });
@@ -145,28 +146,15 @@ $('[nameId="rp_button_apply"]').mousedown(function ()
 $('[nameId="rp_button_wall_texture_1"]').mousedown(function () 
 { 
 	clickO.click.side_wall = 1; 
-	clickO.click.o = clickO.last_obj;
 	showHideMenuTexture_1({type: 2});
 });
 
 $('[nameId="rp_button_wall_texture_2"]').mousedown(function () 
 { 
 	clickO.click.side_wall = 2; 
-	clickO.click.o = clickO.last_obj;
 	showHideMenuTexture_1({type: 2});
 });
 
-$('[nameId="rp_button_room_texture_1"]').mousedown(function () 
-{ 
-	clickO.click.o = clickO.last_obj; 
-	showHideMenuTexture_2({type: 2}); 
-});
-
-$('[nameId="rp_button_room_texture_2"]').mousedown(function () 
-{ 
-	clickO.click.o = findNumberInArrRoom_2({obj: clickO.last_obj}).ceiling;
-	showHideMenuTexture_2({type: 2}); 	
-});
 
 
 $('[nameId="but_back_catalog_texture_1"]').mousedown(function () 
@@ -174,14 +162,11 @@ $('[nameId="but_back_catalog_texture_1"]').mousedown(function ()
 	showHideMenuTexture_1({type: 1});
 });
 
-$('[nameId="but_back_catalog_texture_2"]').mousedown(function () 
-{ 
-	showHideMenuTexture_2({type: 1});
-});
+
 
 $('[add_texture]').mousedown(function () 
 { 
-	var inf = {obj: clickO.click.o, material: {img: this.attributes.add_texture.value, index: clickO.click.side_wall}, ui: true};
+	var inf = {obj: clickO.last_obj, material: {img: this.attributes.add_texture.value, index: clickO.click.side_wall}, ui: true};
 	if(camera == camera3D)
 	{ 
 		if(clickO.index) 

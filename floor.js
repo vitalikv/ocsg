@@ -208,35 +208,6 @@ function findNumberInArrRoom(arr)
 
 
 
-// находим пол потолок, который соответсвует одной комнате
-function findNumberInArrRoom_2(cdm) 
-{
-	var result = null;
-	var obj = cdm.obj;
-	
-	if(obj.userData.tag == 'room')
-	{
-		for ( var i2 = 0; i2 < room.length; i2++ )
-		{
-			if(room[i2] == obj) { result = { floor: room[i2], ceiling: ceiling[i2] }; break; }
-		}		
-	}
-	else if(obj.userData.tag == 'ceiling')
-	{
-		for ( var i2 = 0; i2 < ceiling.length; i2++ )
-		{
-			if(ceiling[i2] == obj) { result = { floor: room[i2], ceiling: ceiling[i2] }; break; }
-		}			
-	}
-	else 
-	{
-		return;
-	}	
-	
-	return result;
-}
-
-
 
 // создаем плоскость для пола, которая будет принемать ее форму и виделяться Outline
 function createPlaneOutlineFloor()

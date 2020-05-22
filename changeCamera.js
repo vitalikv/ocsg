@@ -137,22 +137,24 @@ function changeDepthColor()
 	var svg = [];
 	
 	for ( var i = 0; i < door.length; i++ )
-	{ 
-		if(!door[i].userData.door.obj3D) continue;
-		door[i].userData.door.obj3D.visible = visible_3; 
+	{  
 		svg[svg.length] = door[i].userData.door.svg.el;
 		
 		if(door[i].userData.door.svg.path) { svg[svg.length] = door[i].userData.door.svg.path; }
 		if(door[i].userData.door.svg.arc) { svg[svg.length] = door[i].userData.door.svg.arc; }
+		
+		if(!door[i].userData.door.obj3D) continue;
+		door[i].userData.door.obj3D.visible = visible_3;		
 	}	
 
 	for ( var i = 0; i < window.length; i++ )
 	{ 
-		if(!window[i].userData.door.obj3D) continue;
-		window[i].userData.door.obj3D.visible = visible_3;
 		svg[svg.length] = window[i].userData.door.svg.el;
 		
 		if(window[i].userData.door.svg.path) { svg[svg.length] = window[i].userData.door.svg.path; }
+		
+		if(!window[i].userData.door.obj3D) continue;
+		window[i].userData.door.obj3D.visible = visible_3;		
 	}
 	
 	if(camera == cameraTop)

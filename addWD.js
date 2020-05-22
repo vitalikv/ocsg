@@ -507,19 +507,19 @@ function setPosWD_Obj3D(cdm)
 	//if(openId == 0 || openId == 1) { obj3D.scale.x = Math.abs(obj3D.scale.x); }	
 	//else { obj3D.scale.x = -Math.abs(obj3D.scale.x); }
 
-	if(openId == 3)
+	if(openId == 0)
 	{
 		obj3D.scale.set(Math.abs(obj3D.scale.x), obj3D.scale.y, Math.abs(obj3D.scale.z)); 
 	}
-	else if(openId == 2)  
+	else if(openId == 1) 
 	{ 
 		obj3D.scale.set(Math.abs(obj3D.scale.x), obj3D.scale.y, -Math.abs(obj3D.scale.z)); 
 	}
-	else if(openId == 1) 
+	else if(openId == 2) 
 	{ 
 		obj3D.scale.set(-Math.abs(obj3D.scale.x), obj3D.scale.y, Math.abs(obj3D.scale.z)); 
 	}
-	else if(openId == 0) 
+	else if(openId == 3) 
 	{ 
 		obj3D.scale.set(-Math.abs(obj3D.scale.x), obj3D.scale.y, -Math.abs(obj3D.scale.z)); 
 	}			

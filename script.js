@@ -1530,12 +1530,7 @@ function setTexture(cdm)
 		
 		if(cdm.obj.userData.tag == "room" || cdm.obj.userData.tag == "ceiling")
 		{
-			cdm.obj.userData.material.img = img;
-			
-			if(cdm.ui)
-			{
-				changeTextureRoom_UI_1({obj: cdm.obj});
-			}
+			//cdm.obj.userData.material.img = img;
 		}		
 		
 		renderCamera();
@@ -1866,7 +1861,7 @@ document.addEventListener("keydown", function (e)
 	}  
 	
 	//if(e.keyCode == 56) { showHideLabelSizeWall({switch: true}); }
-	if(e.keyCode == 66) { switchCamera3D(); } 	// b
+	//if(e.keyCode == 66) { switchCamera3D(); } 	// b
 	//if(e.keyCode == 86) { switchLight({switch: true}); } 	// v
 	if(e.keyCode == 89 && !e.ctrlKey) { saveFile({txt: true}); } 			// y
 	//if(e.keyCode == 86) { resetScene(); getAutoBuildingJson(); } // v

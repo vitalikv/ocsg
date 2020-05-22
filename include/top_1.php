@@ -10,11 +10,12 @@
 				<img src="img/download_1.png">
 			</div>	
 		</div>		
-		<div class="button1-wrap-1" nameId='butt_main_sett'>
+
+		<div class="button1-wrap-1" nameId='butt_cam_walk' style="display: none;">
 			<div class="button1 button_gradient_1"> 
-				<img src="img/settings_1.png">
+				<img src="img/walk_2.png">
 			</div>	
-		</div>	
+		</div>		
 
 		<div class="button1-wrap-1" nameId='zoom_camera_butt_m'>
 			<div class="button1 button_gradient_1" style="width: 19px;"> 

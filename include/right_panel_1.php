@@ -211,20 +211,9 @@
 						<div class="right_panel_1_1_h">
 							Текстура
 						</div>
-						<div class="flex_1 texture_wall" nameId="rp_block_room_texture_1">
-							<div class="button1 button_gradient_1 texture_wall_2" nameId="rp_button_room_texture_1">
-								<div class="texture_wall_2_text">Пол</div>							
-								<img src="<?=$path?>img/load/kirpich.jpg" nameId="wall_texture_1img">	
-							</div>
-							<div class="button1 button_gradient_1 texture_wall_2" nameId="rp_button_room_texture_2">
-								<div class="texture_wall_2_text">Потолок</div>
-								<img src="#" nameId="wall_texture_2img">	
-							</div>							
-						</div>
 					</div>
 
-					<div style="display: none;" nameId="rp_catalog_texture_2">
-						<div class="button1 button_gradient_1" style="margin-top: 20px;" nameId="but_back_catalog_texture_2">Закрыть</div>
+					<div nameId="rp_catalog_texture_2">
 						<div class="rp_1_1_list">
 							<div class="rp_1_2_list" list_ui="catalog_texture_2">
 								

@@ -51,20 +51,7 @@ function showHideMenuTexture_1(cdm)
 	}
 }
 
-// показываем/скрываем кнопки/список текстур для пола/потолка
-function showHideMenuTexture_2(cdm)
-{
-	if(cdm.type == 1)
-	{
-		$('[nameId="rp_catalog_texture_2"]').hide(); 
-		$('[nameId="rp_block_room_texture_1"]').show();  		
-	}
-	else
-	{
-		$('[nameId="rp_catalog_texture_2"]').show(); 
-		$('[nameId="rp_block_room_texture_1"]').hide(); 		
-	}
-}
+
 
 
 
@@ -124,6 +111,7 @@ function activeObjRightPanelUI_1(cdm)
 	if(obj.userData.tag == 'point')
 	{
 		$('[nameId="rp_menu_point"]').show();
+		$('[nameId="rp_obj_name"]').val('точка');
 	}	
 	else if(obj.userData.tag == 'wall')
 	{
@@ -186,8 +174,6 @@ function activeObjRightPanelUI_1(cdm)
 		$('[nameId="rp_menu_room"]').show();
 		
 		$('[nameId="rp_obj_name"]').val('пол');
-		showHideMenuTexture_2({type: 1});
-		changeTextureRoom_UI_1({obj: obj});
 	}		
 
 	$('[nameId="wrap_object_1"]').show(); 	
@@ -250,17 +236,6 @@ function changeTextureWall_UI_1(cdm)
 {
 	$('[nameId="wall_texture_1img"]').attr('src', cdm.obj.userData.material[1].img);  
 	$('[nameId="wall_texture_2img"]').attr('src', cdm.obj.userData.material[2].img);
-}
-
-
-
-// показываем текстыру у пола/потолка в правой панели
-function changeTextureRoom_UI_1(cdm) 
-{
-	var res = findNumberInArrRoom_2({obj: cdm.obj});
-	
-	$('[nameId="wall_texture_1img"]').attr('src', res.floor.userData.material.img);  
-	if(res.ceiling.userData.material) { $('[nameId="wall_texture_2img"]').attr('src', res.ceiling.userData.material.img); }
 }
 
 
