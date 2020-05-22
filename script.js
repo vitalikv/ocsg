@@ -2037,11 +2037,8 @@ $(document).ready(function ()
 	if(infProject.settings.load.file)
 	{
 		loadFile({json: infProject.settings.load.file});
-	}		
-	  
-	//loadObjServer({lotid: 6, pos: new THREE.Vector3(1, 1, 0)});
-	//loadObjServer({lotid: 6, pos: new THREE.Vector3(0, 1, 0)});
-	//loadObjServer({lotid: 6, pos: new THREE.Vector3(1, 1, 1), rot: new THREE.Vector3(0, 1, 0)});
+		//loadFile({id: 0});
+	}			  
 	
 });
 

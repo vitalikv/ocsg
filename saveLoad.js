@@ -503,7 +503,7 @@ function saveFile(cdm)
 
 function loadFile(cdm) 
 {
-	if(cdm.id == 0) { resetScene(); return; }	 
+	if(cdm.id == 0) { resetScene(); readyProject(); return; }	 
 	
 	
 	if(cdm.json)	// загрузка json из папки
@@ -549,7 +549,7 @@ async function loadFilePL(arr)
 {
 	resetScene();
 
-	await getListRoomTypesApi();	// получаем типы помещений из api, добавляем в меню
+	//await getListRoomTypesApi();	// получаем типы помещений из api, добавляем в меню
 	await addObjInCatalogUI_1();		// наполняем каталог объектов UI
 	 
 	//if(!arr) return;	
@@ -559,7 +559,7 @@ async function loadFilePL(arr)
 	if(!arr.walls) { arr.walls = []; }
 	if(!arr.rooms) { arr.rooms = []; }
 	if(!arr.object) { arr.object = []; }
-	if(!arr.height) { arr.height = 2.8; }
+	if(!arr.height) { arr.height = infProject.settings.height; }
 	
 	infProject.project = { file: arr, load: { furn: [] } };
 		
@@ -740,9 +740,6 @@ async function loadFilePL(arr)
 async function getListRoomTypesApi()
 {
 	var url = infProject.settings.api.type.room; 
-	
-	
-	if(window.location.hostname == 'ocsg' || window.location.hostname == 'ocsg.ru'){ var url = 't/list_room_zone.json'; }
 	
 
 	var response = await fetch(url, { method: 'GET' });

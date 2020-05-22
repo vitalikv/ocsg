@@ -232,7 +232,7 @@
 						</div>
 					</div>
 					
-					<div class="flex_column_1">
+					<div class="flex_column_1" style="display: none;">
 						<div class="right_panel_1_1_h">
 							Помещения
 						</div>					
