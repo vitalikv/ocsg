@@ -343,7 +343,7 @@ function addPoint_4( point )
 			{
 				clickPointUP_BSP( point.p[0].w );				
 			}			
-			
+			upUvs_1( point.p[0].w[0] );
 			console.log('2. продолжаем создавать новую стену');
 		} 
 		else if(point.userData.point.cross.userData.tag == 'point')		// 3
