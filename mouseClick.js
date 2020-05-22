@@ -176,21 +176,26 @@ function clickRayHit(event)
 	
 	if(!infProject.scene.block.click.obj)
 	{
-		var ray = rayIntersect( event, infProject.scene.array.obj, 'arr' );
+		var ray = rayIntersect( event, infProject.scene.array.obj, 'arr', true );
 		
 		if(ray.length > 0)
-		{   
-			if(rayhit)
-			{  
-				if(rayhit.distance > ray[0].distance) { rayhit = ray[0]; }				
-			}
-			else 
+		{   	
+			rayhit = null;
+			
+			for (var i = 0; i < ray.length; i++)
 			{
-				rayhit = ray[0];
+				if(ray[i].object.userData.obj3D) continue;
+				
+				rayhit = ray[i]; console.log(i, rayhit );
+				break;
 			}
 			
+			var object = null; 
 			
-			//rayhit.object = getParentObj({obj: rayhit.object}); 
+			if(rayhit) { object = getParentObj({obj: rayhit.object}); }
+			
+			if(!object) { rayhit = null; }
+			else { rayhit.object = object; }
 		}			
 	}
 	

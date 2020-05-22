@@ -8,9 +8,9 @@ $('[data-action="left_panel_1"]').mousedown(function () { clickInterface(); });
 
 
 
-$('[nameId="camera_button"]').change(function() { clickInterface({button: $( this ).val()}); });
 
-
+$('[nameId="butt_camera_2D"]').mousedown(function() { changeCamera(cameraTop); $(this).hide(); $('[nameId="butt_camera_3D"]').show(); });
+$('[nameId="butt_camera_3D"]').mousedown(function() { changeCamera(camera3D); $(this).hide(); $('[nameId="butt_camera_2D"]').show(); });
 
 
 $('[nameId="button_wrap_catalog"]').mousedown(function () { changeRightMenuUI_1({el: this}); });

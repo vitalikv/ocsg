@@ -31,14 +31,20 @@
 		</div>		
 	</div> 
 	
+	
 	<div class="tp_right_1">
 	
-		<select nameId="camera_button" class="select-css">
-			<option value ="2D">камера 2D</option>
-			<option value ="3D">камера 3D</option>
-		</select>	
-		
-	</div>
+		<div class="button1-wrap-1" nameId='butt_camera_2D' style="display: none;">
+			<div class="button1 button_gradient_1" style="width: 39px;"> 
+				2D
+			</div>	
+		</div>		
+		<div class="button1-wrap-1" nameId='butt_camera_3D'>
+			<div class="button1 button_gradient_1" style="width: 39px; "> 
+				3D
+			</div>	
+		</div>			
+	</div>	
 	
 </div>
 
