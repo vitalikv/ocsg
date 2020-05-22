@@ -1468,7 +1468,7 @@ function rayIntersect( event, obj, t )
 	
 	var intersects = null;
 	if(t == 'one'){ intersects = raycaster.intersectObject( obj ); } 
-	else if(t == 'arr'){ intersects = raycaster.intersectObjects( obj, true ); }
+	else if(t == 'arr'){ intersects = raycaster.intersectObjects( obj ); }
 	
 	return intersects;
 }
@@ -1585,11 +1585,11 @@ function clickButton( event )
 		}
 		else if(clickO.button == 'create_wd_2')
 		{
-			createEmptyFormWD_1({type:'door', lotid: 3});
+			createEmptyFormWD_1({type:'door', lotid: 10});
 		}
 		else if(clickO.button == 'create_wd_3')
 		{
-			createEmptyFormWD_1({type:'window', lotid: 2});
+			createEmptyFormWD_1({type:'window', lotid: 11});
 		}			
 		else if(clickO.button == 'add_lotid')
 		{

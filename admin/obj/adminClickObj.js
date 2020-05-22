@@ -93,7 +93,7 @@ function saveObjSql(cdm)
 	var obj = cdm.obj;
 	//console.log(cdm); return;
 	if(!obj) return;
-	
+		
 	
 	obj.updateMatrixWorld();
 	obj.geometry.computeBoundingBox();	
@@ -125,10 +125,24 @@ function saveObjSql(cdm)
 	var lotid = obj.userData.obj3D.lotid;
 	var name = (name) ? JSON.stringify( name ) : null;
 	var type = (type) ? JSON.stringify( type ) : null;
-	var size = (size) ? JSON.stringify( size ) : null;	
-	var model = JSON.stringify( obj ); 
+	var size = (size) ? JSON.stringify( size ) : null;		
 	var properties = (properties) ? JSON.stringify( properties ) : null;
 	var preview = saveAsImagePreview();
+	
+	{
+		var pos = obj.position.clone();
+		var rot = obj.rotation.clone();
+		
+		obj.position.set(0, 0, 0);
+		obj.rotation.set(0, 0, 0);
+		
+		var model = JSON.stringify( obj );
+		
+		console.log(obj.rotation.clone());
+		
+		obj.position.copy(pos);
+		obj.rotation.copy(rot);			
+	}
 	
 	$.ajax
 	({
@@ -141,6 +155,8 @@ function saveObjSql(cdm)
 			console.log(data);			
 		}
 	});	
+	
+
 }
 
 
