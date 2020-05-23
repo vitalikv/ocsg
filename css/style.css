@@ -573,6 +573,32 @@ canvas
 	height: 100%;	
 }
 
+
+
+.right_panel_2_1_list
+{
+	display: block;
+	
+	position: absolute; 
+	left:0;
+	right:0;
+	top:40px;
+	bottom:60px; 
+	margin: auto 10px;
+	
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	background-color:#fff;
+	
+	-webkit-box-shadow:0px 0px 2px #bababa, inset 0px 0px 2px rgba(154, 147, 140, 0.5); 
+	-moz-box-shadow: 0px 0px 2px #bababa,  inset 0px 0px 2px rgba(154, 147, 140, 0.5);  
+	box-shadow:0px 0px 2px #bababa, inset 0px 0px 2px rgba(154, 147, 140, 0.5); 
+	
+	overflow: auto;		
+}
+
+
+
 .right_panel_1_1_list_item, .right_panel_2_1_list_item
 {
 	position: relative;

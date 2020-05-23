@@ -2053,11 +2053,21 @@ function exportToGLB()
 	
 	for ( var i = 0; i < wall.length; i++ )
 	{ 		
+		var userData = {};
+		userData.id = wall[i].userData.id;
+		userData.tag = wall[i].userData.tag;		
+		wall[i].userData = userData;
+		
 		arr[arr.length] = wall[i]; 
 	}		
 	
 	for ( var i = 0; i < window.length; i++ )
 	{ 
+		var userData = {};
+		userData.id = window[i].userData.id;
+		userData.tag = window[i].userData.tag;		
+		window[i].userData = userData;
+		
 		window[i].material.opacity = 0;
 		window[i].material.transparent = true;
 		window[i].children[0].material.opacity = 0;
@@ -2067,6 +2077,11 @@ function exportToGLB()
 	
 	for ( var i = 0; i < door.length; i++ )
 	{ 
+		var userData = {};
+		userData.id = door[i].userData.id;
+		userData.tag = door[i].userData.tag;
+		door[i].userData = userData;
+		
 		door[i].material.opacity = 0;
 		door[i].material.transparent = true;
 		door[i].children[0].material.opacity = 0;
@@ -2076,6 +2091,11 @@ function exportToGLB()
 	
 	for ( var i = 0; i < floor.length; i++ )
 	{		
+		var userData = {};
+		userData.id = floor[i].userData.id;
+		userData.tag = floor[i].userData.tag;
+		floor[i].userData = userData;
+		
 		arr[arr.length] = floor[i];
 	}
 	
@@ -2094,7 +2114,7 @@ function exportToGLB()
 		binary: true,
 		forceIndices: false,
 		forcePowerOfTwoTextures: false,
-		maxTextureSize: Number( 20000 ) 
+		maxTextureSize: Number( 20000 ),		
 	};
 
 	var exporter = new THREE.GLTFExporter();

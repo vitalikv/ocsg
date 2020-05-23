@@ -371,10 +371,10 @@
 
 		
 		
-		<div class="flex_column_1" nameId="wrap_catalog" style="display: none;">
+		<div class="flex_column_1 relative_1 height100" nameId="wrap_catalog" style="display: none;">
 			<div class="right_panel_1_1_h">Каталог</div>
 			
-			<div class="right_panel_1_1_list" list_ui="catalog">
+			<div class="right_panel_2_1_list" list_ui="catalog">
 				
 			</div>
 		</div>

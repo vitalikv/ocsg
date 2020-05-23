@@ -178,7 +178,7 @@ function getBoundObject_1(cdm)
 	v[0].z = v[1].z = v[2].z = v[3].z = bound.max.z;
 	v[4].z = v[5].z = v[6].z = v[7].z = bound.min.z;		
 		
-	geometry = new THREE.BufferGeometry().fromGeometry(geometry);	 
+	//geometry = new THREE.BufferGeometry().fromGeometry(geometry);	 
 	var box = new THREE.Mesh( geometry, material ); 	
 	//box.position.copy(centP);	
 	
