@@ -65,72 +65,8 @@ function clickWall_3D(cdm)
 
 	outlineAddObj({arr: [obj]});
 	activeObjRightPanelUI_1({obj: obj, side: index});
-	
-	
-	var arrId = [];
-	var group = {};
-	group.side1 = {};
-	group.side2 = {};
-	group.side1.geometry = new THREE.Geometry();
-	group.side1.material = obj.material[1].clone();
-	group.side2.geometry = new THREE.Geometry();
-	group.side2.material = obj.material[2].clone();	
-	
-	var geometry = new THREE.Geometry();
-	
-	for ( var i = 0; i < obj.geometry.vertices.length; i++ )
-	{
-		group.side1.geometry.vertices.push(obj.geometry.vertices[i]);
-		group.side2.geometry.vertices.push(obj.geometry.vertices[i]);
-	}
-	
-	for ( var i = 0; i < obj.geometry.faceVertexUvs[0].length; i++ )
-	{
-		group.side1.geometry.faceVertexUvs[0].push(obj.geometry.faceVertexUvs[0][i]);
-		group.side2.geometry.faceVertexUvs[0].push(obj.geometry.faceVertexUvs[0][i]);
-	}	
-	
-	
-	for ( var i = 0; i < obj.geometry.faces.length; i++ ) 
-	{	
-		var id = obj.geometry.faces[i].materialIndex;
-		
-		if(id == 1 || id == 2) {}
-		else { continue; }
-		
-		var exist = false;
-		
-		for ( var i2 = 0; i2 < arrId.length; i2++ )
-		{
-			if(obj.geometry.faces[i].materialIndex == arrId[i2]) { exist = true; break; }
-			if(obj.geometry.faces[i].materialIndex == arrId[i2]) { exist = true; break; }
-		}
-		
-		if(!exist)
-		{
-			arrId[arrId.length] = obj.geometry.faces[i].materialIndex;
-		}
 
-		var face = obj.geometry.faces[i]; 
-
-		if(id == 1) group.side1.geometry.faces.push(face.clone());
-		if(id == 2) group.side2.geometry.faces.push(face.clone());
-	}
-	
-	var faceO = new THREE.Mesh( group.side1.geometry, group.side1.material );
-	scene.add(faceO);
-	
-	faceO.position.copy(obj.position);
-	faceO.rotation.copy(obj.rotation);
-	
-	var faceO = new THREE.Mesh( group.side2.geometry, group.side2.material );
-	scene.add(faceO);
-	
-	faceO.position.copy(obj.position);
-	faceO.rotation.copy(obj.rotation);	
-	
-	console.log(222, faceO);
-	
+	createSideFormWall({obj: obj});
 }
 
 

@@ -1152,7 +1152,7 @@ function createToolPoint()
 	
 	var geometry = new THREE.SphereGeometry( 0.1, 16, 16 );
 	
-	var obj = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color : 0xcccccc, transparent: true, opacity: 0.5, depthTest: false } ) );
+	var obj = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color : 0xcccccc, transparent: true, opacity: 0.5, depthTest: false } ) );
 	obj.userData.tag = 'tool_point';
 	obj.userData.tool_point = {};
 	obj.renderOrder = 1;
@@ -2044,6 +2044,7 @@ function exportToGLB()
 {
 	var arr = [];
 	
+	var point = infProject.scene.array.point;
 	var wall = infProject.scene.array.wall;
 	var window = infProject.scene.array.window;
 	var door = infProject.scene.array.door;
@@ -2051,14 +2052,31 @@ function exportToGLB()
 	var floor = infProject.scene.array.floor;
 	
 	
+	for ( var i = 0; i < point.length; i++ )
+	{ 		
+		var userData = {};
+		userData.id = point[i].userData.id;
+		userData.tag = point[i].userData.tag;		
+		point[i].userData = userData;
+		
+		point[i].geometry = new THREE.BufferGeometry().setFromObject(point[i]);
+		
+		arr[arr.length] = point[i];
+	}	
+	
 	for ( var i = 0; i < wall.length; i++ )
 	{ 		
 		var userData = {};
 		userData.id = wall[i].userData.id;
 		userData.tag = wall[i].userData.tag;		
 		wall[i].userData = userData;
+
+		arr[arr.length] = createSideFormWall({obj: wall[i]});
 		
-		arr[arr.length] = wall[i]; 
+		//wall[i].geometry.sortFacesByMaterialIndex();
+		//wall[i].geometry = new THREE.BufferGeometry().setFromObject(wall[i]);
+		//arr[arr.length] = wall[i]; 
+		//wall[i].visible = false;
 	}		
 	
 	for ( var i = 0; i < window.length; i++ )
@@ -2071,7 +2089,9 @@ function exportToGLB()
 		window[i].material.opacity = 0;
 		window[i].material.transparent = true;
 		window[i].children[0].material.opacity = 0;
-		window[i].children[0].material.transparent = true;		
+		window[i].children[0].material.transparent = true;
+
+		window[i].geometry = new THREE.BufferGeometry().fromGeometry(window[i].geometry.clone());
 		arr[arr.length] = window[i];
 	}
 	
@@ -2085,7 +2105,9 @@ function exportToGLB()
 		door[i].material.opacity = 0;
 		door[i].material.transparent = true;
 		door[i].children[0].material.opacity = 0;
-		door[i].children[0].material.transparent = true;		
+		door[i].children[0].material.transparent = true;
+
+		door[i].geometry = new THREE.BufferGeometry().fromGeometry(door[i].geometry.clone());
 		arr[arr.length] = door[i];
 	}		
 	
@@ -2103,6 +2125,7 @@ function exportToGLB()
 	{ 
 		obj[i].material.opacity = 0;
 		obj[i].material.transparent = true;
+		
 		arr[arr.length] = obj[i];
 	}	
 	
@@ -2112,7 +2135,7 @@ function exportToGLB()
 		onlyVisible: false,
 		truncateDrawRange: true,
 		binary: true,
-		forceIndices: false,
+		forceIndices: true,
 		forcePowerOfTwoTextures: false,
 		maxTextureSize: Number( 20000 ),		
 	};
@@ -2123,33 +2146,108 @@ function exportToGLB()
 	exporter.parse( arr, function ( gltf ) 
 	{
 		
-		var link = document.createElement( 'a' );
-		link.style.display = 'none';
-		document.body.appendChild( link );			
-		
-		if ( gltf instanceof ArrayBuffer ) 
-		{ 
-			console.log( gltf ); 
-			link.href = URL.createObjectURL( new Blob( [ gltf ], { type: 'application/octet-stream' } ) );
-			link.download = 'file.glb';	
-		}
-		else
+		if(1==1)
 		{
-			console.log( gltf );
-			var gltf = JSON.stringify( gltf, null, 2 );
+			var link = document.createElement( 'a' );
+			link.style.display = 'none';
+			document.body.appendChild( link );			
 			
-			link.href = URL.createObjectURL( new Blob( [ gltf ], { type: 'text/plain' } ) );
-			link.download = 'file.gltf';
-		}
+			if ( gltf instanceof ArrayBuffer ) 
+			{ 
+				console.log( gltf ); 
+				link.href = URL.createObjectURL( new Blob( [ gltf ], { type: 'application/octet-stream' } ) );
+				link.download = 'file.glb';	
+			}
+			else
+			{
+				console.log( gltf );
+				var gltf = JSON.stringify( gltf, null, 2 );
+				
+				link.href = URL.createObjectURL( new Blob( [ gltf ], { type: 'text/plain' } ) );
+				link.download = 'file.gltf';
+			}
 
-		link.click();			
+			link.click();			
+			
+		}
 		
 	}, options );
 	
 }
 
 
+function createSideFormWall(cdm)
+{
+	var obj = cdm.obj;
+	
+	var group = {};
+	group.side1 = {};
+	group.side2 = {};
+	group.side3 = {};
+	group.side4 = {};
+	group.side1.geometry = new THREE.Geometry();
+	group.side1.material = obj.material[1].clone();
+	group.side2.geometry = new THREE.Geometry();
+	group.side2.material = obj.material[2].clone();	
+	group.side3.geometry = new THREE.Geometry();
+	group.side3.material = obj.material[3].clone();
+	group.side4.geometry = new THREE.Geometry();
+	group.side4.material = obj.material[0].clone();	
+		
+	
+	for ( var i = 0; i < obj.geometry.vertices.length; i++ )
+	{
+		group.side1.geometry.vertices.push(obj.geometry.vertices[i]);
+		group.side2.geometry.vertices.push(obj.geometry.vertices[i]);
+		group.side3.geometry.vertices.push(obj.geometry.vertices[i]);
+		group.side4.geometry.vertices.push(obj.geometry.vertices[i]);
+	}
+	
+	for ( var i = 0; i < obj.geometry.faceVertexUvs[0].length; i++ )
+	{
+		group.side1.geometry.faceVertexUvs[0].push(obj.geometry.faceVertexUvs[0][i]);
+		group.side2.geometry.faceVertexUvs[0].push(obj.geometry.faceVertexUvs[0][i]);
+		group.side3.geometry.faceVertexUvs[0].push(obj.geometry.faceVertexUvs[0][i]);
+		group.side4.geometry.faceVertexUvs[0].push(obj.geometry.faceVertexUvs[0][i]);
+	}	
+	
+	
+	for ( var i = 0; i < obj.geometry.faces.length; i++ ) 
+	{	
+		var id = obj.geometry.faces[i].materialIndex;		
 
+		var face = obj.geometry.faces[i]; 
+
+		if(id == 1) group.side1.geometry.faces.push(face.clone());
+		if(id == 2) group.side2.geometry.faces.push(face.clone());
+		if(id == 3) group.side3.geometry.faces.push(face.clone());
+		if(id == 0) group.side4.geometry.faces.push(face.clone());		
+	}
+	
+	var groupWall = new THREE.Group();
+		
+	for(var index in group) 
+	{ 
+		var geometry = new THREE.BufferGeometry().fromGeometry(group[index].geometry);
+		
+		var faceO = new THREE.Mesh( geometry, group[index].material );
+		groupWall.add(faceO);
+		
+		//faceO.position.copy(obj.position);
+		//faceO.rotation.copy(obj.rotation);		
+	}
+	
+		
+	groupWall.position.copy(obj.position);
+	groupWall.rotation.copy(obj.rotation);	
+	scene.add(groupWall);
+	
+	groupWall.userData = obj.userData;
+
+	console.log(555, groupWall);
+	
+	return groupWall;	
+}
 
 
 
