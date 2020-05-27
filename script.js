@@ -2052,7 +2052,7 @@ function exportToGLB()
 	var floor = infProject.scene.array.floor;
 	
 	
-	for ( var i = 0; i < point.length; i++ )
+	for ( var i = 0; i < 0; i++ )
 	{ 		
 		var userData = {};
 		userData.id = point[i].userData.id;
@@ -2060,6 +2060,7 @@ function exportToGLB()
 		point[i].userData = userData;
 		
 		point[i].geometry = new THREE.BufferGeometry().setFromObject(point[i]);
+		point[i].visible = false;
 		
 		arr[arr.length] = point[i];
 	}	
@@ -2068,14 +2069,36 @@ function exportToGLB()
 	{ 		
 		var userData = {};
 		userData.id = wall[i].userData.id;
-		userData.tag = wall[i].userData.tag;		
-		wall[i].userData = userData;
+		userData.tag = wall[i].userData.tag;
+		userData.point = [wall[i].userData.wall.p[0].position, wall[i].userData.wall.p[1].position];
+		userData.wd = [];
+		
+		for ( var i2 = 0; i2 < wall[i].userData.wall.arrO.length; i2++ )
+		{
+			userData.wd[userData.wd.length] = wall[i].userData.wall.arrO[i2].userData.id
+		}
+		
+		var side = {n: 0, id: 0};
+		for ( var i2 = 0; i2 < wall[i].userData.wall.room.side2.length; i2++ )
+		{
+			var side2 = wall[i].userData.wall.room.side2[i2];			
+			if(side2) { side.n += 1; side.id = i2; }
+		}
+		
+		if(side.n == 1) { userData.hide = side.id; }				
 
-		arr[arr.length] = createSideFormWall({obj: wall[i]});
+		//var o = createSideFormWall({obj: wall[i]});		
+		wall[i].userData = userData;
+		
+		//arr[arr.length] = o;
 		
 		//wall[i].geometry.sortFacesByMaterialIndex();
 		//wall[i].geometry = new THREE.BufferGeometry().setFromObject(wall[i]);
-		//arr[arr.length] = wall[i]; 
+		arr[arr.length] = wall[i];
+		wall[i].material[0].map = null;
+		wall[i].material[1].map = null;
+		wall[i].material[2].map = null;
+		wall[i].material[3].map = null;
 		//wall[i].visible = false;
 	}		
 	
@@ -2119,6 +2142,7 @@ function exportToGLB()
 		floor[i].userData = userData;
 		
 		arr[arr.length] = floor[i];
+		floor[i].material.map = null;
 	}
 	
 	for ( var i = 0; i < obj.length; i++ )
@@ -2231,6 +2255,7 @@ function createSideFormWall(cdm)
 		var geometry = new THREE.BufferGeometry().fromGeometry(group[index].geometry);
 		
 		var faceO = new THREE.Mesh( geometry, group[index].material );
+		//faceO.material.transparent = false;
 		groupWall.add(faceO);
 		
 		//faceO.position.copy(obj.position);

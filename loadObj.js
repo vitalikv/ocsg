@@ -172,7 +172,7 @@ function createSpotObj(inf, cdm)
 	var geometry = new THREE.ExtrudeGeometry( new THREE.Shape(point), { bevelEnabled: false, depth: height } );
 	geometry.rotateX(-Math.PI / 2);
 	geometry.rotateY(Math.PI);
-	var material = new THREE.MeshPhongMaterial( { color: 0xe3e3e5, transparent: true, opacity: 0.8 } );
+	var material = new THREE.MeshLambertMaterial( { color: 0xe3e3e5, transparent: true, opacity: 0.8 } );
 	
 	
 	var obj = new THREE.Mesh( geometry, material ); 
