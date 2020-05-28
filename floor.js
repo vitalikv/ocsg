@@ -24,7 +24,7 @@ function createFloor(cdm)
 	
 	if(infProject.settings.floor.color){ color = infProject.settings.floor.color; }
 	
-	var material = new THREE.MeshPhongMaterial({ color: color, dithering: true });
+	var material = new THREE.MeshStandardMaterial({ color: color, dithering: true });
 	
 	var floor = new THREE.Mesh( new THREE.ExtrudeGeometry( shape, { bevelEnabled: false, depth: infProject.settings.floor.height } ), material ); 
 	room[n] = floor;
@@ -53,7 +53,7 @@ function createFloor(cdm)
 	floor.userData.room.html.label = null; 
 	floor.userData.material = { tag: 'room', color: floor.material.color, img: null };	
 	
-	var ceil = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({ color: 0xffffff, dithering: true }) );
+	var ceil = new THREE.Mesh( geometry, new THREE.MeshStandardMaterial({ color: 0xffffff, dithering: true }) );
 	ceiling[n] = ceil;
 	
 	ceil.position.set( 0, arrP[0].position.y + infProject.settings.height, 0 );  
@@ -215,7 +215,7 @@ function createPlaneOutlineFloor()
 	var shape = new THREE.Shape( [new THREE.Vector2(-2, 1), new THREE.Vector2(2, 1), new THREE.Vector2(2, -1), new THREE.Vector2(-2, -1)] );
 	var geometry = new THREE.ShapeGeometry( shape );
 
-	var plane = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color: 0x0000ff, transparent: true, opacity: 0 } ) );
+	var plane = new THREE.Mesh( geometry, new THREE.MeshStandardMaterial( { color: 0x0000ff, transparent: true, opacity: 0 } ) );
 	plane.position.set( 0, infProject.settings.floor.posY, 0 );
 	plane.rotation.set( -Math.PI / 2, 0, 0 );
 	scene.add(plane);

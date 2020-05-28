@@ -12,7 +12,7 @@ function createEmptyFormWD_1(cdm)
 	if(type == 'window'){ color = infProject.listColor.window2D; }
 	else if(type == 'door'){ color = infProject.listColor.door2D; }
 	
-	var material = new THREE.MeshLambertMaterial({ color: color, transparent: true, opacity: 1.0, depthTest: false, lightMap : lightMap_1 });
+	var material = new THREE.MeshStandardMaterial({ color: color, transparent: true, opacity: 1.0, depthTest: false });
 	
 	
 	if(camera == cameraTop)

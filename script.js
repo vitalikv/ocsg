@@ -1269,6 +1269,8 @@ function crtW( cdm )
 		var material = new THREE.MeshPhongMaterial({ color : color[0], transparent: true, opacity: 1, lightMap : lightMap_1, dithering: true, precision: 'highp' });
 		var materialTop = new THREE.MeshPhongMaterial({ color: color[1], transparent: true, opacity: 1, lightMap : lightMap_1, dithering: true, precision: 'highp' });
 		
+		var material = new THREE.MeshStandardMaterial({ color : color[0], transparent: true, opacity: 1 });
+		var materialTop = new THREE.MeshStandardMaterial({ color : color[1], transparent: true, opacity: 1 });
 		var materials = [ material.clone(), material.clone(), material.clone(), materialTop ];	
 	}
 	

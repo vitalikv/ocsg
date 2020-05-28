@@ -66,7 +66,7 @@ function clickWall_3D(cdm)
 	outlineAddObj({arr: [obj]});
 	activeObjRightPanelUI_1({obj: obj, side: index});
 
-	createSideFormWall({obj: obj});
+	//createSideFormWall({obj: obj});
 }
 
 
