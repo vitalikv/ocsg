@@ -135,13 +135,9 @@ function saveObjSql(cdm)
 		
 		obj.position.set(0, 0, 0);
 		obj.rotation.set(0, 0, 0);
+		obj.updateMatrixWorld();
 		
-		var model = JSON.stringify( obj );
-		
-		console.log(obj.rotation.clone());
-		
-		obj.position.copy(pos);
-		obj.rotation.copy(rot);			
+		var model = JSON.stringify( obj );  		
 	}
 	
 	$.ajax
@@ -152,7 +148,10 @@ function saveObjSql(cdm)
 		dataType: 'json',
 		success: function(data)
 		{  
-			console.log(data);			
+			console.log(data);
+
+			obj.position.copy(pos);
+			obj.rotation.copy(rot);				
 		}
 	});	
 	
