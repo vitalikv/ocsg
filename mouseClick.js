@@ -61,7 +61,8 @@ function onDocumentMouseDown( event )
 	//event.preventDefault();
 
 	if (window.location.hostname == 'ocsg'){} 
-	else if (window.location.hostname == 'ocsg.ru'){} 
+	else if (window.location.hostname == 'ocsg.ru'){}
+	else if (window.location.hostname == '3d-rooms.ru'){} 	
 	else { return; }
  
 	long_click = false;

@@ -4,13 +4,17 @@
 
 <div class="flex_1 top_panel_2">	
 	
-	<div class="toolbar" data-action ='top_panel_1'>		
+	
+	<div class="toolbar" data-action ='top_panel_1'>
+		
+		<?if(1==2){?>
 		<div class="button1-wrap-1" nameId='butt_main_load_obj'>
 			<div class="button1 button_gradient_1"> 
 				<img src="img/download_1.png">
 			</div>	
 		</div>		
-
+		<?}?>
+		
 		<div class="button1-wrap-1" nameId='butt_cam_walk' style="display: none;">
 			<div class="button1 button_gradient_1"> 
 				<img src="img/walk_2.png">

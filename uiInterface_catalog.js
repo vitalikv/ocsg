@@ -19,14 +19,11 @@ async function addObjInCatalogUI_1(cdm)
 	});
 	var json = await response.json(); 
 	
-	json[json.length] =
-	{
-		id : 34,
-		name : 'светильник',
-	};
 	
 	for(var i = 0; i < json.length; i++)
 	{
+		if(json[i].id == 10 || json[i].id == 11) continue;
+		
 		json[i] = getItemChilds({json: json[i]});		
 		
 		json[i].elem.appendTo('[list_ui="catalog"]');

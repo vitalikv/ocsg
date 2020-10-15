@@ -321,8 +321,8 @@ var ccc = new THREE.Color().setHex( '0x'+infProject.settings.profile.color );
 	//await addObjInCatalogUI_1();			// наполняем каталог объектов UI
 	addTextureInCatalogUI_1();		// наполняем каталог текстур UI
 	addTextureInCatalogUI_2();
-	changeRightMenuUI_1({name: 'button_wrap_object'});	// назначаем первоначальную вкладку , которая будет включена	
-	//changeRightMenuUI_1({name: 'button_wrap_plan'});
+	//changeRightMenuUI_1({name: 'button_wrap_object'});	// назначаем первоначальную вкладку , которая будет включена	
+	changeRightMenuUI_1({name: 'button_wrap_plan'});
 	startRightPlaneInput({});
 
 	//getAutoBuildingJson();
@@ -1532,7 +1532,7 @@ function setTexture(cdm)
 		
 		if(cdm.obj.userData.tag == "room" || cdm.obj.userData.tag == "ceiling")
 		{
-			//cdm.obj.userData.material.img = img;
+			cdm.obj.userData.material.img = img;
 		}		
 		
 		renderCamera();

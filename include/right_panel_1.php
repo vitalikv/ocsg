@@ -362,7 +362,7 @@
 					</div>									
 					
 								
-					<div nameId="sp_block_drt">
+					<div nameId="sp_block_drt" style="display:none">
 
 					</div> 
 				</div> 
